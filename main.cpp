@@ -15,6 +15,7 @@ int printBoard();
 
 //  DECLARING GLOBAL VARIABLES
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
+int board[8][8]={0};
 struct node {
     int data;
     struct node *next;
