@@ -14,6 +14,7 @@
 int mainMenu();
 int printBoard();
 int initializeBoard();
+int swapPieces(struct piece *a, struct piece *b);
 
 //  DECLARING GLOBAL VARIABLES
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
@@ -87,5 +88,13 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
         }
         printf("\n");
     }
+    return 1;
+}
+
+int swapPieces(struct piece *a, struct piece *b) {//    SWAPS TWO PIECES ON THE BOARD
+    int temp;
+    temp = a->type;
+    a->type = b->type;
+    b->type = temp;
     return 1;
 }
