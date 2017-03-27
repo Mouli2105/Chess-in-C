@@ -1,5 +1,7 @@
+//  HEADER FILES
 #include<stdio.h>
 #include<stdlib.h>
+#include<conio.h>
 
 //  DEFINING PIECES
 #define EMPTY 0
@@ -15,19 +17,25 @@ int mainMenu();
 int printBoard();
 int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b);
+int handleCursor();
 
 //  DECLARING GLOBAL VARIABLES
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
+int cursorX = 0;
+int cursorY = 0;
 
 struct piece {
     int type;// LIKE PAWN, ROOK, BISHOP, etc
     int color;
-}board[8][8];//         ***MAY HAVE TO CHANGE THIS***
+}board[8][8];
 
 //  MAIN METHOD
 int main() {
     initializeBoard();
-    printBoard();
+    do {
+        printBoard();
+        handleCursor();
+    }while(1);
     return 0;
 }
 
@@ -52,36 +60,66 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
 }
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
+    system("cls");
+    printf("--[w]---[a]---[s]---[d]---[e]---\n\n\n");
     int i, j;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             switch(board[i][j].type) {
                 case PAWN:
-                    printf(" P ");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[P]");
+                    }else {
+                        printf(" P ");
+                    }
                     break;
 
                 case ROOK:
-                    printf(" R ");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[R]");
+                    }else {
+                        printf(" R ");
+                    }
                     break;
 
                 case BISHOP:
-                    printf(" B ");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[B]");
+                    }else {
+                        printf(" B ");
+                    }
                     break;
 
                 case KNIGHT:
-                    printf(" K ");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[N]");
+                    }else {
+                        printf(" N ");
+                    }
                     break;
 
                 case QUEEN:
-                    printf(" Q ");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[N]");
+                    }else {
+                        printf(" N ");
+                    }
                     break;
 
                 case KING:
-                    printf("[K]");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[K]");
+                    }else {
+                        printf(" K ");
+                    }
                     break;
 
                 case EMPTY:
-                    printf("---");
+                    if(i == cursorX && j == cursorY) {
+                        printf("[-]");
+                    }else {
+                        printf(" - ");
+                    }
                     break;
 
             }
@@ -98,3 +136,52 @@ int swapPieces(struct piece *a, struct piece *b) {//    SWAPS TWO PIECES ON THE 
     b->type = temp;
     return 1;
 }
+
+int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDINGLY
+    char ch;
+    fflush(stdin);
+    ch = getche();
+    switch(ch) {
+        case 'w':
+        case 'W':
+            if(cursorX > 0) {
+                cursorX--;
+            }
+            break;
+
+        case 'a':
+        case 'A':
+            if(cursorY > 0) {
+                cursorY--;
+            }
+            break;
+
+        case 's':
+        case 'S':
+            if(cursorX < 7) {
+                cursorX++;
+            }
+            break;
+
+        case 'd':
+        case 'D':
+            if(cursorY < 7) {
+                cursorY++;
+            }
+            break;
+
+        case 'e':
+        case 'E':
+            exit(0);
+            break;
+    }
+}
+
+/*  WRITE THE FORMULAS HERE !!
+
+
+
+
+
+
+*/
