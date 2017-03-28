@@ -33,6 +33,7 @@ struct piece {
 //  MAIN METHOD
 int main() {
     initializeBoard();
+    loadingScreen();
     do {
         printBoard();
         handleCursor();
@@ -62,7 +63,7 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
-    printf("--[w]---[a]---[s]---[d]---[e]---\n\n\n");
+    printf("--[w]---[a]---[s]---[d]---[e]---[SPACE]--\n\n\n");
     int i, j;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
@@ -175,15 +176,21 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
         case 'E':
             exit(0);
             break;
+
+        case ' ':
+            system("pause");
+            break;
     }
 }
 
 int loadingScreen() {
+    system("cls");
     int i;
     printf("Loading\n");
     for(i=0; i<10; i++) {
         printf("%c",219);
-        _sleep(500);
+        _sleep(250);
     }
+    system("cls");
     return 0;
 }
