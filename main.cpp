@@ -18,6 +18,7 @@ int printBoard();
 int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b);
 int handleCursor();
+int loadingScreen();
 
 //  DECLARING GLOBAL VARIABLES
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
@@ -177,11 +178,12 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
     }
 }
 
-/*  WRITE THE FORMULAS HERE !!
-
-
-
-
-
-
-*/
+int loadingScreen() {
+    int i;
+    printf("Loading\n");
+    for(i=0; i<10; i++) {
+        printf("%c",219);
+        _sleep(500);
+    }
+    return 0;
+}
