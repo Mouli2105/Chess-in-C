@@ -131,9 +131,9 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
 
 int swapPieces(struct piece *a, struct piece *b) {//    SWAPS TWO PIECES ON THE BOARD
     int temp;
-    temp = a->type;
-    a->type = b->type;
-    b->type = temp;
+    b = a;
+    a->type = EMPTY;
+    // a->color = ...
     return 1;
 }
 
