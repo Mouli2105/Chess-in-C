@@ -15,6 +15,8 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int king_moves();
+int knight_moves();
 int queen_moves();
 int bishop_moves();
 int pawn_moves();
@@ -31,6 +33,7 @@ int loadingScreen();
 //  DECLARING GLOBAL VARIABLES
 int moves_hash[8][8]={0};
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
+int front_color,rear_color;
 int cursorX = 0;
 int cursorY = 0;
 
@@ -61,7 +64,7 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
         }
     }
     for(i=0; i<8; i++) {
-        board[3][i].type = board[4][i].type = PAWN;
+        board[1][i].type = board[6][i].type = PAWN;
     }
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
@@ -71,11 +74,13 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     for(i=0; i<8; i++)
         board[0][i].color = WHITE;
     for(i=0; i<8; i++)
-        board[3][i].color = WHITE;
+        board[1][i].color = WHITE;
     for(i=0; i<8; i++)
         board[7][i].color = BLACK;
     for(i=0; i<8; i++)
-        board[4][i].color = BLACK;
+        board[6][i].color = BLACK;
+    front_color = 1;
+    rear_color = -1;
 
     return 1;
 }
@@ -243,19 +248,16 @@ void possible_moves()
         case BISHOP:
             bishop_moves();
             break;
-        /*case KNIGHT:
-            knight_moves(board[cursorX][cursorY].color);
+        case KNIGHT:
+            knight_moves();
             break;
         case KING:
-            king_moves(board[cursorX][cursorY].color);
-            break;*/
+            king_moves();
+            break;
         case QUEEN:
             queen_moves();
             break;
         }
-}
-int pawn_moves()
-{
 }
 //TO PRINT THE POSSIBLE MOVES OF ROOK
 int rook_moves()
@@ -511,6 +513,112 @@ int queen_moves()
         moves_hash[cursorX-i][cursorY+j]=1;
         i++;
         j++;
+    }
+}
+//TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
+int knight_moves()
+{
+    int i,j;
+    if(cursorX+2<8&&cursorY+1<8)
+    {
+        if(board[cursorX+2][cursorY+1].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX+2][cursorY+1]=1;
+
+    }
+    if(cursorX+2<8&&cursorY-1>=0)
+    {
+        if(board[cursorX+2][cursorY-1].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX+2][cursorY-1]=1;
+
+    }
+    if(cursorX-2>=0&&cursorY+1<8)
+    {
+        if(board[cursorX-2][cursorY+1].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX-2][cursorY+1]=1;
+
+    }
+    if(cursorX-2>=0&&cursorY-1>=0)
+    {
+        if(board[cursorX-2][cursorY-1].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX-2][cursorY-1]=1;
+
+    }
+    if(cursorX+1<8&&cursorY+2<8)
+    {
+        if(board[cursorX+1][cursorY+2].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX+1][cursorY+2]=1;
+    }
+    if(cursorX+1<8&&cursorY-2>=0)
+    {
+        if(board[cursorX+1][cursorY-2].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX+1][cursorY-2]=1;
+    }
+    if(cursorX-1>=0&&cursorY+2<8)
+    {
+        if(board[cursorX-1][cursorY+2].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX-1][cursorY+2]=1;
+    }
+    if(cursorX-1>=0&&cursorY-2>=0)
+    {
+        if(board[cursorX-1][cursorY-2].color!=board[cursorX][cursorY].color)
+            moves_hash[cursorX-1][cursorY-2]=1;
+    }
+}
+//TO PRINT THE POSSIBLE MOVES OF THE KING
+int king_moves()
+{
+    if(cursorX+1<8)
+    {
+        if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color)
+        moves_hash[cursorX+1][cursorY]=1;
+    }
+    if(cursorX-1>=0)
+    {
+        if(board[cursorX-1][cursorY].color!=board[cursorX][cursorY].color)
+        moves_hash[cursorX-1][cursorY]=1;
+    }
+    if(cursorY+1<8)
+    {
+        if(board[cursorX][cursorY+1].color!=board[cursorX][cursorY+1].color)
+        moves_hash[cursorX][cursorY+1]=1;
+    }
+    if(cursorY-1<8)
+    {
+        if(board[cursorX][cursorY-1].color!=board[cursorX][cursorY-1].color)
+        moves_hash[cursorX][cursorY-1]=1;
+    }
+    if(cursorX+1<8&&cursorY+1<8)
+    {
+        if(board[cursorX+1][cursorY+1].color!=board[cursorX][cursorY].color)
+        moves_hash[cursorX+1][cursorY+1]=1;
+    }
+    if(cursorX+1<8&&cursorY-1>=0)
+    {
+        if(board[cursorX+1][cursorY-1].color!=board[cursorX][cursorY].color)
+        moves_hash[cursorX+1][cursorY-1]=1;
+    }
+    if(cursorX-1>=0&&cursorY+1<8)
+    {
+        if(board[cursorX-1][cursorY+1].color!=board[cursorX][cursorY].color)
+        moves_hash[cursorX-1][cursorY+1]=1;
+    }
+    if(cursorX-1>=0&&cursorY-1>=0)
+    {
+        if(board[cursorX-1][cursorY-1].color!=board[cursorX][cursorY].color)
+        moves_hash[cursorX-1][cursorY-1]=1;
+    }
+}
+//TO PRINT THE POSSIBLE MOVES OF THE PAWN
+int pawn_moves()
+{
+    if(front_color==1&&cursorX<8)
+    {
+        if(board[cursorX+1][cursorY].color==0)
+            moves_hash[cursorX+1][cursorY]=1;
+        if(board[cursorX+1][cursorY+1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX+1][cursorY+1]=1;
+        if(board[cursorX+1][cursorY-1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX+1][cursorY-1]=1;
     }
 }
 //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
