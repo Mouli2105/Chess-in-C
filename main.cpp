@@ -47,6 +47,8 @@ int main() {
     initializeBoard();
     do {
         printBoard();
+        printf("\n");
+        system("pause");
     }while(handleCursor());
     possible_moves();
     printBoard();
@@ -162,7 +164,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                         if(moves_hash[i][j]!=1)
                             printf(" -  ");
                         else
-                            printf(" -* ");
+                            printf(" *  ");
                     }
                     break;
 
