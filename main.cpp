@@ -15,6 +15,7 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int selectPosition();
 int instructions();
 int resetMovesHash();
 int king_moves();
@@ -48,7 +49,9 @@ struct piece {
 int main() {
     initializeBoard();
     do {
+        possible_moves();
         printBoard();
+
     }while(handleCursor());
     return 0;
 }
@@ -219,10 +222,12 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
             break;
 
         case '\r':
-            possible_moves();
-            //system("pause");
+            if(board[cursorX][cursorY].type!=EMPTY) {
+                selectPosition();
+            }
             break;
     }
+
     return 1;
 }
 
@@ -653,6 +658,10 @@ int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
     printf("\na    s    d             <-    \\/   ->");
     printf("\n\n");
     printf("Press 'e' to exit the game.\n");
-    printf("Press 'Enter' to see the valid moves.\n");
-    printf("Press 'Space' to move a piece.\n\n\n");
+    printf("Press 'Enter' to select a piece to move it.\n");
+    //printf("Press 'Space' to move a piece.\n\n\n");
+}
+
+int selectPosition() {
+
 }
