@@ -15,6 +15,9 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int selectPosition();
+int instructions();
+int resetMovesHash();
 int king_moves();
 int knight_moves();
 int queen_moves();
@@ -46,13 +49,15 @@ struct piece {
 int main() {
     initializeBoard();
     do {
+        possible_moves();
         printBoard();
+//<<<<<<< HEAD
         printf("\n");
         system("pause");
+//=======
+
+//>>>>>>> 6650ca938343cf4cc646b8f6493660e9969f9a84
     }while(handleCursor());
-    possible_moves();
-    printBoard();
-    printHash();
     return 0;
 }
 
@@ -67,6 +72,8 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     }
     for(i=0; i<8; i++) {
         board[1][i].type = board[6][i].type = PAWN;
+        board[1][i].color = WHITE;
+        board[6][i].color = BLACK;
     }
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
@@ -76,11 +83,7 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     for(i=0; i<8; i++)
         board[0][i].color = WHITE;
     for(i=0; i<8; i++)
-        board[1][i].color = WHITE;
-    for(i=0; i<8; i++)
         board[7][i].color = BLACK;
-    for(i=0; i<8; i++)
-        board[6][i].color = BLACK;
     front_color = 1;
     rear_color = -1;
 
@@ -89,7 +92,7 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
-    printf("--[w]---[a]---[s]---[d]---[e]---\n\n\n");
+    instructions();
     int i, j;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
@@ -97,74 +100,78 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                 case PAWN:
                     if(i == cursorX && j == cursorY) {
                         if(moves_hash[i][j]!=1)
-                            printf("[P] ");
+                            printf(" [P] ");
                         else
-                            printf("[P]*");
+                            printf(" [P]*");
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf(" P  ");
+                            printf("  P  ");
                         else
-                            printf(" P* ");
+                            printf("  P* ");
                     }
                     break;
 
                 case ROOK:
                     if(i == cursorX && j == cursorY) {
                         if(moves_hash[i][j]!=1)
-                            printf("[R] ");
+                            printf(" [R] ");
                         else
-                            printf("[R]*");
+                            printf(" [R]* ");
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf(" R  ");
+                            printf("  R  ");
                         else
-                            printf(" R* ");
+                            printf("  R* ");
                     }
                     break;
 
                 case BISHOP:
                     if(i == cursorX && j == cursorY) {
-                        printf("[B] ");
+                        printf(" [B] ");
                     }else {
-                        printf(" B  ");
+                        printf("  B  ");
                     }
                     break;
 
                 case KNIGHT:
                     if(i == cursorX && j == cursorY) {
-                        printf("[N] ");
+                        printf(" [N] ");
                     }else {
-                        printf(" N  ");
+                        printf("  N  ");
                     }
                     break;
 
                 case QUEEN:
                     if(i == cursorX && j == cursorY) {
-                        printf("[N] ");
+                        printf(" [Q] ");
                     }else {
-                        printf(" N  ");
+                        printf("  Q  ");
                     }
                     break;
 
                 case KING:
                     if(i == cursorX && j == cursorY) {
-                        printf("[K] ");
+                        printf(" [K] ");
                     }else {
-                        printf(" K  ");
+                        printf("  K  ");
                     }
                     break;
 
                 case EMPTY:
                     if(i == cursorX && j == cursorY) {
                         if(moves_hash[i][j]!=1)
-                            printf("[-] ");
+                            printf(" [ ]  ");
                         else
-                            printf("[-]*");
+                            printf(" [ ]* ");
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf(" -  ");
+                            printf("     ");
                         else
+//<<<<<<< HEAD
                             printf(" *  ");
+//=======
+                            printf("  -  ");
+//>>>>>>> 6650ca938343cf4cc646b8f6493660e9969f9a84
                     }
                     break;
 
@@ -180,6 +187,7 @@ int swapPieces(struct piece *a, struct piece *b) {//    SWAPS TWO PIECES ON THE 
     b = a;
     a->type = EMPTY;
     // a->color = ...
+
     return 1;
 }
 
@@ -187,9 +195,11 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
     char ch;
     fflush(stdin);
     ch = getche();
+    resetMovesHash();
     switch(ch) {
         case 'w':
         case 'W':
+
             if(cursorX > 0) {
                 cursorX--;
             }
@@ -220,12 +230,15 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
         case 'E':
             exit(0);
             break;
-        case ' ':
-            system("pause");
-            break;
+
         case '\r':
-            return 0;
+            if(board[cursorX][cursorY].type!=EMPTY) {
+                selectPosition();
+            }
+            break;
     }
+
+    return 1;
 }
 
 int loadingScreen() {
@@ -622,6 +635,15 @@ int pawn_moves()
         if(board[cursorX+1][cursorY-1].color==-1*board[cursorX][cursorY].color)
             moves_hash[cursorX+1][cursorY-1]=1;
     }
+    else
+    {
+        if(board[cursorX-1][cursorY].color==0)
+            moves_hash[cursorX-1][cursorY]=1;
+        if(board[cursorX-1][cursorY-1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX-1][cursorY-1]=1;
+        if(board[cursorX-1][cursorY+1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX-1][cursorY+1]=1;
+    }
 }
 //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
 void printHash()
@@ -636,4 +658,29 @@ void printHash()
         }
         printf("\n");
     }
+}
+
+int resetMovesHash() {// RESETS THE MOVES_HASH ARRAY TO 0
+    int i, j;
+    for(i=0; i<8; i++) {
+        for(j=0; j<8; j++) {
+            moves_hash[i][j] = 0;
+        }
+    }
+}
+
+int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
+    printf("Use 'w', 'a', 's' and 'd' to move up, left, down and right respectively.");
+    printf("\n\n");
+    printf("     w                        /\\");
+    printf("\n                    =             ");
+    printf("\na    s    d             <-    \\/   ->");
+    printf("\n\n");
+    printf("Press 'e' to exit the game.\n");
+    printf("Press 'Enter' to select a piece to move it.\n");
+    //printf("Press 'Space' to move a piece.\n\n\n");
+}
+
+int selectPosition() {
+
 }
