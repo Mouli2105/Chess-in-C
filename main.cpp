@@ -15,6 +15,7 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int staleMate();
 int pieceMoves();
 int selectPosition();
 int instructions();
@@ -739,3 +740,40 @@ int pieceMoves() {
     system("pause");
 }
 
+int staleMate(int color) {//    TAKES THE COLOR AS INPUT AND RETURNS 1 IF A STALEMATE OCCURED OTHERWISE 0 IS RETURNED
+    int i, j;
+    for(i=0; i<8; i++) {
+        for(j=0; j<8; j++) {
+            if(board[i][j].color == color)
+            switch(board[i][j].type)
+            {
+            case PAWN:
+                pawn_moves();
+                break;
+            case ROOK:
+                rook_moves();
+                break;
+            case BISHOP:
+                bishop_moves();
+                break;
+            case KNIGHT:
+                knight_moves();
+                break;
+            case KING:
+                king_moves();
+                break;
+            case QUEEN:
+                queen_moves();
+                break;
+            }
+        }
+    }
+    for(i=0; i<8; i++) {
+        for(j=0; j<8; j++) {
+            if(moves_hash[i][j]) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
