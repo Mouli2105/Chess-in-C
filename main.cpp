@@ -37,6 +37,8 @@ int handleCursor();
 int loadingScreen();
 
 //  DECLARING GLOBAL VARIABLES
+int mainX;
+int mainY;
 int moves_hash[8][8]={0};
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
 int front_color,rear_color;
@@ -195,11 +197,9 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
 }
 
 int swapPieces(struct piece *a, struct piece *b) {//    SWAPS TWO PIECES ON THE BOARD
-    int temp;
-    b = a;
+    *b = *a;
     a->type = EMPTY;
-    // a->color = ...
-
+    a->color = 0;
     return 1;
 }
 
@@ -245,18 +245,20 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
 
         case '\r':
             possible_moves();
+            mainX = cursorX;
+            mainY = cursorY;
             if(board[cursorX][cursorY].type != EMPTY) {
-
                 if(isMovesHashEmpty() == 0) {
                     pieceMoves();
                     next = current;
-                    system("pause");
                     //cursorX = next->X;
                     //cursorY = next->Y;
                     int result;
                     do
                     {
                         result = selectPosition();
+                        system("cls");
+                        printBoard();
                     }while(result);
                 }else {
                     printf("NO MOVES !!\n");
@@ -730,7 +732,7 @@ int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
 
 int selectPosition() {
     char ch;
-    printf("press 'n' to go to next position or 'r' to return: ");
+    printf("press 'n' to go to next position or 'm' to move or 'r' to return: ");
     ch = getche();
     switch(ch) {
         case 'n':
@@ -743,6 +745,14 @@ int selectPosition() {
                 next = next->next;
             }
             return 1;
+            break;
+
+        case 'm':
+        case 'M':
+            if(mainX != cursorX && mainY != cursorY) {
+                swapPieces(&board[mainX][mainY], &board[cursorX][cursorY]);
+                return 0;
+            }
             break;
 
         case 'r':
@@ -762,12 +772,12 @@ int pieceMoves() {
             if(moves_hash[i][j]) {
                 next->X = i;
                 next->Y = j;
-                next = (struct node*)malloc(sizeof(struct node));
+                next->next = (struct node*)malloc(sizeof(struct node));
                 next = next->next;
             }
         }
     }
-    next->X = 100;
+    //next->X = 100;
     return 1;
 }
 
