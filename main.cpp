@@ -53,7 +53,7 @@ int main() {
         printBoard();
 //<<<<<<< HEAD
         printf("\n");
-        system("pause");
+       // system("pause");
 //=======
 
 //>>>>>>> 6650ca938343cf4cc646b8f6493660e9969f9a84
@@ -170,7 +170,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
 //<<<<<<< HEAD
                             printf(" *  ");
 //=======
-                            printf("  -  ");
+                          //  printf("  -  ");
 //>>>>>>> 6650ca938343cf4cc646b8f6493660e9969f9a84
                     }
                     break;
@@ -626,7 +626,7 @@ int king_moves()
 //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 int pawn_moves()
 {
-    if(front_color==1&&cursorX<8)
+    if(board[cursorX][cursorY].color==1&&front_color==1)
     {
         if(board[cursorX+1][cursorY].color==0)
             moves_hash[cursorX+1][cursorY]=1;
@@ -635,7 +635,25 @@ int pawn_moves()
         if(board[cursorX+1][cursorY-1].color==-1*board[cursorX][cursorY].color)
             moves_hash[cursorX+1][cursorY-1]=1;
     }
-    else
+    else if(board[cursorX][cursorY].color==-1&&front_color==1)
+    {
+        if(board[cursorX-1][cursorY].color==0)
+            moves_hash[cursorX-1][cursorY]=1;
+        if(board[cursorX-1][cursorY-1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX-1][cursorY-1]=1;
+        if(board[cursorX-1][cursorY+1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX-1][cursorY+1]=1;
+    }
+    else if(board[cursorX][cursorY].color==-1&&front_color==-1)
+    {
+        if(board[cursorX+1][cursorY].color==0)
+            moves_hash[cursorX+1][cursorY]=1;
+        if(board[cursorX+1][cursorY+1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX+1][cursorY+1]=1;
+        if(board[cursorX+1][cursorY-1].color==-1*board[cursorX][cursorY].color)
+            moves_hash[cursorX+1][cursorY-1]=1;
+    }
+    else if(board[cursorX][cursorY].color==1&&front_color==-1)
     {
         if(board[cursorX-1][cursorY].color==0)
             moves_hash[cursorX-1][cursorY]=1;
