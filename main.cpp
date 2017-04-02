@@ -15,6 +15,7 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int pieceMoves();
 int selectPosition();
 int instructions();
 int resetMovesHash();
@@ -45,6 +46,13 @@ struct piece {
     int color;
 }board[8][8];
 
+typedef struct cll{
+    int dataX;
+    int dataY;
+    cll *next;
+}cll;
+cll *start, *moves;
+
 //  MAIN METHOD
 int main() {
     initializeBoard();
@@ -71,9 +79,13 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
         board[6][i].color = BLACK;
     }
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
+    //board[3][6].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
-    board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
+    board[0][2].type = board[0][5].type = board[7][2].type = BISHOP;//board[7][5].type = BISHOP;
+    board[4][4].type = BISHOP;
     board[0][3].type = board[7][3].type = QUEEN;
+    //board[4][3].type = QUEEN;
+    //board[2][3].type = QUEEN;
     board[0][4].type = board[7][4].type = KING;
     for(i=0; i<8; i++)
         board[0][i].color = WHITE;
@@ -663,5 +675,27 @@ int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
 }
 
 int selectPosition() {
+    char ch;
+    pieceMoves();
 
 }
+
+int pieceMoves() {
+    int i, j;
+    start = (cll*)malloc(sizeof(cll));
+    moves = start;
+    for(i=0; i<8; i++) {
+        for(j=0; j<8; j++) {
+            if(moves_hash[i][j]) {
+//                moves.dataX = i;
+//                moves.dataY = j;
+                moves = moves->next;
+            }
+        }
+    }
+    moves->next = start;
+    //cursorX = start->dataX;
+    printf("%d",start->dataX);
+    system("pause");
+}
+
