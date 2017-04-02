@@ -47,26 +47,21 @@ struct piece {
     int color;
 }board[8][8];
 
-typedef struct cll{
+struct node{
     int dataX;
     int dataY;
-    cll *next;
-}cll;
-cll *start, *moves;
+    struct node *next;
+}*start, *moves;
 
 //  MAIN METHOD
 int main() {
     initializeBoard();
+    //loadingScreen();
     do {
         possible_moves();
         printBoard();
-//<<<<<<< HEAD
         printf("\n");
         resetMovesHash();
-       // system("pause");
-//=======
-
-//>>>>>>> 6650ca938343cf4cc646b8f6493660e9969f9a84
     }while(handleCursor());
     return 0;
 }
@@ -110,6 +105,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
     instructions();
     int i, j;
+    printf("\n");
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             switch(board[i][j].type) {
@@ -186,13 +182,13 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                         if(moves_hash[i][j]!=1)
                             printf("     ");
                         else
-                            printf("  -  ");
+                            printf("  *  ");
                     }
                     break;
 
             }
         }
-        printf("\n");
+        printf("\n\n");
     }
     return 1;
 }
@@ -723,13 +719,13 @@ int selectPosition() {
 
 int pieceMoves() {
     int i, j;
-    start = (cll*)malloc(sizeof(cll));
+    start = (struct node*)malloc(sizeof(struct node));
     moves = start;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             if(moves_hash[i][j]) {
-//                moves.dataX = i;
-//                moves.dataY = j;
+                moves->dataX = i;
+                moves->dataY = j;
                 moves = moves->next;
             }
         }
