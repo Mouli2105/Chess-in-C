@@ -15,6 +15,7 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int isMovesHashEmpty();
 int staleMate();
 int pieceMoves();
 int selectPosition();
@@ -48,10 +49,10 @@ struct piece {
 }board[8][8];
 
 struct node{
-    int dataX;
-    int dataY;
+    int X;
+    int Y;
     struct node *next;
-}*start, *moves;
+}*current, *next;
 
 //  MAIN METHOD
 int main() {
@@ -243,8 +244,24 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
             break;
 
         case '\r':
-            if(board[cursorX][cursorY].type!=EMPTY) {
-                selectPosition();
+            possible_moves();
+            if(board[cursorX][cursorY].type != EMPTY) {
+
+                if(isMovesHashEmpty() == 0) {
+                    pieceMoves();
+                    next = current;
+                    system("pause");
+                    //cursorX = next->X;
+                    //cursorY = next->Y;
+                    int result;
+                    do
+                    {
+                        result = selectPosition();
+                    }while(result);
+                }else {
+                    printf("NO MOVES !!\n");
+                    system("pause");
+                }
             }
             break;
     }
@@ -713,27 +730,45 @@ int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
 
 int selectPosition() {
     char ch;
-    pieceMoves();
+    printf("press 'n' to go to next position or 'r' to return: ");
+    ch = getche();
+    switch(ch) {
+        case 'n':
+        case 'N':
+            cursorX = next->X;
+            cursorY = next->Y;
+            if(next->X > 8) {
+                next = current;
+            }else {
+                next = next->next;
+            }
+            return 1;
+            break;
+
+        case 'r':
+        case 'R':
+            return 0;
+            break;
+    }
 
 }
 
 int pieceMoves() {
     int i, j;
-    start = (struct node*)malloc(sizeof(struct node));
-    moves = start;
+    current = (struct node*)malloc(sizeof(struct node));
+    next = current;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             if(moves_hash[i][j]) {
-                moves->dataX = i;
-                moves->dataY = j;
-                moves = moves->next;
+                next->X = i;
+                next->Y = j;
+                next = (struct node*)malloc(sizeof(struct node));
+                next = next->next;
             }
         }
     }
-    moves->next = start;
-    //cursorX = start->dataX;
-    printf("%d",start->dataX);
-    system("pause");
+    next->X = 100;
+    return 1;
 }
 
 int staleMate(int color) {//    TAKES THE COLOR AS INPUT AND RETURNS 1 IF A STALEMATE OCCURED OTHERWISE 0 IS RETURNED
@@ -764,6 +799,18 @@ int staleMate(int color) {//    TAKES THE COLOR AS INPUT AND RETURNS 1 IF A STAL
             }
         }
     }
+    for(i=0; i<8; i++) {
+        for(j=0; j<8; j++) {
+            if(moves_hash[i][j]) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
+    int i, j;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             if(moves_hash[i][j]) {
