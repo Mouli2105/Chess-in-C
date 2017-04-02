@@ -61,6 +61,7 @@ int main() {
         printBoard();
 //<<<<<<< HEAD
         printf("\n");
+        resetMovesHash();
        // system("pause");
 //=======
 
@@ -86,16 +87,18 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
     //board[3][6].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
-    board[0][2].type = board[0][5].type = board[7][2].type = BISHOP;//board[7][5].type = BISHOP;
-    board[4][4].type = BISHOP;
-    board[0][3].type = board[7][3].type = QUEEN;
-    //board[4][3].type = QUEEN;
-    //board[2][3].type = QUEEN;
+    board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
+    //board[4][4].type = BISHOP;
+    //board[0][3].type = board[7][3].type = QUEEN;
+    board[4][3].type = QUEEN;
+    board[2][3].type = QUEEN;
     board[0][4].type = board[7][4].type = KING;
     for(i=0; i<8; i++)
         board[0][i].color = WHITE;
     for(i=0; i<8; i++)
         board[7][i].color = BLACK;
+    board[4][3].color = WHITE;
+    board[2][3].color = BLACK;
     front_color = 1;
     rear_color = -1;
 
@@ -111,10 +114,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
             switch(board[i][j].type) {
                 case PAWN:
                     if(i == cursorX && j == cursorY) {
-                        if(moves_hash[i][j]!=1)
-                            printf(" [P] ");
-                        else
-                            printf(" [P]*");
+                        printf(" [P] ");
                     }else {
                         if(moves_hash[i][j]!=1)
                             printf("  P  ");
@@ -125,10 +125,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
 
                 case ROOK:
                     if(i == cursorX && j == cursorY) {
-                        if(moves_hash[i][j]!=1)
-                            printf(" [R] ");
-                        else
-                            printf(" [R]* ");
+                        printf(" [R] ");
                     }else {
                         if(moves_hash[i][j]!=1)
                             printf("  R  ");
@@ -141,7 +138,10 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                     if(i == cursorX && j == cursorY) {
                         printf(" [B] ");
                     }else {
-                        printf("  B  ");
+                        if(moves_hash[i][j]!=1)
+                            printf("  B  ");
+                        else
+                            printf("  B* ");
                     }
                     break;
 
@@ -149,7 +149,10 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                     if(i == cursorX && j == cursorY) {
                         printf(" [N] ");
                     }else {
-                        printf("  N  ");
+                        if(moves_hash[i][j]!=1)
+                            printf("  N  ");
+                        else
+                            printf("  N* ");
                     }
                     break;
 
@@ -157,7 +160,10 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                     if(i == cursorX && j == cursorY) {
                         printf(" [Q] ");
                     }else {
-                        printf("  Q  ");
+                        if(moves_hash[i][j]!=1)
+                            printf("  Q  ");
+                        else
+                            printf("  Q* ");
                     }
                     break;
 
@@ -165,25 +171,21 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
                     if(i == cursorX && j == cursorY) {
                         printf(" [K] ");
                     }else {
-                        printf("  K  ");
+                        if(moves_hash[i][j]!=1)
+                            printf("  K  ");
+                        else
+                            printf("  K* ");
                     }
                     break;
 
                 case EMPTY:
                     if(i == cursorX && j == cursorY) {
-                        if(moves_hash[i][j]!=1)
-                            printf(" [ ]  ");
-                        else
-                            printf(" [ ]* ");
+                            printf(" [ ] ");
                     }else {
                         if(moves_hash[i][j]!=1)
                             printf("     ");
                         else
-//<<<<<<< HEAD
-                            printf(" *  ");
-//=======
-                          //  printf("  -  ");
-//>>>>>>> 6650ca938343cf4cc646b8f6493660e9969f9a84
+                            printf("  -  ");
                     }
                     break;
 
@@ -207,7 +209,7 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
     char ch;
     fflush(stdin);
     ch = getche();
-    resetMovesHash();
+    //resetMovesHash();
     switch(ch) {
         case 'w':
         case 'W':
@@ -678,6 +680,7 @@ int pawn_moves()
 //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
 void printHash()
 {
+    resetMovesHash();
     int i,j;
     printf("\n");
     for(i=0;i<8;i++)
