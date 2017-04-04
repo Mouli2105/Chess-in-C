@@ -61,7 +61,7 @@ struct node{
 struct coord {
     int x;
     int y;
-}stacky[32];
+}stacky[32], whiteKing, blackKing;
 
 //  MAIN METHOD
 int main() {
@@ -94,6 +94,10 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
     board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
     board[0][3].type = board[7][3].type = QUEEN;
+    whiteKing.x = 0;
+    whiteKing.y = 4;
+    blackKing.x = 7;
+    blackKing.y = 4;
     board[0][4].type = board[7][4].type = KING;
     for(i=0; i<8; i++)
         board[0][i].color = WHITE;
@@ -756,6 +760,16 @@ int selectPosition(int len) {
         case 'M':
             if(mainX != cursorX || mainY != cursorY) {
                 resetMovesHash();
+                piece current = board[mainX][mainY];
+                if(current.type == KING) {
+                    if(current.color == WHITE) {
+                        whiteKing.x = cursorX;
+                        whiteKing.y = cursorY;
+                    }else if (current.color == BLACK) {
+                        blackKing.x = cursorX;
+                        blackKing.y = cursorY;
+                    }
+                }
                 swapPieces(&board[mainX][mainY], &board[cursorX][cursorY]);
                 return 0;
             }
