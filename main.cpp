@@ -15,10 +15,11 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int printStacky(int len);
 int isMovesHashEmpty();
 int staleMate();
 int pieceMoves();
-int selectPosition();
+int selectPosition(int len);
 int instructions();
 int resetMovesHash();
 int king_moves();
@@ -37,6 +38,7 @@ int handleCursor();
 int loadingScreen();
 
 //  DECLARING GLOBAL VARIABLES
+int stackPointer = -1;
 int mainX;
 int mainY;
 int moves_hash[8][8]={0};
@@ -55,6 +57,11 @@ struct node{
     int Y;
     struct node *next;
 }*current, *next;
+
+struct coord {
+    int x;
+    int y;
+}stacky[32];
 
 //  MAIN METHOD
 int main() {
@@ -245,27 +252,22 @@ int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDING
 
         case '\r':
             possible_moves();
+            int len;
+            stackPointer = -1;
+            int flag;
             mainX = cursorX;
             mainY = cursorY;
             if(board[cursorX][cursorY].type != EMPTY) {
                 if(isMovesHashEmpty() == 0) {
-                    pieceMoves();
-                    next = current;
-                    //cursorX = next->X;
-                    //cursorY = next->Y;
-                    int result;
+                    len = pieceMoves();
                     do
                     {
-                        result = selectPosition();
-                        system("cls");
                         printBoard();
-                    }while(result);
-                }else {
-                    printf("NO MOVES !!\n");
-                    system("pause");
-                }
+                        flag = selectPosition(len);
+                        //printBoard();
+                    }while(flag==1);}
             }
-            break;
+
     }
 
     return 1;
@@ -280,8 +282,7 @@ int loadingScreen() {
     }
     return 0;
 }
-void possible_moves()
-{
+void possible_moves() {
     switch(board[cursorX][cursorY].type)
         {
         case PAWN:
@@ -730,19 +731,29 @@ int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
     //printf("Press 'Space' to move a piece.\n\n\n");
 }
 
-int selectPosition() {
+int selectPosition(int len) {
     char ch;
-    printf("press 'n' to go to next position or 'm' to move or 'r' to return: ");
+    printf("'n': next piece\n");
+    printf("'p': previous piece\n");
+    printf("press 'm' to move or 'r' to return: ");
     ch = getche();
     switch(ch) {
         case 'n':
         case 'N':
-            cursorX = next->X;
-            cursorY = next->Y;
-            if(next->X > 8) {
-                next = current;
-            }else {
-                next = next->next;
+            if(stackPointer<len-1) {
+                stackPointer++;
+                cursorX = stacky[stackPointer].x;
+                cursorY = stacky[stackPointer].y;
+            }
+            return 1;
+            break;
+
+        case 'P':
+        case 'p':
+            if(stackPointer>0) {
+                stackPointer--;
+                cursorX = stacky[stackPointer].x;
+                cursorY = stacky[stackPointer].y;
             }
             return 1;
             break;
@@ -764,21 +775,21 @@ int selectPosition() {
 }
 
 int pieceMoves() {
-    int i, j;
-    current = (struct node*)malloc(sizeof(struct node));
-    next = current;
+    int i, j, k = 0;
+    //current = (struct node*)malloc(sizeof(struct node));
+    //next = current;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             if(moves_hash[i][j]) {
-                next->X = i;
-                next->Y = j;
-                next->next = (struct node*)malloc(sizeof(struct node));
-                next = next->next;
+                    stacky[k].x = i;
+                    stacky[k].y = j;
+                    k++;
             }
         }
     }
     //next->X = 100;
-    return 1;
+    //printStacky(k);
+    return k;
 }
 
 int staleMate(int color) {//    TAKES THE COLOR AS INPUT AND RETURNS 1 IF A STALEMATE OCCURED OTHERWISE 0 IS RETURNED
@@ -829,4 +840,14 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
         }
     }
     return 1;
+}
+
+int printStacky(int len) {
+    system("cls");
+    int i;
+    for(i=0; i<len; i++) {
+        printf("%d\t%d\n", stacky[i].x, stacky[i].y);
+    }
+    system("pause");
+    system("cls");
 }
