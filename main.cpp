@@ -49,15 +49,9 @@ int cursorX = 0;
 int cursorY = 0;
 
 struct piece {
-    int type;// LIKE PAWN, ROOK, BISHOP, etc
+    int type;
     int color;
 }board[8][8];
-
-struct node{
-    int X;
-    int Y;
-    struct node *next;
-}*current, *next;
 
 struct coord {
     int x;
@@ -67,7 +61,6 @@ struct coord {
 //  MAIN METHOD
 int main() {
     initializeBoard();
-    //loadingScreen();
     int col = WHITE;
     do {
         if(moved) {
@@ -119,7 +112,6 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
-    //instructions();
     int i, j;
     for(i=0; i<8; i++) {
         printf(" %c", 218);
@@ -241,7 +233,6 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     int i, j;
     fflush(stdin);
     ch = getche();
-    //resetMovesHash();
     switch(ch) {
         case 'w':
         case 'W':
@@ -288,6 +279,11 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             exit(0);
             break;
 
+        case 'i':
+        case 'I':
+            instructions();
+            return 1;
+
         case '\r':
             possible_moves();
             int len;
@@ -302,7 +298,6 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                     {
                         printBoard();
                         flag = selectPosition(len);
-                        //printBoard();
                     }while(flag==1);}
             }
 
@@ -752,22 +747,26 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
 }
 
 int instructions() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
-    printf("Use 'w', 'a', 's' and 'd' to move up, left, down and right respectively.");
+    system("cls");
+    printf("W: UP\n");
+    printf("A: LEFT\n");
+    printf("S: DOWN\n");
+    printf("D: RIGHT\n");
+    printf("ENTER: SELECT PIECE\n");
+    printf("\n");
+    printf("E: EXIT\n");
     printf("\n\n");
-    printf("     w                        /\\");
-    printf("\n                    =             ");
-    printf("\na    s    d             <-    \\/   ->");
-    printf("\n\n");
-    printf("Press 'e' to exit the game.\n");
-    printf("Press 'Enter' to select a piece to move it.\n");
-    //printf("Press 'Space' to move a piece.\n\n\n");
+    system("pause");
+    system("cls");
 }
 
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
     char ch;
-    printf("'n': next piece\n");
-    printf("'p': previous piece\n");
-    printf("press 'm' to move or 'r' to return: ");
+    printf("N: NEXT PIECE\n");
+    printf("P: PREVIOUS PIECE\n");
+    printf("M: MOVE\n");
+    printf("R: RETURN\n\n");
+    printf("ENTER:  ");
     ch = getche();
     switch(ch) {
         case 'n':
@@ -820,8 +819,6 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
 
 int pieceMoves() {  //  INITIALISES A STACK WITH ALL POSSIBLE MOVES FOR TRAVERSAL
     int i, j, k = 0;
-    //current = (struct node*)malloc(sizeof(struct node));
-    //next = current;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             if(moves_hash[i][j]) {
@@ -831,8 +828,6 @@ int pieceMoves() {  //  INITIALISES A STACK WITH ALL POSSIBLE MOVES FOR TRAVERSA
             }
         }
     }
-    //next->X = 100;
-    //printStacky(k);
     return k;
 }
 
