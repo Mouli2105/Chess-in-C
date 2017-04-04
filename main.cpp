@@ -34,10 +34,11 @@ int mainMenu();
 int printBoard();
 int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b);
-int handleCursor();
+int handleCursor(int color);
 int loadingScreen();
 
 //  DECLARING GLOBAL VARIABLES
+int moved = 0;
 int stackPointer = -1;
 int mainX;
 int mainY;
@@ -67,12 +68,17 @@ struct coord {
 int main() {
     initializeBoard();
     //loadingScreen();
+    int col = WHITE;
     do {
+        if(moved) {
+            col *= -1;
+        }
+        moved = 0;
         possible_moves();
         printBoard();
         printf("\n");
         resetMovesHash();
-    }while(handleCursor());
+    }while(handleCursor(col));
     return 0;
 }
 
@@ -87,8 +93,6 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     }
     for(i=0; i<8; i++) {
         board[1][i].type = board[6][i].type = PAWN;
-        board[1][i].color = WHITE;
-        board[6][i].color = BLACK;
     }
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
@@ -99,10 +103,14 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     blackKing.x = 7;
     blackKing.y = 4;
     board[0][4].type = board[7][4].type = KING;
-    for(i=0; i<8; i++)
+    for(i=0; i<8; i++) {
         board[0][i].color = WHITE;
-    for(i=0; i<8; i++)
+        board[1][i].color = WHITE;
+    }
+    for(i=0; i<8; i++) {
+        board[6][i].color = BLACK;
         board[7][i].color = BLACK;
+    }
     front_color = 1;
     rear_color = -1;
 
@@ -208,38 +216,50 @@ int swapPieces(struct piece *a, struct piece *b) {//    SWAPS TWO PIECES ON THE 
     return 1;
 }
 
-int handleCursor() {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDINGLY
+int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDINGLY
     char ch;
+    int i, j;
     fflush(stdin);
     ch = getche();
     //resetMovesHash();
     switch(ch) {
         case 'w':
         case 'W':
-
-            if(cursorX > 0) {
-                cursorX--;
+            for(i=cursorX-1; i>=0; i--) {
+                if(board[i][cursorY].color == col) {
+                    cursorX = i;
+                    break;
+                }
             }
             return 1;
 
         case 'a':
         case 'A':
-            if(cursorY > 0) {
-                cursorY--;
+            for(j=cursorY-1; j>=0; j--) {
+                if(board[cursorX][j].color == col) {
+                    cursorY = j;
+                    break;
+                }
             }
             return 1;
 
         case 's':
         case 'S':
-            if(cursorX < 7) {
-                cursorX++;
+            for(i=cursorX+1; i<8; i++) {
+                if(board[i][cursorY].color == col) {
+                    cursorX = i;
+                    break;
+                }
             }
             return 1;
 
         case 'd':
         case 'D':
-            if(cursorY < 7) {
-                cursorY++;
+            for(j=cursorY+1; j<8; j++) {
+                if(board[cursorX][j].color == col) {
+                    cursorY = j;
+                    break;
+                }
             }
             return 1;
 
@@ -771,6 +791,7 @@ int selectPosition(int len) {
                     }
                 }
                 swapPieces(&board[mainX][mainY], &board[cursorX][cursorY]);
+                moved = 1;
                 return 0;
             }
             break;
