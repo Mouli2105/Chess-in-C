@@ -119,92 +119,112 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
-    instructions();
+    //instructions();
     int i, j;
-    printf("\n");
     for(i=0; i<8; i++) {
+        printf(" %c", 218);
+        for(j=1; j<48; j++) {
+            if(j%6==0 && j!=0 && j!=48) {
+                printf("%c  %c", 191, 218);
+            }else {
+                printf("%c", 196);
+            }
+        }
+        printf("%c\n", 191);
         for(j=0; j<8; j++) {
             switch(board[i][j].type) {
                 case PAWN:
                     if(i == cursorX && j == cursorY) {
-                        printf(" [P] ");
+                        printf(" %c%c P %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("  P  ");
+                            printf(" %c  P  %c ", 179, 179);
                         else
-                            printf("  P* ");
+                            printf(" %c %cP%c %c ", 179, 222, 221, 179);
                     }
                     break;
 
                 case ROOK:
                     if(i == cursorX && j == cursorY) {
-                        printf(" [R] ");
+                        printf(" %c%c R %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("  R  ");
+                            printf(" %c  R  %c ", 179, 179);
                         else
-                            printf("  R* ");
+                            printf(" %c %cR%c %c ", 179, 222, 221, 179);
                     }
                     break;
 
                 case BISHOP:
                     if(i == cursorX && j == cursorY) {
-                        printf(" [B] ");
+                        printf(" %c%c B %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("  B  ");
+                            printf(" %c  B  %c ", 179, 179);
                         else
-                            printf("  B* ");
+                            printf(" %c %cB%c %c ", 179, 222, 221, 179);;
                     }
                     break;
 
                 case KNIGHT:
                     if(i == cursorX && j == cursorY) {
-                        printf(" [N] ");
+                        printf(" %c%c N %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("  N  ");
+                            printf(" %c  N  %c ", 179, 179);
                         else
-                            printf("  N* ");
+                            printf(" %c %cN%c %c ", 179, 222, 221, 179);
                     }
                     break;
 
                 case QUEEN:
                     if(i == cursorX && j == cursorY) {
-                        printf(" [Q] ");
+                        printf(" %c%c Q %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("  Q  ");
+                            printf(" %c  Q  %c ", 179, 179);
                         else
-                            printf("  Q* ");
+                            printf(" %c %cQ%c %c ", 179, 222, 221, 179);
                     }
                     break;
 
                 case KING:
                     if(i == cursorX && j == cursorY) {
-                        printf(" [K] ");
+                        printf(" %c%c K %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("  K  ");
+                            printf(" %c  K  %c ", 179, 179);
                         else
-                            printf("  K* ");
+                            printf(" %c %cK%c %c ", 179, 222, 221, 179);
                     }
                     break;
 
                 case EMPTY:
                     if(i == cursorX && j == cursorY) {
-                            printf(" [ ] ");
+                        printf(" %c%c   %c%c ", 175, 175, 174, 174);
                     }else {
                         if(moves_hash[i][j]!=1)
-                            printf("     ");
+                            printf(" %c     %c ", 179, 179);
                         else
-                            printf("  *  ");
+                            printf(" %c  %c  %c ", 179, 219, 179);
                     }
                     break;
 
             }
         }
-        printf("\n\n");
+        printf("\n");
+        printf(" %c", 192);
+        for(j=1; j<48; j++) {
+            if(j%6==0 && j!=0 && j!=48) {
+                printf("%c  %c", 217, 192);
+            }else {
+                printf("%c", 196);
+            }
+        }
+        printf("%c", 217);
+        printf("\n");
+
+
     }
     return 1;
 }
