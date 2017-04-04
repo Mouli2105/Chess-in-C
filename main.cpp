@@ -15,6 +15,7 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int check();
 int printStacky(int len);
 int isMovesHashEmpty();
 int staleMate();
@@ -92,7 +93,7 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
     board[0][3].type = board[7][3].type = QUEEN;
     whiteKing.x = 0;
-    whiteKing.y = 4;
+    whiteKing.y = 4;//  USE THESE
     blackKing.x = 7;
     blackKing.y = 4;
     board[0][4].type = board[7][4].type = KING;
@@ -805,6 +806,8 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
                 }
                 swapPieces(&board[mainX][mainY], &board[cursorX][cursorY]);
                 moved = 1;
+                cursorX = mainX;
+                cursorY = mainY;
                 return 0;
             }
             break;
@@ -879,4 +882,10 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
         }
     }
     return 1;
+}
+
+int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
+    int ans = 0;
+    //  NOT YET IMPLEMENTED
+    return ans;
 }
