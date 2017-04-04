@@ -91,20 +91,14 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
         board[6][i].color = BLACK;
     }
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
-    //board[3][6].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
     board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
-    //board[4][4].type = BISHOP;
-    //board[0][3].type = board[7][3].type = QUEEN;
-    board[4][3].type = QUEEN;
-    board[2][3].type = QUEEN;
+    board[0][3].type = board[7][3].type = QUEEN;
     board[0][4].type = board[7][4].type = KING;
     for(i=0; i<8; i++)
         board[0][i].color = WHITE;
     for(i=0; i<8; i++)
         board[7][i].color = BLACK;
-    board[4][3].color = WHITE;
-    board[2][3].color = BLACK;
     front_color = 1;
     rear_color = -1;
 
@@ -760,7 +754,8 @@ int selectPosition(int len) {
 
         case 'm':
         case 'M':
-            if(mainX != cursorX && mainY != cursorY) {
+            if(mainX != cursorX || mainY != cursorY) {
+                resetMovesHash();
                 swapPieces(&board[mainX][mainY], &board[cursorX][cursorY]);
                 return 0;
             }
