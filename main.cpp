@@ -62,7 +62,7 @@ struct node{
 struct coord {
     int x;
     int y;
-}stacky[32], whiteKing, blackKing;
+}positionStack[32], whiteKing, blackKing;
 
 //  MAIN METHOD
 int main() {
@@ -311,7 +311,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     return 1;
 }
 
-int loadingScreen() {
+int loadingScreen() {   //  DISPLAYS THE LOADING SCREEN
     int i;
     printf("Loading\n");
     for(i=0; i<10; i++) {
@@ -320,7 +320,8 @@ int loadingScreen() {
     }
     return 0;
 }
-void possible_moves() {
+
+void possible_moves() { //  FIND THE POSSIBLE MOVES OF CURRENT PIECE
     switch(board[cursorX][cursorY].type)
         {
         case PAWN:
@@ -343,9 +344,8 @@ void possible_moves() {
             break;
         }
 }
-//TO PRINT THE POSSIBLE MOVES OF ROOK
-int rook_moves()
-{
+
+int rook_moves() {//    TO PRINT THE POSSIBLE MOVES OF ROOK
     int i,j;
     i=1;
     while(cursorX+i<8)
@@ -409,9 +409,8 @@ int rook_moves()
     }
 
 }
-//TO PRINT THE POSSIBLE MOVES OF BISHOP
-int bishop_moves()
-{
+
+int bishop_moves() {    //TO PRINT THE POSSIBLE MOVES OF BISHOP
     int i,j;
     i=1;
     j=1;
@@ -474,9 +473,8 @@ int bishop_moves()
         j++;
     }
 }
-//TO PRINT THE POSSIBLE MOVES OF QUEEN
-int queen_moves()
-{
+
+int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
     int i,j;
     i=1;
     while(cursorX+i<8)
@@ -599,9 +597,8 @@ int queen_moves()
         j++;
     }
 }
-//TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
-int knight_moves()
-{
+
+int knight_moves() {    //TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
     int i,j;
     if(cursorX+2<8&&cursorY+1<8)
     {
@@ -648,9 +645,8 @@ int knight_moves()
             moves_hash[cursorX-1][cursorY-2]=1;
     }
 }
-//TO PRINT THE POSSIBLE MOVES OF THE KING
-int king_moves()
-{
+
+int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
     if(cursorX+1<8)
     {
         if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color)
@@ -692,9 +688,8 @@ int king_moves()
         moves_hash[cursorX-1][cursorY-1]=1;
     }
 }
-//TO PRINT THE POSSIBLE MOVES OF THE PAWN
-int pawn_moves()
-{
+
+int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
     if(board[cursorX][cursorY].color==1&&front_color==1)
     {
         if(board[cursorX+1][cursorY].color==0)
@@ -732,9 +727,8 @@ int pawn_moves()
             moves_hash[cursorX-1][cursorY+1]=1;
     }
 }
-//TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
-void printHash()
-{
+
+void printHash() {  //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
     resetMovesHash();
     int i,j;
     printf("\n");
@@ -748,7 +742,7 @@ void printHash()
     }
 }
 
-int resetMovesHash() {// RESETS THE MOVES_HASH ARRAY TO 0
+int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
     int i, j;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
@@ -757,7 +751,7 @@ int resetMovesHash() {// RESETS THE MOVES_HASH ARRAY TO 0
     }
 }
 
-int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
+int instructions() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
     printf("Use 'w', 'a', 's' and 'd' to move up, left, down and right respectively.");
     printf("\n\n");
     printf("     w                        /\\");
@@ -769,7 +763,7 @@ int instructions() {//  DISPLAYS THE INSTRUCTIONS OF GAME
     //printf("Press 'Space' to move a piece.\n\n\n");
 }
 
-int selectPosition(int len) {
+int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
     char ch;
     printf("'n': next piece\n");
     printf("'p': previous piece\n");
@@ -780,8 +774,8 @@ int selectPosition(int len) {
         case 'N':
             if(stackPointer<len-1) {
                 stackPointer++;
-                cursorX = stacky[stackPointer].x;
-                cursorY = stacky[stackPointer].y;
+                cursorX = positionStack[stackPointer].x;
+                cursorY = positionStack[stackPointer].y;
             }
             return 1;
             break;
@@ -790,8 +784,8 @@ int selectPosition(int len) {
         case 'p':
             if(stackPointer>0) {
                 stackPointer--;
-                cursorX = stacky[stackPointer].x;
-                cursorY = stacky[stackPointer].y;
+                cursorX = positionStack[stackPointer].x;
+                cursorY = positionStack[stackPointer].y;
             }
             return 1;
             break;
@@ -824,15 +818,15 @@ int selectPosition(int len) {
 
 }
 
-int pieceMoves() {
+int pieceMoves() {  //  INITIALISES A STACK WITH ALL POSSIBLE MOVES FOR TRAVERSAL
     int i, j, k = 0;
     //current = (struct node*)malloc(sizeof(struct node));
     //next = current;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
             if(moves_hash[i][j]) {
-                    stacky[k].x = i;
-                    stacky[k].y = j;
+                    positionStack[k].x = i;
+                    positionStack[k].y = j;
                     k++;
             }
         }
@@ -890,14 +884,4 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
         }
     }
     return 1;
-}
-
-int printStacky(int len) {
-    system("cls");
-    int i;
-    for(i=0; i<len; i++) {
-        printf("%d\t%d\n", stacky[i].x, stacky[i].y);
-    }
-    system("pause");
-    system("cls");
 }
