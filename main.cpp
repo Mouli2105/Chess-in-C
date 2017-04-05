@@ -37,6 +37,9 @@ int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b);
 int handleCursor(int color);
 int loadingScreen();
+int setCursor();
+int setHashCheckMate();
+void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
 int moved = 0;
@@ -44,10 +47,13 @@ int stackPointer = -1;
 int mainX;
 int mainY;
 int moves_hash[8][8]={0};
+int checkmate_hash[8][8]={0};
 int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
 int front_color,rear_color;
 int cursorX = 0;
 int cursorY = 0;
+int col = WHITE;
+int check_flag;
 
 struct piece {
     int type;
@@ -62,12 +68,7 @@ struct coord {
 //  MAIN METHOD
 int main() {
     initializeBoard();
-    int col = WHITE;
     do {
-        if(moved) {
-            col *= -1;
-        }
-        moved = 0;
         possible_moves();
         printBoard();
         printf("\n");
@@ -76,6 +77,38 @@ int main() {
     return 0;
 }
 
+int setHashCheckMate()
+{
+    int i,j;
+        check_flag = 1;
+            for(i=0; i<8; i++) {
+        for(j=0; j<8; j++) {
+            if(board[i][j].color == col)
+            switch(board[i][j].type)
+            {
+            case PAWN:
+                pawn_moves();
+                break;
+            case ROOK:
+                rook_moves();
+                break;
+            case BISHOP:
+                bishop_moves();
+                break;
+            case KNIGHT:
+                knight_moves();
+                break;
+            case KING:
+                king_moves();
+                break;
+            case QUEEN:
+                queen_moves();
+                break;
+            }
+        }
+    }
+    check_flag = 0;
+}
 //  OTHER METHODS
 int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISITION
     int i,j;
@@ -240,7 +273,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             for(i=cursorX-1; i>=0; i--) {
                 if(board[i][cursorY].color == col) {
                     cursorX = i;
-                    break;
+                    return 1;
                 }
             }
             return 1;
@@ -250,7 +283,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             for(j=cursorY-1; j>=0; j--) {
                 if(board[cursorX][j].color == col) {
                     cursorY = j;
-                    break;
+                    return 1;
                 }
             }
             return 1;
@@ -260,7 +293,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             for(i=cursorX+1; i<8; i++) {
                 if(board[i][cursorY].color == col) {
                     cursorX = i;
-                    break;
+                    return 1;
                 }
             }
             return 1;
@@ -270,7 +303,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             for(j=cursorY+1; j<8; j++) {
                 if(board[cursorX][j].color == col) {
                     cursorY = j;
-                    break;
+                    return 1;
                 }
             }
             return 1;
@@ -352,10 +385,16 @@ int rook_moves() {//    TO PRINT THE POSSIBLE MOVES OF ROOK
         }
         else if(board[cursorX+i][cursorY].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX+i][cursorY]=1;
+            if(check_flag)
+            checkmate_hash[cursorX+i][cursorY] = 1;
+            else
+            moves_hash[cursorX+i][cursorY] = 1;
             break;
         }
-        moves_hash[cursorX+i][cursorY]=1;
+        if(check_flag)
+        checkmate_hash[cursorX+i][cursorY] = 1;
+        else
+        moves_hash[cursorX+i][cursorY] = 1;
         i++;
     }
     i=1;
@@ -367,10 +406,16 @@ int rook_moves() {//    TO PRINT THE POSSIBLE MOVES OF ROOK
         }
         else if(board[cursorX-i][cursorY].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX-i][cursorY]=1;
+            if(check_flag)
+            checkmate_hash[cursorX-i][cursorY] = 1;
+            else
+            moves_hash[cursorX-i][cursorY] = 1;
             break;
         }
-        moves_hash[cursorX-i][cursorY]=1;
+        if(check_flag)
+        checkmate_hash[cursorX-i][cursorY] = 1;
+        else
+        moves_hash[cursorX-i][cursorY] = 1;
         i++;
     }
     i=1;
@@ -382,10 +427,16 @@ int rook_moves() {//    TO PRINT THE POSSIBLE MOVES OF ROOK
         }
         else if(board[cursorX][cursorY+i].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX][cursorY+i]=1;
+            if(check_flag)
+            checkmate_hash[cursorX][cursorY+i] = 1;
+            else
+            moves_hash[cursorX][cursorY+i] = 1;
             break;
         }
-        moves_hash[cursorX][cursorY+i]=1;
+        if(check_flag)
+        checkmate_hash[cursorX][cursorY+i] = 1;
+        else
+        moves_hash[cursorX][cursorY+i] = 1;
         i++;
     }
     i=1;
@@ -397,10 +448,16 @@ int rook_moves() {//    TO PRINT THE POSSIBLE MOVES OF ROOK
         }
         else if(board[cursorX][cursorY-i].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX][cursorY-i]=1;
+            if(check_flag)
+            checkmate_hash[cursorX][cursorY-i] = 1;
+            else
+            moves_hash[cursorX][cursorY-i] = 1;
             break;
         }
-        moves_hash[cursorX][cursorY-i]=1;
+        if(check_flag)
+        checkmate_hash[cursorX][cursorY-i] = 1;
+        else
+        moves_hash[cursorX][cursorY-i] = 1;
         i++;
     }
 
@@ -416,10 +473,16 @@ int bishop_moves() {    //TO PRINT THE POSSIBLE MOVES OF BISHOP
             break;
         else if(board[cursorX+i][cursorY+j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX+i][cursorY+j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX+i][cursorY+j]=1;
+            else
+                moves_hash[cursorX+i][cursorY+j]=1;
             break;
         }
-        moves_hash[cursorX+i][cursorY+j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX+i][cursorY+j]=1;
+        else
+            moves_hash[cursorX+i][cursorY+j]=1;
         i++;
         j++;
     }
@@ -431,10 +494,16 @@ int bishop_moves() {    //TO PRINT THE POSSIBLE MOVES OF BISHOP
             break;
         else if(board[cursorX+i][cursorY-j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX+i][cursorY-j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX+i][cursorY-j]=1;
+            else
+                moves_hash[cursorX+i][cursorY-j]=1;
             break;
         }
-        moves_hash[cursorX+i][cursorY-j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX+i][cursorY-j]=1;
+        else
+            moves_hash[cursorX+i][cursorY-j]=1;
         i++;
         j++;
     }
@@ -446,10 +515,16 @@ int bishop_moves() {    //TO PRINT THE POSSIBLE MOVES OF BISHOP
             break;
         else if(board[cursorX-i][cursorY-j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX-i][cursorY-j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX-i][cursorY-j]=1;
+            else
+                moves_hash[cursorX-i][cursorY-j]=1;
             break;
         }
-        moves_hash[cursorX-i][cursorY-j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX-i][cursorY-j]=1;
+        else
+            moves_hash[cursorX-i][cursorY-j]=1;
         i++;
         j++;
     }
@@ -461,10 +536,16 @@ int bishop_moves() {    //TO PRINT THE POSSIBLE MOVES OF BISHOP
             break;
         else if(board[cursorX-i][cursorY+j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX-i][cursorY+j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX-i][cursorY+j]=1;
+            else
+                moves_hash[cursorX-i][cursorY+j]=1;
             break;
         }
-        moves_hash[cursorX-i][cursorY+j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX-i][cursorY+j]=1;
+        else
+            moves_hash[cursorX-i][cursorY+j]=1;
         i++;
         j++;
     }
@@ -481,10 +562,16 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
         }
         else if(board[cursorX+i][cursorY].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX+i][cursorY]=1;
+            if(check_flag)
+            checkmate_hash[cursorX+i][cursorY] = 1;
+            else
+            moves_hash[cursorX+i][cursorY] = 1;
             break;
         }
-        moves_hash[cursorX+i][cursorY]=1;
+        if(check_flag)
+        checkmate_hash[cursorX+i][cursorY] = 1;
+        else
+        moves_hash[cursorX+i][cursorY] = 1;
         i++;
     }
     i=1;
@@ -496,10 +583,16 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
         }
         else if(board[cursorX-i][cursorY].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX-i][cursorY]=1;
+            if(check_flag)
+            checkmate_hash[cursorX-i][cursorY] = 1;
+            else
+            moves_hash[cursorX-i][cursorY] = 1;
             break;
         }
-        moves_hash[cursorX-i][cursorY]=1;
+        if(check_flag)
+        checkmate_hash[cursorX-i][cursorY] = 1;
+        else
+        moves_hash[cursorX-i][cursorY] = 1;
         i++;
     }
     i=1;
@@ -511,10 +604,16 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
         }
         else if(board[cursorX][cursorY+i].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX][cursorY+i]=1;
+            if(check_flag)
+            checkmate_hash[cursorX][cursorY+i] = 1;
+            else
+            moves_hash[cursorX][cursorY+i] = 1;
             break;
         }
-        moves_hash[cursorX][cursorY+i]=1;
+        if(check_flag)
+        checkmate_hash[cursorX][cursorY+i] = 1;
+        else
+        moves_hash[cursorX][cursorY+i] = 1;
         i++;
     }
     i=1;
@@ -526,13 +625,18 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
         }
         else if(board[cursorX][cursorY-i].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX][cursorY-i]=1;
+            if(check_flag)
+            checkmate_hash[cursorX][cursorY-i] = 1;
+            else
+            moves_hash[cursorX][cursorY-i] = 1;
             break;
         }
-        moves_hash[cursorX][cursorY-i]=1;
+        if(check_flag)
+        checkmate_hash[cursorX][cursorY-i] = 1;
+        else
+        moves_hash[cursorX][cursorY-i] = 1;
         i++;
     }
-    i=1;
     j=1;
     while(cursorX+i<8&&cursorY+i<8)
     {
@@ -540,10 +644,16 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
             break;
         else if(board[cursorX+i][cursorY+j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX+i][cursorY+j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX+i][cursorY+j]=1;
+            else
+                moves_hash[cursorX+i][cursorY+j]=1;
             break;
         }
-        moves_hash[cursorX+i][cursorY+j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX+i][cursorY+j]=1;
+        else
+            moves_hash[cursorX+i][cursorY+j]=1;
         i++;
         j++;
     }
@@ -555,10 +665,16 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
             break;
         else if(board[cursorX+i][cursorY-j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX+i][cursorY-j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX+i][cursorY-j]=1;
+            else
+                moves_hash[cursorX+i][cursorY-j]=1;
             break;
         }
-        moves_hash[cursorX+i][cursorY-j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX+i][cursorY-j]=1;
+        else
+            moves_hash[cursorX+i][cursorY-j]=1;
         i++;
         j++;
     }
@@ -570,10 +686,16 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
             break;
         else if(board[cursorX-i][cursorY-j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX-i][cursorY-j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX-i][cursorY-j]=1;
+            else
+                moves_hash[cursorX-i][cursorY-j]=1;
             break;
         }
-        moves_hash[cursorX-i][cursorY-j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX-i][cursorY-j]=1;
+        else
+            moves_hash[cursorX-i][cursorY-j]=1;
         i++;
         j++;
     }
@@ -585,13 +707,20 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
             break;
         else if(board[cursorX-i][cursorY+j].color==-1*board[cursorX][cursorY].color)
         {
-            moves_hash[cursorX-i][cursorY+j]=1;
+            if(check_flag)
+                checkmate_hash[cursorX-i][cursorY+j]=1;
+            else
+                moves_hash[cursorX-i][cursorY+j]=1;
             break;
         }
-        moves_hash[cursorX-i][cursorY+j]=1;
+        if(check_flag)
+            checkmate_hash[cursorX-i][cursorY+j]=1;
+        else
+            moves_hash[cursorX-i][cursorY+j]=1;
         i++;
         j++;
     }
+
 }
 
 int knight_moves() {    //TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
@@ -763,6 +892,7 @@ int instructions() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
 
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
     char ch;
+    int ifCheck;
     printf("N: NEXT PIECE\n");
     printf("P: PREVIOUS PIECE\n");
     printf("M: MOVE\n");
@@ -795,19 +925,25 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
             if(mainX != cursorX || mainY != cursorY) {
                 resetMovesHash();
                 piece current = board[mainX][mainY];
-                if(current.type == KING) {
-                    if(current.color == WHITE) {
-                        whiteKing.x = cursorX;
-                        whiteKing.y = cursorY;
-                    }else if (current.color == BLACK) {
-                        blackKing.x = cursorX;
-                        blackKing.y = cursorY;
-                    }
-                }
                 swapPieces(&board[mainX][mainY], &board[cursorX][cursorY]);
-                moved = 1;
-                cursorX = mainX;
-                cursorY = mainY;
+                setHashCheckMate();
+                ifCheck=check();
+                moved++;
+                setCursor();
+                if(moved%2==0) {
+                    col = WHITE;
+                }
+                else
+                {
+                    col = BLACK;
+                }
+                resetMovesHash();
+                if(ifCheck==1)
+                {
+                    printf("CHECK TO BLACK\n");
+                    _beep(1500,500);
+                    system("pause");
+                }
                 return 0;
             }
             break;
@@ -819,7 +955,50 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     }
 
 }
-
+void resetCheckHash()
+{
+    int i,j;
+    for(i = 0;i < 8;i++)
+    {
+        for(j = 0;j < 8;j++)
+        {
+            checkmate_hash[i][j] = 0;
+        }
+    }
+}
+int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
+    int i,j;
+    for(i = 0;i < 8;i++)
+    {
+        for(j = 0;j < 8;j++)
+        {
+            if(board[i][j].type == KING&&board[i][j].color == -1*col)
+            {
+                if(checkmate_hash[i][j] == 1)
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
+int setCursor()
+{
+    int i,j;
+    //col = col * -1;
+    for(i = 0;i < 8; i++)
+    {
+        for(j = 0 ; j < 8 ; j++)
+        {
+            if(board[i][j].color == -1*col)
+            {
+                cursorX = i;
+                cursorY = j;
+                return 1;
+            }
+        }
+    }
+    return 1;
+}
 int pieceMoves() {  //  INITIALISES A STACK WITH ALL POSSIBLE MOVES FOR TRAVERSAL
     int i, j, k = 0;
     for(i=0; i<8; i++) {
@@ -884,8 +1063,3 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
     return 1;
 }
 
-int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
-    int ans = 0;
-    //  NOT YET IMPLEMENTED
-    return ans;
-}
