@@ -47,13 +47,13 @@ int setHashCheckMate();
 void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
+int started = 0;
 int moved = 0;
 int stackPointer = -1;
 int mainX;
 int mainY;
 int moves_hash[8][8]={0};
 int checkmate_hash[8][8]={0};
-int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
 int front_color,rear_color;
 int cursorX = 0;
 int cursorY = 0;
@@ -72,7 +72,9 @@ struct coord {
 
 //  MAIN METHOD
 int main() {
-    //welcome();
+    if(started == 0) {
+        welcome();
+    }
     system("color 0a");
     int a;
     int endGame = 0;
@@ -104,6 +106,7 @@ int main() {
 
         }
     }while(a!=1 && a!=5 && endGame==0);
+    started = 1;
     if(endGame) {
         main();
     }
@@ -307,6 +310,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     switch(ch) {
         case 'w':
         case 'W':
+            _beep(250, 100);
             for(i=cursorX-1; i>=0; i--) {
                 if(board[i][cursorY].color == col) {
                     cursorX = i;
@@ -317,6 +321,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 'a':
         case 'A':
+            _beep(300, 100);
             for(j=cursorY-1; j>=0; j--) {
                 if(board[cursorX][j].color == col) {
                     cursorY = j;
@@ -327,6 +332,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 's':
         case 'S':
+            _beep(350, 100);
             for(i=cursorX+1; i<8; i++) {
                 if(board[i][cursorY].color == col) {
                     cursorX = i;
@@ -337,6 +343,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 'd':
         case 'D':
+            _beep(400, 100);
             for(j=cursorY+1; j<8; j++) {
                 if(board[cursorX][j].color == col) {
                     cursorY = j;
