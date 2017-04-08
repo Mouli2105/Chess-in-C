@@ -54,6 +54,7 @@ int cursorX = 0;
 int cursorY = 0;
 int col = WHITE;
 int check_flag;
+int ifCheck;
 
 struct piece {
     int type;
@@ -728,53 +729,93 @@ int knight_moves() {    //TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
     if(cursorX+2<8&&cursorY+1<8)
     {
         if(board[cursorX+2][cursorY+1].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX+2][cursorY+1]=1;
+            {
+                if(check_flag)
+                    checkmate_hash[cursorX+2][cursorY+1]=1;
+                else
+                    moves_hash[cursorX+2][cursorY+1]=1;
+            }
 
     }
     if(cursorX+2<8&&cursorY-1>=0)
     {
         if(board[cursorX+2][cursorY-1].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX+2][cursorY-1]=1;
+            {
+                if(check_flag)
+                    checkmate_hash[cursorX+2][cursorY-1]=1;
+                else
+                    moves_hash[cursorX+2][cursorY-1]=1;
+            }
 
     }
     if(cursorX-2>=0&&cursorY+1<8)
     {
         if(board[cursorX-2][cursorY+1].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX-2][cursorY+1]=1;
-
+        {
+            if(check_flag)
+                    checkmate_hash[cursorX-2][cursorY+1]=1;
+                else
+                    moves_hash[cursorX-2][cursorY+1]=1;
+        }
     }
     if(cursorX-2>=0&&cursorY-1>=0)
     {
         if(board[cursorX-2][cursorY-1].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX-2][cursorY-1]=1;
-
+        {
+            if(check_flag)
+                    checkmate_hash[cursorX-2][cursorY-1]=1;
+                else
+                    moves_hash[cursorX-2][cursorY-1]=1;
+        }
     }
     if(cursorX+1<8&&cursorY+2<8)
     {
         if(board[cursorX+1][cursorY+2].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX+1][cursorY+2]=1;
+        {
+            if(check_flag)
+                    checkmate_hash[cursorX+1][cursorY+2]=1;
+                else
+                    moves_hash[cursorX+1][cursorY+2]=1;
+        }
+
     }
     if(cursorX+1<8&&cursorY-2>=0)
     {
         if(board[cursorX+1][cursorY-2].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX+1][cursorY-2]=1;
+        {
+            if(check_flag)
+                    checkmate_hash[cursorX+1][cursorY-2]=1;
+                else
+                    moves_hash[cursorX+1][cursorY-2]=1;
+        }
     }
     if(cursorX-1>=0&&cursorY+2<8)
     {
         if(board[cursorX-1][cursorY+2].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX-1][cursorY+2]=1;
+        {
+            if(check_flag)
+                    checkmate_hash[cursorX-1][cursorY+2]=1;
+                else
+                    moves_hash[cursorX-1][cursorY+2]=1;
+        }
     }
     if(cursorX-1>=0&&cursorY-2>=0)
     {
         if(board[cursorX-1][cursorY-2].color!=board[cursorX][cursorY].color)
-            moves_hash[cursorX-1][cursorY-2]=1;
+        {
+            if(check_flag)
+                    checkmate_hash[cursorX-1][cursorY-2]=1;
+                else
+                    moves_hash[cursorX-1][cursorY-2]=1;
+        }
     }
 }
 
 int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
     if(cursorX+1<8)
     {
-        if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color)
+
+    if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color)
         moves_hash[cursorX+1][cursorY]=1;
     }
     if(cursorX-1>=0)
@@ -892,7 +933,7 @@ int instructions() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
 
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
     char ch;
-    int ifCheck;
+    int beepsound;
     printf("N: NEXT PIECE\n");
     printf("P: PREVIOUS PIECE\n");
     printf("M: MOVE\n");
@@ -940,9 +981,13 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
                 resetMovesHash();
                 if(ifCheck==1)
                 {
-                    printf("CHECK TO BLACK\n");
+                    printf("CHECK\n");
+                    for(beepsound=0 ; beepsound<3;beepsound++)
+                    {
                     _beep(1500,500);
-                    system("pause");
+                    //system("pause");
+                    //_sleep(5);
+                    }
                 }
                 return 0;
             }
