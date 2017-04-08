@@ -15,13 +15,18 @@
 #define KING 6
 
 //  DECLARING PROTOTYPES
+int aboutUs();
+int instructions();
+int startGame();
+int welcome();
+int mainMenu();
 int check();
 int printStacky(int len);
 int isMovesHashEmpty();
 int staleMate();
 int pieceMoves();
 int selectPosition(int len);
-int instructions();
+int controls();
 int resetMovesHash();
 int king_moves();
 int knight_moves();
@@ -36,19 +41,19 @@ int printBoard();
 int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b);
 int handleCursor(int color);
-int loadingScreen();
+int loadingScreen(char c, int time);
 int setCursor();
 int setHashCheckMate();
 void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
+int started = 0;
 int moved = 0;
 int stackPointer = -1;
 int mainX;
 int mainY;
 int moves_hash[8][8]={0};
 int checkmate_hash[8][8]={0};
-int whitePieces[6]={PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
 int front_color,rear_color;
 int cursorX = 0;
 int cursorY = 0;
@@ -68,18 +73,48 @@ struct coord {
 
 //  MAIN METHOD
 int main() {
-    initializeBoard();
+    if(started == 0) {
+        welcome();
+    }
+    system("color 0a");
+    int a;
+    int endGame = 0;
     do {
-        possible_moves();
-        printBoard();
-        printf("\n");
-        resetMovesHash();
-    }while(handleCursor(col));
+        a = mainMenu();
+        switch(a) {
+            case 1:
+                endGame = startGame();
+                break;
+
+            case 2:
+                instructions();
+                break;
+
+            case 3:
+                controls();
+                break;
+
+            case 4:
+                aboutUs();
+                break;
+
+            case 5:
+                system("cls");
+                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
+                system("pause");
+                exit(0);
+                break;
+
+        }
+    }while(a!=1 && a!=5 && endGame==0);
+    started = 1;
+    if(endGame) {
+        main();
+    }
     return 0;
 }
 
-int setHashCheckMate()
-{
+int setHashCheckMate() {
     int i,j;
         check_flag = 1;
             for(i=0; i<8; i++) {
@@ -110,6 +145,7 @@ int setHashCheckMate()
     }
     check_flag = 0;
 }
+
 //  OTHER METHODS
 int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISITION
     int i,j;
@@ -148,7 +184,9 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
     int i, j;
+    printf("\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n");
     for(i=0; i<8; i++) {
+        printf("\t\t");
         printf(" %c", 218);
         for(j=1; j<48; j++) {
             if(j%6==0 && j!=0 && j!=48) {
@@ -158,6 +196,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
             }
         }
         printf("%c\n", 191);
+        printf("\t\t");
         for(j=0; j<8; j++) {
             switch(board[i][j].type) {
                 case PAWN:
@@ -240,6 +279,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
             }
         }
         printf("\n");
+        printf("\t\t");
         printf(" %c", 192);
         for(j=1; j<48; j++) {
             if(j%6==0 && j!=0 && j!=48) {
@@ -271,6 +311,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     switch(ch) {
         case 'w':
         case 'W':
+            _beep(250, 100);
             for(i=cursorX-1; i>=0; i--) {
                 if(board[i][cursorY].color == col) {
                     cursorX = i;
@@ -281,6 +322,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 'a':
         case 'A':
+            _beep(300, 100);
             for(j=cursorY-1; j>=0; j--) {
                 if(board[cursorX][j].color == col) {
                     cursorY = j;
@@ -291,6 +333,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 's':
         case 'S':
+            _beep(350, 100);
             for(i=cursorX+1; i<8; i++) {
                 if(board[i][cursorY].color == col) {
                     cursorX = i;
@@ -301,6 +344,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 'd':
         case 'D':
+            _beep(400, 100);
             for(j=cursorY+1; j<8; j++) {
                 if(board[cursorX][j].color == col) {
                     cursorY = j;
@@ -311,12 +355,12 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 'e':
         case 'E':
-            exit(0);
+            return 0;
             break;
 
-        case 'i':
-        case 'I':
-            instructions();
+        case 'c':
+        case 'C':
+            controls();
             return 1;
 
         case '\r':
@@ -341,12 +385,13 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     return 1;
 }
 
-int loadingScreen() {   //  DISPLAYS THE LOADING SCREEN
+int loadingScreen(char c, int time) {   //  DISPLAYS THE LOADING SCREEN
     int i;
-    printf("Loading\n");
-    for(i=0; i<10; i++) {
-        printf("%c",219);
-        _sleep(500);
+    printf("\n\n\n\n\t\t\t\t\t\tLoading");
+    for(i=0; i<8; i++) {
+        //printf("%c",219);
+        printf("%c",c);
+        _sleep(time);
     }
     return 0;
 }
@@ -917,16 +962,16 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
     }
 }
 
-int instructions() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
+int controls() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
     system("cls");
-    printf("W: UP\n");
-    printf("A: LEFT\n");
-    printf("S: DOWN\n");
-    printf("D: RIGHT\n");
-    printf("ENTER: SELECT PIECE\n");
+    printf("\n\n\t\t\t\t\t\tW       :       UP\n");
+    printf("\n\n\t\t\t\t\t\tA       :       LEFT\n");
+    printf("\n\n\t\t\t\t\t\tS       :       DOWN\n");
+    printf("\n\n\t\t\t\t\t\tD       :       RIGHT\n");
+    printf("\n\n\t\t\t\t\t\tENTER   :       SELECT PIECE\n");
     printf("\n");
-    printf("E: EXIT\n");
-    printf("\n\n");
+    printf("\n\n\t\t\t\t\t\tE       :       EXIT\n");
+    printf("\n\n\n\n\t\t");
     system("pause");
     system("cls");
 }
@@ -1000,8 +1045,8 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     }
 
 }
-void resetCheckHash()
-{
+
+void resetCheckHash() {
     int i,j;
     for(i = 0;i < 8;i++)
     {
@@ -1011,6 +1056,7 @@ void resetCheckHash()
         }
     }
 }
+
 int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     int i,j;
     for(i = 0;i < 8;i++)
@@ -1026,8 +1072,8 @@ int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     }
     return 0;
 }
-int setCursor()
-{
+
+int setCursor() {
     int i,j;
     //col = col * -1;
     for(i = 0;i < 8; i++)
@@ -1044,6 +1090,7 @@ int setCursor()
     }
     return 1;
 }
+
 int pieceMoves() {  //  INITIALISES A STACK WITH ALL POSSIBLE MOVES FOR TRAVERSAL
     int i, j, k = 0;
     for(i=0; i<8; i++) {
@@ -1108,3 +1155,54 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
     return 1;
 }
 
+int welcome() {
+    printf("\n\n\n\n\t\t\t\t\t\tWelcome to ChessC !!\n");
+    loadingScreen('.', 300);
+}
+
+int mainMenu() {
+    char ch;
+    do {
+        system("cls");
+        printf("\n\n\n\n\t\t\t\t\t\tMAIN MENU");
+        printf("\n\n\t\t\t\t\t\t1. TWO PLAYER MODE");
+        printf("\n\n\t\t\t\t\t\t2. HOW TO PLAY CHESS?");
+        printf("\n\n\t\t\t\t\t\t3. CONTROLS");
+        printf("\n\n\t\t\t\t\t\t4. ABOUT US");
+        printf("\n\n\t\t\t\t\t\t5. EXIT GAME");
+        printf("\n\n\n\n\n\t\t\t\t\t\tENTER: ");
+        ch = getche();
+    }while(ch!='1' && ch!='2' && ch!='3' && ch!= '4' && ch!='5');
+    system("cls");
+    return(ch-48);
+}
+
+int startGame() {
+    initializeBoard();
+    system("color 0e");
+    do {
+        possible_moves();
+        printBoard();
+        printf("\n");
+        resetMovesHash();
+    }while(handleCursor(col));
+    return 1;
+}
+
+int instructions() {
+    printf("\n\n\n\n\t\t\t\t\tThe player controlling the white pieces is named 'White'; the player controlling the black pieces is named 'Black'. White moves first, then players alternate moves. Making a move is required; it is not legal to skip a move, even when having to move is detrimental. Play continues until a king is checkmated, a player resigns, or a draw is declared, as explained below. In addition, if the game is being played under a time control players who exceed their time limit lose the game. The official chess rules do not include a procedure for determining who plays White. Instead, this decision is left open to tournament-specific rules (e.g. a Swiss system tournament or Round-robin tournament) or, in the case of non-competitive play, mutual agreement, in which case some kind of random choice is often employed. A common method is for one player to conceal a piece (usually a pawn) of each color in either hand; the other player chooses a hand to open, and receives the color of the piece that is revealed.");
+    printf("\n");
+    system("pause");
+    system("cls");
+    return 1;
+}
+
+int aboutUs() {
+    printf("\n\n\n\n\t\t\t\t\tSunny");
+    printf("\n\n\n\n\t\t\t\t\tSreekara Mouli. T");
+    printf("\n");
+    printf("\n\n\n\n\t\t\tYou can find the source code to this project at: https://github.com/MouliTadinada/Chess-in-C\n\n\n");
+    system("pause");
+    system("cls");
+    return 1;
+}
