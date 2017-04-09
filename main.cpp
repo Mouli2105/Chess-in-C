@@ -386,7 +386,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         case 'W':
             _beep(250, 100);
             for(i=cursorX-1; i>=0; i--) {
-                if(board[i][cursorY].color == col) {
+                if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
                     cursorX = i;
                     return 1;
                 }
@@ -397,7 +397,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         case 'A':
             _beep(300, 100);
             for(j=cursorY-1; j>=0; j--) {
-                if(board[cursorX][j].color == col) {
+                if(board[cursorX][j].color == col || board[cursorX][j].color == 0) {
                     cursorY = j;
                     return 1;
                 }
@@ -408,7 +408,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         case 'S':
             _beep(350, 100);
             for(i=cursorX+1; i<8; i++) {
-                if(board[i][cursorY].color == col) {
+                if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
                     cursorX = i;
                     return 1;
                 }
@@ -419,7 +419,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         case 'D':
             _beep(400, 100);
             for(j=cursorY+1; j<8; j++) {
-                if(board[cursorX][j].color == col) {
+                if(board[cursorX][j].color == col || board[cursorX][j].color == 0) {
                     cursorY = j;
                     return 1;
                 }
