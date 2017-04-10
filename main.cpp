@@ -13,8 +13,17 @@
 #define BISHOP 4
 #define QUEEN 5
 #define KING 6
+#define horizontal_line 196
+#define vertical_line 179
+#define top_right_corner 191
+#define top_left_corner 218
+#define bottom_right_corner 217
+#define bottom_left_corner 192
+#define plus 197
 
 //  DECLARING PROTOTYPES
+void printPiece(int i, int j, char piece);
+void printBoard2();
 int getpos(int i,int j);
 int aboutUs();
 int instructions();
@@ -73,45 +82,50 @@ struct coord {
 }positionStack[32], whiteKing, blackKing;
 
 //  MAIN METHOD
+//int main() {
+//    if(started == 0) {
+//        welcome();
+//    }
+//    system("color 0a");
+//    int a;
+//    int endGame = 0;
+//    do {
+//        a = mainMenu();
+//        switch(a) {
+//            case 1:
+//                endGame = startGame();
+//                break;
+//
+//            case 2:
+//                instructions();
+//                break;
+//
+//            case 3:
+//                controls();
+//                break;
+//
+//            case 4:
+//                aboutUs();
+//                break;
+//
+//            case 5:
+//                system("cls");
+//                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
+//                system("pause");
+//                exit(0);
+//                break;
+//
+//        }
+//    }while(a!=1 && a!=5 && endGame==0);
+//    started = 1;
+//    if(endGame) {
+//        main();
+//    }
+//    return 0;
+//}
+
 int main() {
-    if(started == 0) {
-        welcome();
-    }
-    system("color 0a");
-    int a;
-    int endGame = 0;
-    do {
-        a = mainMenu();
-        switch(a) {
-            case 1:
-                endGame = startGame();
-                break;
-
-            case 2:
-                instructions();
-                break;
-
-            case 3:
-                controls();
-                break;
-
-            case 4:
-                aboutUs();
-                break;
-
-            case 5:
-                system("cls");
-                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
-                system("pause");
-                exit(0);
-                break;
-
-        }
-    }while(a!=1 && a!=5 && endGame==0);
-    started = 1;
-    if(endGame) {
-        main();
-    }
+    startGame();
     return 0;
 }
 
@@ -448,7 +462,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                     len = pieceMoves();
                     do
                     {
-                        printBoard();
+                        printBoard2();
                         flag = selectPosition(len);
                     }while(flag==1);}
             }
@@ -1275,7 +1289,7 @@ int startGame() {
     system("color 0e");
     do {
         possible_moves();
-        printBoard();
+        printBoard2();
         setHashCheckMate();
         resetMovesHash();
     }while(handleCursor(col));
@@ -1298,4 +1312,101 @@ int aboutUs() {
     system("pause");
     system("cls");
     return 1;
+}
+
+void printBoard2() {
+    system("cls");
+    int i, j, k, pos;
+    for(i=0; i<8; i++) {
+        if(i!=0) {
+        for(k=0; k<8; k++) {
+            printf("%c     ", vertical_line);
+        }
+        printf("%c\n", vertical_line);
+        }
+        for(k=0; k<8; k++) {
+            printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
+        }
+        printf("%c\n",  plus);
+        for(k=0; k<8; k++) {
+        printf("%c     ", vertical_line);
+        }
+        printf("%c\n", vertical_line);
+        for(j=0; j<8; j++) {
+            pos=getpos(i,j);
+            switch(board[i][j].type) {
+                case PAWN:
+                    printPiece(i, j, 'P');
+                    break;
+
+                case ROOK:
+                    printPiece(i, j, 'R');
+                    break;
+
+                case BISHOP:
+                    printPiece(i, j, 'B');
+                    break;
+
+                case KNIGHT:
+                    printPiece(i, j, 'N');
+                    break;
+
+                case QUEEN:
+                    printPiece(i, j, 'Q');
+                    break;
+
+                case KING:
+                    printPiece(i, j, 'K');
+                    break;
+
+                case EMPTY:
+//                    if(i == cursorX && j == cursorY) {
+//                    printf(" %c%c   %c%c ", 175, 175, 174, 174);
+//                }else {
+//                    if(moves_hash[i][j]!=1)
+//                        printf(" %c     %c ", 179, 179);
+//                    else
+//                        printf(" %c  %c  %c ", 179, 219, 179);
+//                }
+                    printPiece(i, j, 256);
+                    break;
+                }
+        }
+        printf("%c\n", vertical_line);
+        if(i==7) {
+        for(k=0; k<8; k++) {
+            printf("%c     ", vertical_line);
+        }
+        printf("%c\n", vertical_line);
+        for(k=0; k<8; k++) {
+            printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
+        }
+        printf("%c\n", plus);
+        }
+    }
+}
+
+void printPiece(int i, int j, char piece) {
+    if(i == cursorX && j == cursorY) {
+        if(board[i][j].color == -1) {
+            printf("%c%c[%c]%c", 179, 175, piece, 174);
+        }else {
+            printf("%c%c %c %c", 179, 175, piece, 174);
+        }
+    }else {
+        if(moves_hash[i][j]!=1){
+            if(board[i][j].color == -1) {
+                printf("%c [%c] ", 179, piece);
+            }else {
+                printf("%c  %c  ", 179, piece);
+            }
+        }
+        else{
+            if(board[i][j].color == -1) {
+                printf("%c%c[%c]%c", 179, 222, piece, 221);
+            }else {
+                printf("%c %c%c%c ", 179, 222, piece, 221);
+            }
+        }
+    }
 }
