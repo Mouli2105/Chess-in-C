@@ -445,32 +445,44 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         case 'w':
         case 'W':
             _beep(250, 100);
-            if(board[cursorX-1][cursorY].color == col || board[cursorX-1][cursorY].color == 0){
-                cursorX--;
+            for(int i=cursorX-1; i>=0; i--) {
+                if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
+                    cursorX = i;
+                    break;
+                }
             }
             return 1;
 
         case 'a':
         case 'A':
             _beep(300, 100);
-            if(board[cursorX][cursorY-1].color == col || board[cursorX][cursorY-1].color == 0) {
-                cursorY--;
+            for(int i=cursorY-1; i>=0; i--) {
+                if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
+                    cursorY = i;
+                    break;
+                }
             }
             return 1;
 
         case 's':
         case 'S':
             _beep(350, 100);
-            if(board[cursorX+1][cursorY].color == col || board[cursorX+1][cursorY].color == 0) {
-                cursorX++;
+            for(int i=cursorX+1; i<=7; i++) {
+                if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
+                    cursorX = i;
+                    break;
+                }
             }
             return 1;
 
         case 'd':
         case 'D':
             _beep(400, 100);
-            if(board[cursorX][cursorY+1].color == col || board[cursorX][cursorY+1].color == 0) {
-                cursorY++;
+            for(int i=cursorY+1; i<=7; i++) {
+                if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
+                    cursorY = i;
+                    break;
+                }
             }
             return 1;
 
@@ -1392,7 +1404,7 @@ void printBoard2() {
                     break;
 
                 case EMPTY:
-                    printPiece(i, j, 256);
+                    printPiece(i, j, ' ');
                     break;
             }
         }
