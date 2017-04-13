@@ -22,6 +22,17 @@
 #define plus 197
 
 //  DECLARING PROTOTYPES
+int find_checkedpiece_path();
+int checkmate();
+int all_moves();
+int possible_moves_at_check();
+int find_rook_path();
+int find_bishop_path();
+int find_queen_path();
+int find_knight_path();
+int find_pawn_path();
+int find_king_path();
+void printCheckHash();
 void printPiece(int i, int j, char piece);
 void printBoard2();
 int getpos(int i,int j);
@@ -73,6 +84,9 @@ int check_flag;
 int ifCheck = 0;
 int tempcursorX;
 int tempcursorY;
+int flag = 0;
+int black_checked = 0;
+int white_checked = 0;
 
 struct piece {
     int type;
@@ -82,7 +96,7 @@ struct piece {
 struct coord {
     int x;
     int y;
-}positionStack[32], whiteKing, blackKing;
+}positionStack[32], whiteKing, blackKing,checkedKing,checkingPiece_pos,checkstack[32];
 
 //  MAIN METHOD
 //int main() {
@@ -170,11 +184,26 @@ int setHashCheckMate() {
                         break;
                 }
                 if(check()) {
-                    printf("\n\t\t\tCHECK");
+                        if(flag){
+                    if(col == WHITE){
+                        printf("\n\t\t\tblack");
+                        black_checked = 1;
+                    }
+                    else{
+                        printf("\n\t\t\twhite");
+                        white_checked = 1;
+                    }
+                    printf("CHECK");
                     system("pause");
                     checkingPiece = board[cursorX][cursorY];
+                    checkingPiece_pos.x = cursorX;
+                    checkingPiece_pos.y = cursorY;
                     resetCheckHash();
-                    break;
+                        }
+                    cursorX = tempcursorX;
+                    cursorY = tempcursorY;
+                    check_flag = 0;
+                    return 1;
                 }else{
                     resetCheckHash();
                 }
@@ -185,6 +214,7 @@ int setHashCheckMate() {
     cursorX = tempcursorX;
     cursorY = tempcursorY;
     check_flag = 0;
+    return 0;
 }
 
 //  OTHER METHODS
@@ -1063,7 +1093,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 			}
         }
         if(cursorX == 1) {
-            if(board[cursorX+2][cursorY].color == EMPTY) {
+            if(board[cursorX+2][cursorY].color == EMPTY && board[cursorX+1][cursorY].color == EMPTY) {
 				if(check_flag) {
 					checkmate_hash[cursorX+2][cursorY] = 1;
 				}else {
@@ -1095,7 +1125,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
         }
     }
     if(cursorX == 6) {
-        if(board[cursorX-2][cursorY].color == EMPTY) {
+        if(board[cursorX-2][cursorY].color == EMPTY&&board[cursorX-1][cursorY].color == EMPTY) {
             if(check_flag) {
                 checkmate_hash[cursorX-2][cursorY] = 1;
             }else {
@@ -1106,7 +1136,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 }
 
 void printHash() {  //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
-    resetMovesHash();
+    //resetMovesHash();
     int i, j;
     printf("\n");
     for(i=0; i<8; i++) {
@@ -1174,9 +1204,13 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
         case 'M':
             if(mainX != cursorX || mainY != cursorY) {
                 resetMovesHash();
+                black_checked = 0;
+                white_checked = 0;
                 piece current = board[mainX][mainY];
                 swapPieces(&board[mainX][mainY], &board[cursorX][cursorY],cursorX,cursorY);
+                flag = 1;
                 setHashCheckMate();
+                flag = 0;
                 //system("pause");
                 moved++;
                 setCursor();
@@ -1209,16 +1243,30 @@ int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     int i, j;
     if( col == WHITE) {
         if(checkmate_hash[blackKing.x][blackKing.y]) {
+                checkedKing.x = blackKing.x;
+                checkedKing.y = blackKing.y;
             return 1;
         }
     }else if( col == BLACK) {
         if(checkmate_hash[whiteKing.x][whiteKing.y]) {
+                checkedKing.x = whiteKing.x;
+                checkedKing.y = whiteKing.y;
             return 1;
         }
     }
     return 0;
 }
-
+void printCheckHash()
+{
+    int i,j;
+    for( i = 0 ; i < 8 ; i++){
+        for( j = 0 ; j < 8 ; j++)
+        {
+            printf("%d ",checkmate_hash[i][j]);
+        }
+        printf("\n");
+    }
+}
 int setCursor() {
     int i,j;
     for(i=0; i<8; i++) {
@@ -1325,16 +1373,407 @@ int mainMenu() {
 }
 
 int startGame() {
+    piece temp;
+    int tempX,tempY,i;
     initializeBoard();
     system("color 0e");
     do {
-        possible_moves();
+        if(black_checked || white_checked){
+                    find_checkedpiece_path();
+//                    for(i=0;checkstack[i].x!=-1;i++)
+//                        printf("%d %d\n",checkstack[i].x,checkstack[i].y);
+//                    system("pause");
+                    if(checkmate())
+                    {
+//                        printf("\nEntered");
+//                        system("pause");
+                        printf("check mate\ngmae over");
+                        break;
+                    }
+                    else
+                    {
+                        possible_moves_at_check();
+                    }
+        }
+        else
+        {
+        temp = board[cursorX][cursorY];
+        tempX = cursorX;
+        tempY = cursorY;
+        col = -1 * col;
+        board[cursorX][cursorY].type = EMPTY;
+        board[cursorX][cursorY].color = 0;
+        if(setHashCheckMate())
+        {
+            col = -1 * col;
+            cursorY = tempY;
+            cursorX = tempX;
+           // printf("\n\n\t\t\t\t%d %d",temp.type,temp.color);
+            board[tempX][tempY] = temp;
+            //system("pause");
+            resetMovesHash();
+        }
+        else
+        {
+            col = -1 * col;
+            cursorX = tempX;
+            cursorY = tempY;
+            board[tempX][tempY] = temp;
+            possible_moves();
+
+
+        }
+        }
         printBoard2();
+//        printHash();
+//        system("pause");
         resetMovesHash();
+        resetCheckHash();
     }while(handleCursor(col));
     return 1;
 }
+int find_checkedpiece_path(){
+    switch(checkingPiece.type)
+        {
+            case ROOK : find_rook_path();
+                        break;
+            case BISHOP : find_bishop_path();
+                        break;
+            case QUEEN : find_queen_path();
+                        break;
+            case KNIGHT : find_knight_path();
+                        break;
+            case PAWN : find_pawn_path();
+                        break;
+            case KING : find_king_path();
 
+        }
+        return 0;
+}
+int find_rook_path(){
+    int i,j;
+    if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = checkingPiece_pos.x;
+            checkstack[j++].y = i;
+            i++;
+        }while(i < 8 && i != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y > checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = checkingPiece_pos.x;
+            checkstack[j++].y = i;
+            i--;
+        }while(i <= 0 && i != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y == checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        do
+        {
+            checkstack[j].y = checkingPiece_pos.y;
+            checkstack[j++].x = i;
+            i++;
+        }while(i < 8 && i != checkedKing.x);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x > checkedKing.x && checkingPiece_pos.y == checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        do
+        {
+            checkstack[j].y = checkingPiece_pos.y;
+            checkstack[j++].x = i;
+            i--;
+        }while(i >= 0  && i != checkedKing.x);
+        checkstack[j].x = -1;
+    }
+}
+int find_bishop_path(){
+    int i,j,k;
+    if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y < checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i++;
+            k++;
+        }while(i < 8 && k < 8 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y > checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i++;
+            k--;
+        }while(i < 8 && k >= 0 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x > checkedKing.x && checkingPiece_pos.y > checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i--;
+            k--;
+        }while(i >= 0 && k >= 0 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x > checkedKing.x && checkingPiece_pos.y < checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i--;
+            k++;
+        }while(i >= 0 && k < 8 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+}
+int find_queen_path(){
+   int i,j,k;
+    if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = checkingPiece_pos.x;
+            checkstack[j++].y = i;
+            i++;
+        }while(i < 8 && i != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y > checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = checkingPiece_pos.x;
+            checkstack[j++].y = i;
+            i--;
+        }while(i <= 0 && i != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y == checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        do
+        {
+            checkstack[j].y = checkingPiece_pos.y;
+            checkstack[j++].x = i;
+            i++;
+        }while(i < 8 && i != checkedKing.x);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x > checkedKing.x && checkingPiece_pos.y == checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        do
+        {
+            checkstack[j].y = checkingPiece_pos.y;
+            checkstack[j++].x = i;
+            i--;
+        }while(i >= 0  && i != checkedKing.x);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y < checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i++;
+            k++;
+        }while(i < 8 && k < 8 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y > checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i++;
+            k--;
+        }while(i < 8 && k >= 0 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x > checkedKing.x && checkingPiece_pos.y > checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i--;
+            k--;
+        }while(i >= 0 && k >= 0 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+    else if(checkingPiece_pos.x > checkedKing.x && checkingPiece_pos.y < checkedKing.y)
+    {
+        j = 0;
+        i = checkingPiece_pos.x;
+        k = checkingPiece_pos.y;
+        do
+        {
+            checkstack[j].x = i;
+            checkstack[j++].y = k;
+            i--;
+            k++;
+        }while(i >= 0 && k < 8 && i != checkedKing.x && k != checkedKing.y);
+        checkstack[j].x = -1;
+    }
+}
+int find_knight_path(){}
+int find_pawn_path(){}
+int find_king_path(){}
+int checkmate() {
+    int i,j,FLAG = 0,tempX,tempY,color;
+    piece temp;
+    tempX = cursorX;
+    tempY = cursorY;
+    cursorX = tempX;
+    cursorY = tempY;
+    all_moves();
+    cursorX = tempcursorX;
+    cursorY = tempcursorY;
+    tempX = cursorX;
+    tempY = cursorY;
+    for( i = 0 ; checkstack[i].x>=0 ;i++)
+    {
+            if(moves_hash[checkstack[i].x][checkstack[i].y]){
+
+                return 0;
+                }
+               // printHash()
+    }
+    return 1;
+}
+int all_moves(){
+    tempcursorX = cursorX;
+    tempcursorY = cursorY;
+    for(cursorX=0; cursorX<8; cursorX++) {
+        for(cursorY=0; cursorY<8; cursorY++) {
+            if(board[cursorX][cursorY].color == col){
+                switch(board[cursorX][cursorY].type)
+                {
+                    case PAWN:
+                        pawn_moves();
+                        break;
+
+                    case ROOK:
+                        rook_moves();
+                        break;
+
+                    case BISHOP:
+                        bishop_moves();
+                        break;
+
+                    case KNIGHT:
+                        knight_moves();
+                        break;
+
+                    case QUEEN:
+                        queen_moves();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+}
+int possible_moves_at_check(){
+    int i;
+    resetMovesHash();
+    switch(board[cursorX][cursorY].type)
+                {
+                    case PAWN:
+                        pawn_moves();
+                        break;
+
+                    case ROOK:
+                        rook_moves();
+                        break;
+
+                    case BISHOP:
+                        bishop_moves();
+                        break;
+
+                    case KNIGHT:
+                        knight_moves();
+                        break;
+
+                    case KING:
+                        king_moves();
+                        break;
+
+                    case QUEEN:
+                        queen_moves();
+                        break;
+
+                    default:
+                        break;
+                }
+
+            for( i = 0 ; checkstack[i].x >= 0 ; i++)
+            {
+//                printf("%d cursor = %d,%d",moves_hash[checkstack[i].x][checkstack[i].y],cursorX,cursorY);
+//                system("pause");
+                if(moves_hash[checkstack[i].x][checkstack[i].y])
+                {
+                    return 1;
+                }
+
+            }
+            resetMovesHash();
+            return 1;
+}
 int instructions() {
     printf("\n\n\n\n\t\t\t\t\tThe player controlling the white pieces is named 'White'; the player controlling the black pieces is named 'Black'. White moves first, then players alternate moves. Making a move is required; it is not legal to skip a move, even when having to move is detrimental. Play continues until a king is checkmated, a player resigns, or a draw is declared, as explained below. In addition, if the game is being played under a time control players who exceed their time limit lose the game. The official chess rules do not include a procedure for determining who plays White. Instead, this decision is left open to tournament-specific rules (e.g. a Swiss system tournament or Round-robin tournament) or, in the case of non-competitive play, mutual agreement, in which case some kind of random choice is often employed. A common method is for one player to conceal a piece (usually a pawn) of each color in either hand; the other player chooses a hand to open, and receives the color of the piece that is revealed.");
     printf("\n");
