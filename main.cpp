@@ -22,6 +22,8 @@
 #define plus 197
 
 //  DECLARING PROTOTYPES
+
+int is_king_can_move();
 int find_checkedpiece_path();
 int checkmate();
 int all_moves();
@@ -68,12 +70,14 @@ int setHashCheckMate();
 void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
+int codX,codY;
 int count_v=0;
 int started = 0;
 int moved = 0;
 int stackPointer = -1;
 int mainX;
 int mainY;
+int king_hash[8][8] = {0};
 int moves_hash[8][8]={0};
 int checkmate_hash[8][8]={0};
 int front_color,rear_color;
@@ -85,6 +89,7 @@ int ifCheck = 0;
 int tempcursorX;
 int tempcursorY;
 int flag = 0;
+int cursor_flag = 0;
 int black_checked = 0;
 int white_checked = 0;
 
@@ -96,8 +101,8 @@ struct piece {
 struct coord {
     int x;
     int y;
-}positionStack[32], whiteKing, blackKing,checkedKing,checkingPiece_pos,checkstack[32];
-
+}positionStack[32], whiteKing, blackKing,checkedKing,checkingPiece_pos,checkstack[32],king_stack[32];
+int checkKingMoves(coord pos);
 //  MAIN METHOD
 //int main() {
 //    if(started == 0) {
@@ -1211,7 +1216,6 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
                 flag = 1;
                 setHashCheckMate();
                 flag = 0;
-                //system("pause");
                 moved++;
                 setCursor();
                 if(moved%2==0) {
@@ -1378,12 +1382,14 @@ int startGame() {
     initializeBoard();
     system("color 0e");
     do {
-        if(black_checked || white_checked){
+            cursor_flag = 1;
+            if(black_checked || white_checked){
                     find_checkedpiece_path();
 //                    for(i=0;checkstack[i].x!=-1;i++)
 //                        printf("%d %d\n",checkstack[i].x,checkstack[i].y);
 //                    system("pause");
-                    if(checkmate())
+
+                    if( checkmate()&&is_king_can_move())
                     {
 //                        printf("\nEntered");
 //                        system("pause");
@@ -1393,10 +1399,11 @@ int startGame() {
                     else
                     {
                         possible_moves_at_check();
+                        printBoard2();
+                        cursor_flag = 0;
                     }
+
         }
-        else
-        {
         temp = board[cursorX][cursorY];
         tempX = cursorX;
         tempY = cursorY;
@@ -1423,7 +1430,7 @@ int startGame() {
 
 
         }
-        }
+        if(cursor_flag)
         printBoard2();
 //        printHash();
 //        system("pause");
@@ -1446,6 +1453,7 @@ int find_checkedpiece_path(){
             case PAWN : find_pawn_path();
                         break;
             case KING : find_king_path();
+                        break;
 
         }
         return 0;
@@ -1671,17 +1679,17 @@ int find_knight_path(){}
 int find_pawn_path(){}
 int find_king_path(){}
 int checkmate() {
-    int i,j,FLAG = 0,tempX,tempY,color;
+    int i,j,FLAG = 0,color;
     piece temp;
-    tempX = cursorX;
-    tempY = cursorY;
-    cursorX = tempX;
-    cursorY = tempY;
+    codX = cursorX;
+    codY = cursorY;
+    cursorX = codX;
+    cursorY = codY;
     all_moves();
     cursorX = tempcursorX;
     cursorY = tempcursorY;
-    tempX = cursorX;
-    tempY = cursorY;
+    cursorX = codX;
+    cursorY = codY;
     for( i = 0 ; checkstack[i].x>=0 ;i++)
     {
             if(moves_hash[checkstack[i].x][checkstack[i].y]){
@@ -1758,6 +1766,7 @@ int possible_moves_at_check(){
                         break;
 
                     default:
+
                         break;
                 }
 
@@ -1886,4 +1895,84 @@ void printPiece(int i, int j, char piece) {
             }
         }
     }
+}
+
+int is_king_can_move()
+{
+    int i;
+    piece temp;
+    checkKingMoves(checkedKing);
+    resetMovesHash();
+    for(i=0;king_stack[i].x>=0;i++){
+    temp = board[king_stack[i].x][king_stack[i].y];
+    board[king_stack[i].x][king_stack[i].y].type = EMPTY;
+    board[king_stack[i].x][king_stack[i].y].color = 0;
+    col = -1 * col;
+    all_moves();
+    cursorX = codX;
+    cursorY = codY;
+    col = -1 * col;
+   // printf("            %d",moves_hash[king_stack[i].x][king_stack[i].y]);
+    if(moves_hash[king_stack[i].x][king_stack[i].y] == 0)
+        return 0;
+    board[king_stack[i].x][king_stack[i].y] = temp;
+   // printHash();
+   // system("pause");
+    }
+    return 1;
+}
+
+int checkKingMoves(coord pos){
+    int i = 0;
+    printf("%d %d",pos.x,pos.y);
+    if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y].color || board[pos.x+1][pos.y].color == EMPTY) && pos.x!=7){
+            printf("*1");
+        king_stack[i].x = pos.x+1;
+        king_stack[i].y = pos.y;
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x-1][pos.y].color || board[pos.x-1][pos.y].color == EMPTY) && pos.x!=0){
+        printf("*2");
+        king_stack[i].x = pos.x-1;
+        king_stack[i].y = pos.y;
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x][pos.y+1].color || board[pos.x][pos.y+1].color == EMPTY) && pos.y!=7){
+        printf("*3");
+        king_stack[i].x = pos.x;
+        king_stack[i].y = pos.y+1;
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x][pos.y-1].color || board[pos.x][pos.y-1].color == EMPTY) && pos.y!=0){
+        printf("*4");
+        king_stack[i].x = pos.x;
+        king_stack[i].y = pos.y-1;
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y+1].color || board[pos.x+1][pos.y+1].color == EMPTY) && pos.x!=7 && pos.y!=7){
+        printf("*5");
+        king_stack[i].x = pos.x+1;
+        king_stack[i].y = pos.y+1;
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y-1].color || board[pos.x+1][pos.y-1].color == EMPTY) && pos.x!=7 && pos.y!=0){
+        printf("*6");
+        king_stack[i].x = pos.x+1;
+        king_stack[i].y = pos.y-1;
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x-1][pos.y+1].color || board[pos.x-1][pos.y+1].color == EMPTY) && pos.x!=0 && pos.y!=7){
+        printf("*7");
+        king_stack[i].x = pos.x-1;
+        king_stack[i].y = pos.y+1;
+       // printf("       %d %d",king_stack[i].x,king_stack[i].y);
+        i++;
+    }
+    if((board[pos.x][pos.y].color == -1*board[pos.x-1][pos.y-1].color || board[pos.x-1][pos.y-1].color == EMPTY) && pos.x!=0 && pos.y!=0){
+        printf("*8");
+        king_stack[i].x = pos.x-1;
+        king_stack[i].y = pos.y-1;
+        i++;
+    }
+    king_stack[i].x = -1;
 }
