@@ -2,6 +2,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<conio.h>
+#define _WIN32_WINNT 0x0601
+#include<windows.h>
 
 //  DEFINING PIECES
 #define WHITE 1
@@ -104,52 +106,56 @@ struct coord {
 }positionStack[32], whiteKing, blackKing,checkedKing,checkingPiece_pos,checkstack[32],king_stack[32];
 int checkKingMoves(coord pos);
 //  MAIN METHOD
-//int main() {
-//    if(started == 0) {
-//        welcome();
-//    }
-//    system("color 0a");
-//    int a;
-//    int endGame = 0;
-//    do {
-//        a = mainMenu();
-//        switch(a) {
-//            case 1:
-//                endGame = startGame();
-//                break;
-//
-//            case 2:
-//                instructions();
-//                break;
-//
-//            case 3:
-//                controls();
-//                break;
-//
-//            case 4:
-//                aboutUs();
-//                break;
-//
-//            case 5:
-//                system("cls");
-//                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
-//                system("pause");
-//                exit(0);
-//                break;
-//
-//        }
-//    }while(a!=1 && a!=5 && endGame==0);
-//    started = 1;
-//    if(endGame) {
-//        main();
-//    }
-//    return 0;
-//}
-
 int main() {
-    startGame();
+    COORD Coord;
+    SetConsoleDisplayMode( GetStdHandle( STD_OUTPUT_HANDLE ), CONSOLE_FULLSCREEN_MODE, &Coord);
+    if(started == 0) {
+        welcome();
+    }
+    system("color 0a");
+    int a;
+    int endGame = 0;
+    do {
+        a = mainMenu();
+        switch(a) {
+            case 1:
+                endGame = startGame();
+                break;
+
+            case 2:
+                instructions();
+                break;
+
+            case 3:
+                controls();
+                break;
+
+            case 4:
+                aboutUs();
+                break;
+
+            case 5:
+                system("cls");
+                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
+                system("pause");
+                exit(0);
+                break;
+
+        }
+    }while(a!=1 && a!=5 && endGame==0);
+    started = 1;
+    if(endGame) {
+        main();
+    }
     return 0;
 }
+
+//int main() {
+//    COORD Coord;
+//    SetConsoleDisplayMode( GetStdHandle( STD_OUTPUT_HANDLE ), CONSOLE_FULLSCREEN_MODE, &Coord);
+//    startGame();
+//    return 0;
+//}
 
 int setHashCheckMate() {
     int i,j;
@@ -189,13 +195,11 @@ int setHashCheckMate() {
                         break;
                 }
                 if(check()) {
-                        if(flag){
+                    if(flag){
                     if(col == WHITE){
-                        printf("\n\t\t\tblack");
                         black_checked = 1;
                     }
                     else{
-                        printf("\n\t\t\twhite");
                         white_checked = 1;
                     }
                     printf("CHECK");
@@ -237,12 +241,12 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
     board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
-    board[0][3].type = board[7][3].type = QUEEN;
+    board[0][4].type = board[7][4].type = QUEEN;
     whiteKing.x = 0;
-    whiteKing.y = 4;//  USE THESE
+    whiteKing.y = 3;//  USE THESE
     blackKing.x = 7;
-    blackKing.y = 4;
-    board[0][4].type = board[7][4].type = KING;
+    blackKing.y = 3;
+    board[0][3].type = board[7][3].type = KING;
     for(i=0; i<8; i++) {
         board[0][i].color = WHITE;
         board[1][i].color = WHITE;
@@ -556,9 +560,9 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
 int loadingScreen(char c, int time) {   //  DISPLAYS THE LOADING SCREEN
     int i;
-    printf("\n\n\n\n\t\t\t\t\t\tLoading");
-    for(i=0; i<8; i++) {
-        printf("%c",c);
+    printf("\n\n\n\n\t\t\t\t\t\tLoading\n\n\n\n\t\t\t\t\t\t");
+    for(i=0; i<25; i++) {
+        printf("%c", 219);
         _sleep(time);
     }
     return 0;
@@ -1229,6 +1233,10 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
         case 'R':
             return 0;
             break;
+
+        default:
+            return 1;
+            break;
     }
 }
 
@@ -1258,8 +1266,8 @@ int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     }
     return 0;
 }
-void printCheckHash()
-{
+
+void printCheckHash() {
     int i,j;
     for( i = 0 ; i < 8 ; i++){
         for( j = 0 ; j < 8 ; j++)
@@ -1269,6 +1277,7 @@ void printCheckHash()
         printf("\n");
     }
 }
+
 int setCursor() {
     int i,j;
     for(i=0; i<8; i++) {
@@ -1353,21 +1362,31 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
 }
 
 int welcome() {
-    printf("\n\n\n\n\t\t\t\t\t\tWelcome to ChessC !!\n");
-    loadingScreen('.', 300);
+    printf("\n\n\n\n\n");
+	printf("\n\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
+	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c%c%c%c%c%c%c%c%c%c  %c           %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c       %c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c           %c           %c           %c       %c   %c%c     %c%c   %c             %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c%c%c%c%c%c%c%c%c%c  %c           %c           %c       %c   %c%c%c   %c%c%c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c        %c  %c %c  %c     %c           %c           %c           %c       %c   %c%c%c%c %c%c%c%c   %c             %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c         %c%c   %c%c      %c%c%c%c%c%c%c%c%c%c  %c%c%c%c%c%c%c%c%c%c  %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+    printf("\n");
+    //getch();
+    loadingScreen('.', 100);
 }
 
 int mainMenu() {
     char ch;
     do {
         system("cls");
+        printf("\n\n\n\n\n");
         printf("\n\n\n\n\t\t\t\t\t\tMAIN MENU");
-        printf("\n\n\t\t\t\t\t\t1. TWO PLAYER MODE");
-        printf("\n\n\t\t\t\t\t\t2. HOW TO PLAY CHESS?");
-        printf("\n\n\t\t\t\t\t\t3. CONTROLS");
-        printf("\n\n\t\t\t\t\t\t4. ABOUT US");
-        printf("\n\n\t\t\t\t\t\t5. EXIT GAME");
-        printf("\n\n\n\n\n\t\t\t\t\t\tENTER: ");
+        printf("\n\n\t\t\t\t\t\t\t\t[1] TWO PLAYER MODE");
+        printf("\n\n\t\t\t\t\t\t\t\t[2] HOW TO PLAY CHESS?");
+        printf("\n\n\t\t\t\t\t\t\t\t[3] CONTROLS");
+        printf("\n\n\t\t\t\t\t\t\t\t[4] ABOUT US");
+        printf("\n\n\t\t\t\t\t\t\t\t[5] EXIT GAME");
+        printf("\n\n\n\n\n\t\t\t\t\t\t\t\tENTER: ");
         ch = getche();
     }while(ch!='1' && ch!='2' && ch!='3' && ch!= '4' && ch!='5');
     system("cls");
@@ -1375,11 +1394,13 @@ int mainMenu() {
 }
 
 int startGame() {
+    loadingScreen('*', 50);
     piece temp;
     int tempX,tempY,i;
     initializeBoard();
     system("color 0e");
     do {
+<<<<<<< HEAD
             cursor_flag = 1;
             if(black_checked || white_checked){
                     find_checkedpiece_path();
@@ -1438,12 +1459,52 @@ int startGame() {
         }
 //        printHash();
 //        system("pause");
+=======
+        if(black_checked || white_checked) {
+            find_checkedpiece_path();
+            if(checkmate()) {
+                printf("CHECK MATE\n");
+                if(black_checked) {
+                    printf("WHITE WON !!");
+                }else {
+                    printf("BLACK WON !!");
+                }
+                printf("\n\n");
+                system("pause");
+                break;
+            }else {
+                possible_moves_at_check();
+            }
+        }else {
+            temp = board[cursorX][cursorY];
+            tempX = cursorX;
+            tempY = cursorY;
+            col = -1 * col;
+            board[cursorX][cursorY].type = EMPTY;
+            board[cursorX][cursorY].color = 0;
+            if(setHashCheckMate()) {
+                col = -1 * col;
+                cursorY = tempY;
+                cursorX = tempX;
+                board[tempX][tempY] = temp;
+                resetMovesHash();
+            }else {
+                col = -1 * col;
+                cursorX = tempX;
+                cursorY = tempY;
+                board[tempX][tempY] = temp;
+                possible_moves();
+            }
+        }
+        printBoard2();
+>>>>>>> master
         resetMovesHash();
         resetCheckHash();
     }while(handleCursor(col));
     return 1;
 }
-int find_checkedpiece_path(){
+
+int find_checkedpiece_path() {
     switch(checkingPiece.type)
         {
             case ROOK : find_rook_path();
@@ -1462,7 +1523,8 @@ int find_checkedpiece_path(){
         }
         return 0;
 }
-int find_rook_path(){
+
+int find_rook_path() {
     int i,j;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
     {
@@ -1513,6 +1575,7 @@ int find_rook_path(){
         checkstack[j].x = -1;
     }
 }
+
 int find_bishop_path(){
     int i,j,k;
     if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1572,6 +1635,7 @@ int find_bishop_path(){
         checkstack[j].x = -1;
     }
 }
+
 int find_queen_path(){
    int i,j,k;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1679,6 +1743,7 @@ int find_queen_path(){
         checkstack[j].x = -1;
     }
 }
+<<<<<<< HEAD
 int find_knight_path(){
     int i = 0,j = checkingPiece_pos.x,k = checkingPiece_pos.y;
     if(j+2 == checkedKing.x && k+1 == checkedKing.y)
@@ -1754,7 +1819,13 @@ int find_pawn_path(){
    // printf("  %d %d ",checkstack[0].x,checkstack[0].y);
     //system("pause");
 }
+=======
+
+int find_knight_path(){}
+int find_pawn_path(){}
+>>>>>>> master
 int find_king_path(){}
+
 int checkmate() {
     int i,j,FLAG = 0,color;
     piece temp;
@@ -1764,6 +1835,7 @@ int checkmate() {
    // cursorX = codX;
     //cursorY = codY;
     all_moves();
+<<<<<<< HEAD
    // cursorX = tempcursorX;
    // cursorY = tempcursorY;
    cursorX = codX;
@@ -1774,9 +1846,20 @@ int checkmate() {
              return 0;
                 }
                // printHash()
+=======
+    cursorX = tempcursorX;
+    cursorY = tempcursorY;
+    tempX = cursorX;
+    tempY = cursorY;
+    for( i = 0 ; checkstack[i].x>=0 ;i++) {
+        if(moves_hash[checkstack[i].x][checkstack[i].y]) {
+            return 0;
+        }
+>>>>>>> master
     }
     return 1;
 }
+
 int all_moves(){
     tempcursorX = cursorX;
     tempcursorY = cursorY;
@@ -1814,35 +1897,28 @@ int all_moves(){
     pawn_flag = 0;
 
 }
+
 int possible_moves_at_check(){
     int i;
     resetMovesHash();
-    switch(board[cursorX][cursorY].type)
-                {
-                    case PAWN:
-                        pawn_moves();
-                        break;
+    switch(board[cursorX][cursorY].type) {
+        case PAWN:
+            pawn_moves();
+            break;
 
-                    case ROOK:
-                        rook_moves();
-                        break;
+        case ROOK:
+            rook_moves();
+            break;
 
-                    case BISHOP:
-                        bishop_moves();
-                        break;
+        case BISHOP:
+            bishop_moves();
+            break;
 
-                    case KNIGHT:
-                        knight_moves();
-                        break;
+        case KNIGHT:
+            knight_moves();
+            break;
 
-                    case KING:
-                        king_moves();
-                        break;
-
-                    case QUEEN:
-                        queen_moves();
-                        break;
-
+<<<<<<< HEAD
                     default:
 
                         break;
@@ -1856,13 +1932,30 @@ int possible_moves_at_check(){
                 {
                         return 1;
                 }
+=======
+        case KING:
+            king_moves();
+            break;
 
-            }
-            resetMovesHash();
+        case QUEEN:
+            queen_moves();
+            break;
+>>>>>>> master
+
+        default:
+            break;
+    }
+    for( i = 0 ; checkstack[i].x >= 0 ; i++) {
+        if(moves_hash[checkstack[i].x][checkstack[i].y]) {
             return 1;
+        }
+    }
+    resetMovesHash();
+    return 1;
 }
+
 int instructions() {
-    printf("\n\n\n\n\t\t\t\t\tThe player controlling the white pieces is named 'White'; the player controlling the black pieces is named 'Black'. White moves first, then players alternate moves. Making a move is required; it is not legal to skip a move, even when having to move is detrimental. Play continues until a king is checkmated, a player resigns, or a draw is declared, as explained below. In addition, if the game is being played under a time control players who exceed their time limit lose the game. The official chess rules do not include a procedure for determining who plays White. Instead, this decision is left open to tournament-specific rules (e.g. a Swiss system tournament or Round-robin tournament) or, in the case of non-competitive play, mutual agreement, in which case some kind of random choice is often employed. A common method is for one player to conceal a piece (usually a pawn) of each color in either hand; the other player chooses a hand to open, and receives the color of the piece that is revealed.");
+    printf("\nThe player controlling the white pieces is named 'White'; the player controlling the black pieces is named 'Black'. White moves first, then players alternate moves. Making a move is required; it is not legal to skip a move, even when having to move is detrimental. Play continues until a king is checkmated, a player resigns, or a draw is declared, as explained below. In addition, if the game is being played under a time control players who exceed their time limit lose the game. The official chess rules do not include a procedure for determining who plays White. Instead, this decision is left open to tournament-specific rules (e.g. a Swiss system tournament or Round-robin tournament) or, in the case of non-competitive play, mutual agreement, in which case some kind of random choice is often employed. A common method is for one player to conceal a piece (usually a pawn) of each color in either hand; the other player chooses a hand to open, and receives the color of the piece that is revealed.");
     printf("\n");
     system("pause");
     system("cls");
@@ -1882,26 +1975,26 @@ int aboutUs() {
 void printBoard2() {
     system("cls");
     int i, j, k, pos;
-    printf("\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n");
+    printf("\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n");
     for(i=0; i<8; i++) {
-        printf("\t\t\t");
+        printf("\t\t\t\t\t\t\t");
         if(i!=0) {
             for(k=0; k<8; k++) {
                 printf("%c     ", vertical_line);
             }
             printf("%c\n", vertical_line);
-            printf("\t\t\t");
+            printf("\t\t\t\t\t\t\t");
         }
         for(k=0; k<8; k++) {
             printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
         }
         printf("%c\n",  plus);
-        printf("\t\t\t");
+        printf("\t\t\t\t\t\t\t");
         for(k=0; k<8; k++) {
             printf("%c     ", vertical_line);
         }
         printf("%c\n", vertical_line);
-        printf("\t\t\t");
+        printf("\t\t\t\t\t\t\t");
         for(j=0; j<8; j++) {
             pos=getpos(i,j);
             switch(board[i][j].type) {
@@ -1936,12 +2029,12 @@ void printBoard2() {
         }
         printf("%c\n", vertical_line);
         if(i==7) {
-            printf("\t\t\t");
+            printf("\t\t\t\t\t\t\t");
             for(k=0; k<8; k++) {
                 printf("%c     ", vertical_line);
             }
             printf("%c\n", vertical_line);
-            printf("\t\t\t");
+            printf("\t\t\t\t\t\t\t");
             for(k=0; k<8; k++) {
                 printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
             }
@@ -1952,24 +2045,36 @@ void printBoard2() {
 
 void printPiece(int i, int j, char piece) {
     if(i == cursorX && j == cursorY) {
-        if(board[i][j].color == -1) {
-            printf("%c%c[%c]%c", 179, 175, piece, 174);
+        if(board[i][j].type != EMPTY) {
+            if(board[i][j].color == -1) {
+                printf("%c%c[%c]%c", 179, 175, piece, 174);
+            }else {
+                printf("%c%c{%c}%c", 179, 175, piece, 174);
+            }
         }else {
             printf("%c%c %c %c", 179, 175, piece, 174);
         }
     }else {
         if(moves_hash[i][j]!=1){
-            if(board[i][j].color == -1) {
-                printf("%c [%c] ", 179, piece);
-            }else {
+            if(board[i][j].type != EMPTY) {
+                if(board[i][j].color == -1) {
+                    printf("%c [%c] ", 179, piece);
+                }else {
+                    printf("%c {%c} ", 179, piece);
+                }
+            }else{
                 printf("%c  %c  ", 179, piece);
             }
         }
         else{
-            if(board[i][j].color == -1) {
-                printf("%c%c[%c]%c", 179, 222, piece, 221);
+            if(board[i][j].type != EMPTY) {
+                if(board[i][j].color == -1) {
+                    printf("%c%c[%c]%c", 179, 222, piece, 221);
+                }else {
+                    printf("%c%c{%c}%c", 179, 222, piece, 221);
+                }
             }else {
-                printf("%c %c%c%c ", 179, 222, piece, 221);
+                printf("%c%c %c %c", 179, 222, piece, 221);
             }
         }
     }
