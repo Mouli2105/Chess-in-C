@@ -1,7 +1,9 @@
- //  HEADER FILES
+//  HEADER FILES
 #include<stdio.h>
 #include<stdlib.h>
 #include<conio.h>
+#define _WIN32_WINNT 0x0601
+#include<windows.h>
 
 //  DEFINING PIECES
 #define WHITE 1
@@ -20,6 +22,7 @@
 #define bottom_right_corner 217
 #define bottom_left_corner 192
 #define plus 197
+
 
 //  DECLARING PROTOTYPES
 int is_king_can_move();
@@ -42,7 +45,7 @@ int instructions();
 int startGame();
 int mainMenu();
 int check();
-//system("pause");
+int welcome();
 int printStacky(int len);
 int isMovesHashEmpty();
 int staleMate();
@@ -63,7 +66,7 @@ int printBoard();
 int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b, int newX, int newY);
 int handleCursor(int color);
-int loadingScreen(char c, int time);
+int loadingScreen(int time);
 int setCursor();
 int setHashCheckMate();
 void resetCheckHash();
@@ -103,51 +106,49 @@ struct coord {
     int y;
 }positionStack[32], whiteKing, blackKing,checkedKing,checkingPiece_pos,checkstack[32],king_stack[32];
 int checkKingMoves(coord pos);
-//  MAIN METHOD
-//int main() {
-//    if(started == 0) {
-//        welcome();
-//    }
-//    system("color 0a");
-//    int a;
-//    int endGame = 0;
-//    do {
-//        a = mainMenu();
-//        switch(a) {
-//            case 1:
-//                endGame = startGame();
-//                break;
-//
-//            case 2:
-//                instructions();
-//                break;
-//
-//            case 3:
-//                controls();
-//                break;
-//
-//            case 4:
-//                aboutUs();
-//                break;
-//
-//            case 5:
-//                system("cls");
-//                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
-//                system("pause");
-//                exit(0);
-//                break;
-//
-//        }
-//    }while(a!=1 && a!=5 && endGame==0);
-//    started = 1;
-//    if(endGame) {
-//        main();
-//    }
-//    return 0;
-//}
 
+//  MAIN METHOD
 int main() {
-    startGame();
+    COORD Coord;
+    SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
+    if(started == 0) {
+        welcome();
+    }
+    system("color 0a");
+    int a;
+    int endGame = 0;
+    do {
+        a = mainMenu();
+        switch(a) {
+            case 1:
+                endGame = startGame();
+                break;
+
+            case 2:
+                instructions();
+                break;
+
+            case 3:
+                controls();
+                break;
+
+            case 4:
+                aboutUs();
+                break;
+
+            case 5:
+                system("cls");
+                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
+                system("pause");
+                exit(0);
+                break;
+
+        }
+    }while(a!=1 && a!=5 && endGame==0);
+    started = 1;
+    if(endGame) {
+        main();
+    }
     return 0;
 }
 
@@ -237,12 +238,12 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     board[0][0].type = board[0][7].type = board[7][0].type = board[7][7].type = ROOK;
     board[0][1].type = board[0][6].type = board[7][1].type = board[7][6].type = KNIGHT;
     board[0][2].type = board[0][5].type = board[7][2].type = board[7][5].type = BISHOP;
-    board[0][3].type = board[7][3].type = QUEEN;
+    board[0][4].type = board[7][4].type = QUEEN;
     whiteKing.x = 0;
-    whiteKing.y = 4;//  USE THESE
+    whiteKing.y = 3;//  USE THESE
     blackKing.x = 7;
-    blackKing.y = 4;
-    board[0][4].type = board[7][4].type = KING;
+    blackKing.y = 3;
+    board[0][3].type = board[7][3].type = KING;
     for(i=0; i<8; i++) {
         board[0][i].color = WHITE;
         board[1][i].color = WHITE;
@@ -554,11 +555,11 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     return 1;
 }
 
-int loadingScreen(char c, int time) {   //  DISPLAYS THE LOADING SCREEN
+int loadingScreen(int time) {   //  DISPLAYS THE LOADING SCREEN
     int i;
     printf("\n\n\n\n\t\t\t\t\t\tLoading");
-    for(i=0; i<8; i++) {
-        printf("%c",c);
+    for(i=0; i<20; i++) {
+        printf("%c", '.');
         _sleep(time);
     }
     return 0;
@@ -1353,8 +1354,14 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
 }
 
 int welcome() {
-    printf("\n\n\n\n\t\t\t\t\t\tWelcome to ChessC !!\n");
-    loadingScreen('.', 300);
+	printf("\n\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
+	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c%c%c%c%c%c%c%c%c%c  %c           %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c       %c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c           %c           %c           %c       %c   %c%c     %c%c   %c             %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c%c%c%c%c%c%c%c%c%c  %c           %c           %c       %c   %c%c%c   %c%c%c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c        %c  %c %c  %c     %c           %c           %c           %c       %c   %c%c%c%c %c%c%c%c   %c             %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c         %c%c   %c%c      %c%c%c%c%c%c%c%c%c%c  %c%c%c%c%c%c%c%c%c%c  %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
+	printf("\n\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+    loadingScreen(150);
 }
 
 int mainMenu() {
