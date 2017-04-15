@@ -111,9 +111,9 @@ int checkKingMoves(coord pos);
 int main() {
     COORD Coord;
     SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
-    if(started == 0) {
-        welcome();
-    }
+//    if(started == 0) {
+//        welcome();
+//    }
     system("color 0a");
     int a;
     int endGame = 0;
@@ -1889,27 +1889,31 @@ int aboutUs() {
 void printBoard2() {
     system("cls");
     int i, j, k, pos;
-    printf("\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n");
+    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n\n\n\n\n");
+    printf("\t\t\t\t\t\t\t     A     B     C     D     E     F     G     H   \n");
     for(i=0; i<8; i++) {
-        printf("\t\t\t");
+        printf("\t\t\t\t\t\t\t  ");
         if(i!=0) {
             for(k=0; k<8; k++) {
                 printf("%c     ", vertical_line);
             }
             printf("%c\n", vertical_line);
-            printf("\t\t\t");
+            printf("\t\t\t\t\t\t\t  ");
         }
         for(k=0; k<8; k++) {
             printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
         }
         printf("%c\n",  plus);
-        printf("\t\t\t");
+        printf("\t\t\t\t\t\t\t  ");
         for(k=0; k<8; k++) {
             printf("%c     ", vertical_line);
         }
         printf("%c\n", vertical_line);
-        printf("\t\t\t");
+        printf("\t\t\t\t\t\t  ");
         for(j=0; j<8; j++) {
+            if(j==0) {
+                printf("\t");
+            }
             pos=getpos(i,j);
             switch(board[i][j].type) {
                 case PAWN:
@@ -1943,12 +1947,12 @@ void printBoard2() {
         }
         printf("%c\n", vertical_line);
         if(i==7) {
-            printf("\t\t\t");
+            printf("\t\t\t\t\t\t\t  ");
             for(k=0; k<8; k++) {
                 printf("%c     ", vertical_line);
             }
             printf("%c\n", vertical_line);
-            printf("\t\t\t");
+            printf("\t\t\t\t\t\t\t  ");
             for(k=0; k<8; k++) {
                 printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
             }
@@ -1960,23 +1964,47 @@ void printBoard2() {
 void printPiece(int i, int j, char piece) {
     if(i == cursorX && j == cursorY) {
         if(board[i][j].color == -1) {
-            printf("%c%c[%c]%c", 179, 175, piece, 174);
+            if(j==0) {
+                printf("%d %c%c[%c]%c", i+1, 179, 175, piece, 174);
+            }else {
+                printf("%c%c[%c]%c", 179, 175, piece, 174);
+            }
         }else {
-            printf("%c%c %c %c", 179, 175, piece, 174);
+            if(j==0) {
+                printf("%d %c%c %c %c", i+1, 179, 175, piece, 174);
+            }else {
+                printf("%c%c %c %c", 179, 175, piece, 174);
+            }
         }
     }else {
         if(moves_hash[i][j]!=1){
             if(board[i][j].color == -1) {
-                printf("%c [%c] ", 179, piece);
+                if(j==0) {
+                    printf("%d %c [%c] ", i+1, 179, piece);
+                }else {
+                    printf("%c [%c] ", 179, piece);
+                }
             }else {
-                printf("%c  %c  ", 179, piece);
+                if(j==0) {
+                    printf("%d %c  %c  ", i+1, 179, piece);
+                }else {
+                    printf("%c  %c  ", 179, piece);
+                }
             }
         }
         else{
             if(board[i][j].color == -1) {
-                printf("%c%c[%c]%c", 179, 222, piece, 221);
+                if(j==0) {
+                    printf("%d %c%c[%c]%c", i, 179, 222, piece, 221);
+                }else {
+                    printf("%c%c[%c]%c", 179, 222, piece, 221);
+                }
             }else {
-                printf("%c %c%c%c ", 179, 222, piece, 221);
+                if(j==0) {
+                    printf("%d %c %c%c%c ", i, 179, 222, piece, 221);
+                }else {
+                    printf("%c %c%c%c ", 179, 222, piece, 221);
+                }
             }
         }
     }
