@@ -61,7 +61,6 @@ int pawn_moves();
 int rook_moves();
 void printHash();
 void possible_moves();
-int mainMenu();
 int printBoard();
 int initializeBoard();
 int swapPieces(struct piece *a, struct piece *b, int newX, int newY);
@@ -111,9 +110,9 @@ int checkKingMoves(coord pos);
 int main() {
     COORD Coord;
     SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
-//    if(started == 0) {
-//        welcome();
-//    }
+    if(started == 0) {
+        welcome();
+    }
     system("color 0a");
     int a;
     int endGame = 0;
@@ -1366,6 +1365,7 @@ int welcome() {
 
 int mainMenu() {
     char ch;
+    int X = 0, Y = 0;
     do {
         system("cls");
         printf("\n\n\n\n\t\t\t\t\t\tMAIN MENU");
