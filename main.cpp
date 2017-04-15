@@ -22,7 +22,6 @@
 #define plus 197
 
 //  DECLARING PROTOTYPES
-
 int is_king_can_move();
 int find_checkedpiece_path();
 int checkmate();
@@ -41,9 +40,9 @@ int getpos(int i,int j);
 int aboutUs();
 int instructions();
 int startGame();
-int welcome();
 int mainMenu();
 int check();
+//system("pause");
 int printStacky(int len);
 int isMovesHashEmpty();
 int staleMate();
@@ -202,12 +201,6 @@ int setHashCheckMate() {
                     printf("CHECK");
                     system("pause");
                     checkingPiece = board[cursorX][cursorY];
-                    if(checkingPiece.type == PAWN){
-                        board[whiteKing.x][whiteKing.y].type = KING;
-                        board[whiteKing.x][whiteKing.y].color = WHITE;
-                        board[blackKing.x][blackKing.y].type = KING;
-                        board[blackKing.x][blackKing.y].color = BLACK;
-                    }
                     checkingPiece_pos.x = cursorX;
                     checkingPiece_pos.y = cursorY;
                     resetCheckHash();
@@ -1758,8 +1751,8 @@ int find_pawn_path(){
     }
     }
     checkstack[k+1].x = -1;
-    printf("  %d %d ",checkstack[0].x,checkstack[0].y);
-    system("pause");
+   // printf("  %d %d ",checkstack[0].x,checkstack[0].y);
+    //system("pause");
 }
 int find_king_path(){}
 int checkmate() {
@@ -1767,6 +1760,7 @@ int checkmate() {
     piece temp;
     codX = cursorX;
     codY = cursorY;
+    resetMovesHash();
    // cursorX = codX;
     //cursorY = codY;
     all_moves();
@@ -1774,8 +1768,6 @@ int checkmate() {
    // cursorY = tempcursorY;
    cursorX = codX;
     cursorY = codY;
-
-    for(i=0;checkstack[i].x>=0;i++)
     for( i = 0 ; checkstack[i].x>=0 ;i++)
     {
             if(moves_hash[checkstack[i].x][checkstack[i].y]){
