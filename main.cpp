@@ -70,6 +70,7 @@ int setHashCheckMate();
 void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
+int pawn_flag = 0;
 int codX,codY;
 int count_v=0;
 int started = 0;
@@ -201,6 +202,12 @@ int setHashCheckMate() {
                     printf("CHECK");
                     system("pause");
                     checkingPiece = board[cursorX][cursorY];
+                    if(checkingPiece.type == PAWN){
+                        board[whiteKing.x][whiteKing.y].type = KING;
+                        board[whiteKing.x][whiteKing.y].color = WHITE;
+                        board[blackKing.x][blackKing.y].type = KING;
+                        board[blackKing.x][blackKing.y].color = BLACK;
+                    }
                     checkingPiece_pos.x = cursorX;
                     checkingPiece_pos.y = cursorY;
                     resetCheckHash();
@@ -1002,78 +1009,62 @@ int knight_moves() {    //TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
 }
 
 int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
-    if(cursorX+1<8) {
-		if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color) {
+		if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color&&cursorX+1<8) {
 			if(check_flag) {
 				checkmate_hash[cursorX+1][cursorY] = 1;
 			}else {
             moves_hash[cursorX+1][cursorY] = 1;
 			}
 		}
-    }
-    if(cursorX-1>=0){
-        if(board[cursorX-1][cursorY].color!=board[cursorX][cursorY].color) {
+        if(board[cursorX-1][cursorY].color!=board[cursorX][cursorY].color&&cursorX-1>=0) {
 			if(check_flag) {
 				checkmate_hash[cursorX-1][cursorY] = 1;
 			}else {
 				moves_hash[cursorX-1][cursorY] = 1;
 			}
         }
-    }
-    if(cursorY+1<8) {
-        if(board[cursorX][cursorY+1].color!=board[cursorX][cursorY+1].color) {
+        if(board[cursorX][cursorY+1].color!=board[cursorX][cursorY].color&&cursorY+1<8) {
 			if(check_flag) {
 				checkmate_hash[cursorX][cursorY+1]=1;
 			}else {
 				moves_hash[cursorX][cursorY+1] = 1;
 			}
         }
-    }
-    if(cursorY-1<8) {
-        if(board[cursorX][cursorY-1].color!=board[cursorX][cursorY-1].color) {
+        if(board[cursorX][cursorY-1].color!=board[cursorX][cursorY].color&&cursorY-1>=0) {
 			if(check_flag) {
 				checkmate_hash[cursorX][cursorY-1] = 1;
 			}else {
 				moves_hash[cursorX][cursorY-1]=1;
 			}
         }
-    }
-    if(cursorX+1<8&&cursorY+1<8) {
-        if(board[cursorX+1][cursorY+1].color!=board[cursorX][cursorY].color) {
+        if(board[cursorX+1][cursorY+1].color!=board[cursorX][cursorY].color&&cursorX+1<8&&cursorY+1<8) {
 			if(check_flag) {
 				checkmate_hash[cursorX+1][cursorY+1];
 			}else {
 				moves_hash[cursorX+1][cursorY+1]=1;
 			}
         }
-    }
-    if(cursorX+1<8&&cursorY-1>=0) {
-        if(board[cursorX+1][cursorY-1].color!=board[cursorX][cursorY].color) {
+        if(board[cursorX+1][cursorY-1].color!=board[cursorX][cursorY].color&&cursorX+1<8&&cursorY-1>=0) {
 			if(check_flag) {
 				checkmate_hash[cursorX+1][cursorY-1];
 			}else {
 				moves_hash[cursorX+1][cursorY-1]=1;
 			}
         }
-    }
-    if(cursorX-1>=0&&cursorY+1<8) {
-        if(board[cursorX-1][cursorY+1].color!=board[cursorX][cursorY].color) {
+        if(board[cursorX-1][cursorY+1].color!=board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY+1<8) {
 			if(check_flag) {
 				checkmate_hash[cursorX-1][cursorY+1];
 			}else {
 				moves_hash[cursorX-1][cursorY+1]=1;
 			}
         }
-    }
-    if(cursorX-1>=0&&cursorY-1>=0) {
-        if(board[cursorX-1][cursorY-1].color!=board[cursorX][cursorY].color) {
+        if(board[cursorX-1][cursorY-1].color!=board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY-1>=0) {
 			if(check_flag) {
 				checkmate_hash[cursorX-1][cursorY-1];
 			}else {
 				moves_hash[cursorX-1][cursorY-1]=1;
 			}
         }
-    }
 }
 
 int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
@@ -1081,16 +1072,24 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
         if(board[cursorX+1][cursorY].color==0) {
             if(check_flag) {
                 checkmate_hash[cursorX+1][cursorY]=1;
+                checkmate_hash[cursorX+1][cursorY+1]=1;
+                checkmate_hash[cursorX+1][cursorY-1]=1;
 			}else {
                 moves_hash[cursorX+1][cursorY]=1;
+                if(pawn_flag){
+                moves_hash[cursorX+1][cursorY+1]=1;
+                moves_hash[cursorX+1][cursorY-1]=1;
+                }
 			}
-        }else if(board[cursorX+1][cursorY+1].color==-1*board[cursorX][cursorY].color) {
+        }
+         if(board[cursorX+1][cursorY+1].color==-1*board[cursorX][cursorY].color&&cursorX+1<8&&cursorY+1<8) {
             if(check_flag) {
                 checkmate_hash[cursorX+1][cursorY+1]=1;
 			}else {
                 moves_hash[cursorX+1][cursorY+1]=1;
 			}
-        }else if(board[cursorX+1][cursorY-1].color==-1*board[cursorX][cursorY].color){
+        }
+         if(board[cursorX+1][cursorY-1].color==-1*board[cursorX][cursorY].color&&cursorX+1<8&&cursorY-1>=0){
             if(check_flag) {
                 checkmate_hash[cursorX+1][cursorY-1]=1;
 			}else {
@@ -1098,7 +1097,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 			}
         }
         if(cursorX == 1) {
-            if(board[cursorX+2][cursorY].color == EMPTY && board[cursorX+1][cursorY].color == EMPTY) {
+            if(board[cursorX+2][cursorY].color == EMPTY && board[cursorX+1][cursorY].color == EMPTY&&cursorX+2<8) {
 				if(check_flag) {
 					checkmate_hash[cursorX+2][cursorY] = 1;
 				}else {
@@ -1110,18 +1109,24 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
         if(board[cursorX-1][cursorY].color==0) {
 			if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY]=1;
+                checkmate_hash[cursorX-1][cursorY-1]=1;
+                checkmate_hash[cursorX-1][cursorY+1]=1;
 			}else {
                 moves_hash[cursorX-1][cursorY]=1;
+                if(pawn_flag){
+                moves_hash[cursorX+1][cursorY+1]=1;
+                moves_hash[cursorX+1][cursorY-1]=1;
+                }
 			}
         }
-        if(board[cursorX-1][cursorY-1].color==-1*board[cursorX][cursorY].color) {
+        if(board[cursorX-1][cursorY-1].color==-1*board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY-1>=0) {
             if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY-1]=1;
 			}else {
                 moves_hash[cursorX-1][cursorY-1]=1;
 			}
         }
-        if(board[cursorX-1][cursorY+1].color==-1*board[cursorX][cursorY].color) {
+        if(board[cursorX-1][cursorY+1].color==-1*board[cursorX][cursorY].color&&cursorX+1>=0&&cursorY+1<8) {
             if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY+1]=1;
 			}else {
@@ -1130,7 +1135,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
         }
     }
     if(cursorX == 6) {
-        if(board[cursorX-2][cursorY].color == EMPTY&&board[cursorX-1][cursorY].color == EMPTY) {
+        if(board[cursorX-2][cursorY].color == EMPTY&&board[cursorX-1][cursorY].color == EMPTY&&cursorX-2>=0) {
             if(check_flag) {
                 checkmate_hash[cursorX-2][cursorY] = 1;
             }else {
@@ -1398,6 +1403,7 @@ int startGame() {
                     }
                     else
                     {
+                       // find_checkedpiece_path();
                         possible_moves_at_check();
                         printBoard2();
                         cursor_flag = 0;
@@ -1430,8 +1436,13 @@ int startGame() {
 
 
         }
-        if(cursor_flag)
+        if(cursor_flag){
+        board[whiteKing.x][whiteKing.y].type = KING;
+        board[whiteKing.x][whiteKing.y].color = WHITE;
+        board[blackKing.x][blackKing.y].type = KING;
+        board[blackKing.x][blackKing.y].color = BLACK;
         printBoard2();
+        }
 //        printHash();
 //        system("pause");
         resetMovesHash();
@@ -1675,26 +1686,100 @@ int find_queen_path(){
         checkstack[j].x = -1;
     }
 }
-int find_knight_path(){}
-int find_pawn_path(){}
+int find_knight_path(){
+    int i = 0,j = checkingPiece_pos.x,k = checkingPiece_pos.y;
+    if(j+2 == checkedKing.x && k+1 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j+2 == checkedKing.x && k-1 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j-2 == checkedKing.x && k+1 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j-2 == checkedKing.x && k-1 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j+1 == checkedKing.x && k+2 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j-1 == checkedKing.x && k+2 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j+1 == checkedKing.x && k-2 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    else if(j-1 == checkedKing.x && k-2 == checkedKing.y)
+    {
+        checkstack[i].x = j;
+        checkstack[i].y = k;
+    }
+    checkstack[i+1].x = -1;
+   // printf("    in knight  %d  %d",checkstack[0].x,checkstack[0].y);
+    //system("pause");
+    return 1;
+}
+int find_pawn_path(){
+    int i,j,k=0;
+    i = checkedKing.x;
+    j = checkedKing.y;
+    if(board[checkedKing.x][checkedKing.y].color == WHITE){
+    if(i+1 == checkingPiece_pos.x && j+1 == checkingPiece_pos.y){
+        checkstack[k].x = i-1;
+        checkstack[k].y = j-1;
+    }
+    if(i+1 == checkingPiece_pos.x && j-1 == checkingPiece_pos.y){
+        checkstack[k].x = i-1;
+        checkstack[k].y = j+1;
+    }
+    }
+    if(board[checkedKing.x][checkedKing.y].color == BLACK){
+    if(i-1 == checkingPiece_pos.x && j-1 == checkingPiece_pos.y){
+        checkstack[k].x = i-1;
+        checkstack[k].y = j-1;
+    }
+    if(i-1 == checkingPiece_pos.x && j+1 == checkingPiece_pos.y){
+        checkstack[k].x = i-1;
+        checkstack[k].y = j+1;
+    }
+    }
+    checkstack[k+1].x = -1;
+    printf("  %d %d ",checkstack[0].x,checkstack[0].y);
+    system("pause");
+}
 int find_king_path(){}
 int checkmate() {
     int i,j,FLAG = 0,color;
     piece temp;
     codX = cursorX;
     codY = cursorY;
-    cursorX = codX;
-    cursorY = codY;
+   // cursorX = codX;
+    //cursorY = codY;
     all_moves();
-    cursorX = tempcursorX;
-    cursorY = tempcursorY;
-    cursorX = codX;
+   // cursorX = tempcursorX;
+   // cursorY = tempcursorY;
+   cursorX = codX;
     cursorY = codY;
+
+    for(i=0;checkstack[i].x>=0;i++)
     for( i = 0 ; checkstack[i].x>=0 ;i++)
     {
             if(moves_hash[checkstack[i].x][checkstack[i].y]){
-
-                return 0;
+             return 0;
                 }
                // printHash()
     }
@@ -1703,6 +1788,7 @@ int checkmate() {
 int all_moves(){
     tempcursorX = cursorX;
     tempcursorY = cursorY;
+    pawn_flag = 1;
     for(cursorX=0; cursorX<8; cursorX++) {
         for(cursorY=0; cursorY<8; cursorY++) {
             if(board[cursorX][cursorY].color == col){
@@ -1727,13 +1813,13 @@ int all_moves(){
                     case QUEEN:
                         queen_moves();
                         break;
-
                     default:
                         break;
                 }
             }
         }
     }
+    pawn_flag = 0;
 
 }
 int possible_moves_at_check(){
@@ -1772,11 +1858,11 @@ int possible_moves_at_check(){
 
             for( i = 0 ; checkstack[i].x >= 0 ; i++)
             {
-//                printf("%d cursor = %d,%d",moves_hash[checkstack[i].x][checkstack[i].y],cursorX,cursorY);
-//                system("pause");
+             //   printf("  %d %d",checkstack[i].x,checkstack[i].y);
+              //  system("pause");
                 if(moves_hash[checkstack[i].x][checkstack[i].y])
                 {
-                    return 1;
+                        return 1;
                 }
 
             }
@@ -1896,13 +1982,15 @@ void printPiece(int i, int j, char piece) {
         }
     }
 }
-
 int is_king_can_move()
 {
-    int i;
+    int i,temp_color;
     piece temp;
     checkKingMoves(checkedKing);
     resetMovesHash();
+    temp_color = board[checkedKing.x][checkedKing.y].color;
+    board[checkedKing.x][checkedKing.y].color = 0;
+    board[checkedKing.x][checkedKing.y].type = EMPTY;
     for(i=0;king_stack[i].x>=0;i++){
     temp = board[king_stack[i].x][king_stack[i].y];
     board[king_stack[i].x][king_stack[i].y].type = EMPTY;
@@ -1912,67 +2000,75 @@ int is_king_can_move()
     cursorX = codX;
     cursorY = codY;
     col = -1 * col;
-   // printf("            %d",moves_hash[king_stack[i].x][king_stack[i].y]);
+    //printHash();
+    //system("pause");
     if(moves_hash[king_stack[i].x][king_stack[i].y] == 0)
+    {
+        board[checkedKing.x][checkedKing.y].color = temp_color;
+        board[checkedKing.x][checkedKing.y].color = KING;
         return 0;
-    board[king_stack[i].x][king_stack[i].y] = temp;
-   // printHash();
-   // system("pause");
     }
+    board[king_stack[i].x][king_stack[i].y] = temp;
+    }
+        board[checkedKing.x][checkedKing.y].color = temp_color;
+        board[checkedKing.x][checkedKing.y].color = KING;
     return 1;
 }
 
 int checkKingMoves(coord pos){
     int i = 0;
-    printf("%d %d",pos.x,pos.y);
     if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y].color || board[pos.x+1][pos.y].color == EMPTY) && pos.x!=7){
-            printf("*1");
+         //   printf("*1");
         king_stack[i].x = pos.x+1;
         king_stack[i].y = pos.y;
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x-1][pos.y].color || board[pos.x-1][pos.y].color == EMPTY) && pos.x!=0){
-        printf("*2");
+       // printf("*2");
         king_stack[i].x = pos.x-1;
         king_stack[i].y = pos.y;
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x][pos.y+1].color || board[pos.x][pos.y+1].color == EMPTY) && pos.y!=7){
-        printf("*3");
+       // printf("*3");
         king_stack[i].x = pos.x;
         king_stack[i].y = pos.y+1;
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x][pos.y-1].color || board[pos.x][pos.y-1].color == EMPTY) && pos.y!=0){
-        printf("*4");
+       // printf("*4");
         king_stack[i].x = pos.x;
         king_stack[i].y = pos.y-1;
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y+1].color || board[pos.x+1][pos.y+1].color == EMPTY) && pos.x!=7 && pos.y!=7){
-        printf("*5");
+       // printf("*5");
         king_stack[i].x = pos.x+1;
         king_stack[i].y = pos.y+1;
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y-1].color || board[pos.x+1][pos.y-1].color == EMPTY) && pos.x!=7 && pos.y!=0){
-        printf("*6");
+       // printf("*6");
         king_stack[i].x = pos.x+1;
         king_stack[i].y = pos.y-1;
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x-1][pos.y+1].color || board[pos.x-1][pos.y+1].color == EMPTY) && pos.x!=0 && pos.y!=7){
-        printf("*7");
+        //printf("*7");
         king_stack[i].x = pos.x-1;
         king_stack[i].y = pos.y+1;
        // printf("       %d %d",king_stack[i].x,king_stack[i].y);
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x-1][pos.y-1].color || board[pos.x-1][pos.y-1].color == EMPTY) && pos.x!=0 && pos.y!=0){
-        printf("*8");
+       // printf("*8");
         king_stack[i].x = pos.x-1;
         king_stack[i].y = pos.y-1;
         i++;
     }
     king_stack[i].x = -1;
+//    for(i=0;king_stack[i].x>=0;i++){
+//        printf("   %d  %d ",king_stack[i].x,king_stack[i].y);
+//    }
+//    system("pause");
 }
