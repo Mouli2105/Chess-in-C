@@ -1062,7 +1062,7 @@ int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
 }
 
 int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
-    if(board[cursorX][cursorY].color==1&&front_color==1) {
+    if(board[cursorX][cursorY].color==1&&front_color==WHITE) {
         if(board[cursorX+1][cursorY].color==0) {
             if(check_flag) {
                 checkmate_hash[cursorX+1][cursorY]=1;
@@ -1072,7 +1072,6 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
                 moves_hash[cursorX+1][cursorY]=1;
                 }
 			}
-        }
          if(board[cursorX+1][cursorY+1].color==-1*board[cursorX][cursorY].color&&cursorX+1<8&&cursorY+1<8) {
             if(check_flag) {
                 checkmate_hash[cursorX+1][cursorY+1]=1;
@@ -1095,6 +1094,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 					moves_hash[cursorX+2][cursorY] = 1;
 				}
             }
+        }
         }else if(board[cursorX][cursorY].color==-1&&front_color==1) {
         if(board[cursorX-1][cursorY].color==0) {
 			if(check_flag) {
@@ -1105,7 +1105,6 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
                 moves_hash[cursorX-1][cursorY]=1;
                 }
 			}
-        }
         if(board[cursorX-1][cursorY-1].color==-1*board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY-1>=0) {
             if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY-1]=1;
@@ -1113,7 +1112,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
                 moves_hash[cursorX-1][cursorY-1]=1;
 			}
         }
-        if(board[cursorX-1][cursorY+1].color==-1*board[cursorX][cursorY].color&&cursorX+1>=0&&cursorY+1<8) {
+        if(board[cursorX-1][cursorY+1].color==-1*board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY+1<8) {
             if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY+1]=1;
 			}else {
@@ -1129,6 +1128,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 			}
         }
     }
+        }
 }
 
 void printHash() {  //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
@@ -1730,20 +1730,20 @@ int find_pawn_path(){
     j = checkedKing.y;
     if(board[checkedKing.x][checkedKing.y].color == WHITE){
     if(i+1 == checkingPiece_pos.x && j+1 == checkingPiece_pos.y){
-        checkstack[k].x = i-1;
-        checkstack[k].y = j-1;
-    }
-    if(i+1 == checkingPiece_pos.x && j-1 == checkingPiece_pos.y){
-        checkstack[k].x = i-1;
+        checkstack[k].x = i+1;
         checkstack[k].y = j+1;
     }
+   else if(i+1 == checkingPiece_pos.x && j-1 == checkingPiece_pos.y){
+        checkstack[k].x = i+1;
+        checkstack[k].y = j-1;
     }
-    if(board[checkedKing.x][checkedKing.y].color == BLACK){
+    }
+    else if(board[checkedKing.x][checkedKing.y].color == BLACK){
     if(i-1 == checkingPiece_pos.x && j-1 == checkingPiece_pos.y){
         checkstack[k].x = i-1;
         checkstack[k].y = j-1;
     }
-    if(i-1 == checkingPiece_pos.x && j+1 == checkingPiece_pos.y){
+    else if(i-1 == checkingPiece_pos.x && j+1 == checkingPiece_pos.y){
         checkstack[k].x = i-1;
         checkstack[k].y = j+1;
     }
