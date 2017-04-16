@@ -37,11 +37,9 @@ int find_bishop_path();
 int find_queen_path();
 int find_knight_path();
 int find_pawn_path();
-int find_king_path();
 void printCheckHash();
 void printPiece(int i, int j, char piece);
 void printBoard2();
-int getpos(int i,int j);
 int aboutUs();
 int instructions();
 int startGame();
@@ -163,7 +161,7 @@ int main() {
     return 0;
 }
 
-int setHashCheckMate() {
+int setHashCheckMate() {  //SETS THE HASH TABLE USED TO CHECK THE CHECKMATE AND CHECK CONDITION
     int i,j;
     check_flag = 1;
     tempcursorX = cursorX;
@@ -284,7 +282,6 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
         printf("%c\n", 191);
         printf("\t\t");
         for(j=0; j<8; j++) {
-            pos=getpos(i,j);
             switch(board[i][j].type) {
                 case PAWN:
                     if(i == cursorX && j == cursorY) {
@@ -461,9 +458,6 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     return 1;
 }
 
-int getpos(int i,int j){
-    return ((i+1)/8)+((j+1)%8);
-}
 
 int swapPieces(struct piece *a, struct piece *b, int newX, int newY) {//    SWAPS TWO PIECES ON THE BOARD
     if(a->type == KING){
@@ -1256,7 +1250,7 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     }
 }
 
-void resetCheckHash() {
+void resetCheckHash() { // RESETS THE HASH TABLE
     int i,j;
     for(i=0; i<8; i++) {
         for(j=0 ; j<8; j++) {
@@ -1282,8 +1276,7 @@ int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     }
     return 0;
 }
-void printCheckHash()
-{
+void printCheckHash(){
     int i,j;
     for( i = 0 ; i < 8 ; i++){
         for( j = 0 ; j < 8 ; j++)
@@ -1293,7 +1286,7 @@ void printCheckHash()
         printf("\n");
     }
 }
-int setCursor() {
+int setCursor() {// SETS THE CURSOR TO INITIAL POSITION
     int i,j;
     for(i=0; i<8; i++) {
         for(j=0; j<8; j++) {
@@ -1506,7 +1499,7 @@ int startGame() {
     }while(handleCursor(col));
     return 1;
 }
-int find_checkedpiece_path(){
+int find_checkedpiece_path(){ // FINDS THE PATH FROM CHECKEING PIECE TO OPPENENT KING
     switch(checkingPiece.type)
         {
             case ROOK : find_rook_path();
@@ -1519,13 +1512,11 @@ int find_checkedpiece_path(){
                         break;
             case PAWN : find_pawn_path();
                         break;
-            case KING : find_king_path();
-                        break;
 
         }
         return 0;
 }
-int find_rook_path(){
+int find_rook_path(){// FIND THE ROOK PATH
     int i,j;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
     {
@@ -1576,7 +1567,7 @@ int find_rook_path(){
         checkstack[j].x = -1;
     }
 }
-int find_bishop_path(){
+int find_bishop_path(){//FINDS THE BISHOP PATH
     int i,j,k;
     if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y < checkedKing.y)
     {
@@ -1635,7 +1626,7 @@ int find_bishop_path(){
         checkstack[j].x = -1;
     }
 }
-int find_queen_path(){
+int find_queen_path(){//FINDS THE QUEEN PATH
    int i,j,k;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
     {
@@ -1742,7 +1733,7 @@ int find_queen_path(){
         checkstack[j].x = -1;
     }
 }
-int find_knight_path(){
+int find_knight_path(){//FINDS THE KNIGHT PATH
     int i = 0,j = checkingPiece_pos.x,k = checkingPiece_pos.y;
     if(j+2 == checkedKing.x && k+1 == checkedKing.y)
     {
@@ -1789,7 +1780,7 @@ int find_knight_path(){
     //system("pause");
     return 1;
 }
-int find_pawn_path(){
+int find_pawn_path(){//FINDS THE PAWN PATH
     int i,j,k=0;
     i = checkedKing.x;
     j = checkedKing.y;
@@ -1817,8 +1808,8 @@ int find_pawn_path(){
    // printf("  %d %d ",checkstack[0].x,checkstack[0].y);
     //system("pause");
 }
-int find_king_path(){}
-int checkmate() {
+
+int checkmate() {// RETURNS 1 IF CHECKMATE SITUATION ARRIVES
     int i,j,FLAG = 0,color;
     piece temp;
     codX = cursorX;
@@ -1840,7 +1831,7 @@ int checkmate() {
     }
     return 1;
 }
-int all_moves(){
+int all_moves(){// FIX THE HASH TABLE WITH ALL THE MOVES EXCEPT KING WHICH IS USED IN CHECKMATE METHOD
     tempcursorX = cursorX;
     tempcursorY = cursorY;
     for(cursorX=0; cursorX<8; cursorX++) {
@@ -1875,7 +1866,7 @@ int all_moves(){
     }
 
 }
-int possible_moves_at_check(){
+int possible_moves_at_check(){//FINDS THE POSSIBLE MOVES AFTER CHECKING THE OPPONENT KING
     int i;
     resetMovesHash();
     switch(board[cursorX][cursorY].type)
@@ -1950,7 +1941,7 @@ int aboutUs() {
     return 1;
 }
 
-void printBoard2() {
+void printBoard2() {// PRINTS THE BOARD IN WELL DESIGNED MANNER
     system("cls");
     int i, j, k, pos;
     printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n");
@@ -1986,7 +1977,6 @@ void printBoard2() {
             if(j==0) {
                 printf("\t");
             }
-            pos=getpos(i,j);
             switch(board[i][j].type) {
                 case PAWN:
                     printPiece(i, j, 'P');
@@ -2081,7 +2071,7 @@ void printPiece(int i, int j, char piece) {
         }
     }
 }
-int is_king_can_move()
+int is_king_can_move()// CHECKES WHETHER A CHECKED KING CAN MOVE AFTER CHECKING
 {
     int i,temp_color;
     piece temp;
@@ -2172,7 +2162,7 @@ int checkKingMoves(coord pos){
 //    system("pause");
 }
 
-int scanPlayers() {
+int scanPlayers() {// SCANS THE  PLAYERNAMES
     system("cls");
     printf("\n\n\n\n\n\n");
     printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter first player's name: ");
