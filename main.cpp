@@ -25,6 +25,7 @@
 
 
 //  DECLARING PROTOTYPES
+int scanPlayers();
 int is_king_can_move();
 int find_checkedpiece_path();
 int checkmate();
@@ -71,6 +72,8 @@ int setHashCheckMate();
 void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
+char player1[50];
+char player2[50];
 int pawn_flag = 0;
 int codX,codY;
 int count_v=0;
@@ -120,6 +123,8 @@ int main() {
         a = mainMenu();
         switch(a) {
             case 1:
+                _sleep(100);
+                scanPlayers();
                 loadingScreen(100);
                 endGame = startGame();
                 break;
@@ -1936,6 +1941,12 @@ void printBoard2() {
     system("cls");
     int i, j, k, pos;
     printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n\n\n\n\n");
+    printf("\t\t\t\t\t\t\t\t\t");
+    if(col == WHITE) {
+        printf("%s's turn \n\n\n", player1);
+    }else {
+        printf("%s's turn \n\n\n", player2);
+    }
     printf("\t\t\t\t\t\t\t     A     B     C     D     E     F     G     H   \n");
     for(i=0; i<8; i++) {
         printf("\t\t\t\t\t\t\t  ");
@@ -2144,4 +2155,15 @@ int checkKingMoves(coord pos){
 //        printf("   %d  %d ",king_stack[i].x,king_stack[i].y);
 //    }
 //    system("pause");
+}
+
+int scanPlayers() {
+    system("cls");
+    printf("\n\n\n\n\n\n");
+    printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter first player's name: ");
+    scanf("%s", &player1);
+    printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter second player's name: ");
+    scanf("%s", &player2);
+    system("pause");
+    system("cls");
 }
