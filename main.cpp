@@ -840,6 +840,7 @@ int queen_moves() { //TO PRINT THE POSSIBLE MOVES OF QUEEN
         i++;
     }
     j = 1;
+    i = 1;
     while(cursorX+i<8&&cursorY+i<8) {
         if(board[cursorX+i][cursorY+j].color==board[cursorX][cursorY].color) {
             break;
@@ -1032,28 +1033,28 @@ int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
         }
         if(board[cursorX+1][cursorY+1].color!=board[cursorX][cursorY].color&&cursorX+1<8&&cursorY+1<8) {
 			if(check_flag) {
-				checkmate_hash[cursorX+1][cursorY+1];
+				checkmate_hash[cursorX+1][cursorY+1] = 1;
 			}else {
 				moves_hash[cursorX+1][cursorY+1]=1;
 			}
         }
         if(board[cursorX+1][cursorY-1].color!=board[cursorX][cursorY].color&&cursorX+1<8&&cursorY-1>=0) {
 			if(check_flag) {
-				checkmate_hash[cursorX+1][cursorY-1];
+				checkmate_hash[cursorX+1][cursorY-1] = 1;
 			}else {
 				moves_hash[cursorX+1][cursorY-1]=1;
 			}
         }
         if(board[cursorX-1][cursorY+1].color!=board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY+1<8) {
 			if(check_flag) {
-				checkmate_hash[cursorX-1][cursorY+1];
+				checkmate_hash[cursorX-1][cursorY+1] = 1;
 			}else {
 				moves_hash[cursorX-1][cursorY+1]=1;
 			}
         }
         if(board[cursorX-1][cursorY-1].color!=board[cursorX][cursorY].color&&cursorX-1>=0&&cursorY-1>=0) {
 			if(check_flag) {
-				checkmate_hash[cursorX-1][cursorY-1];
+				checkmate_hash[cursorX-1][cursorY-1] = 1;
 			}else {
 				moves_hash[cursorX-1][cursorY-1]=1;
 			}
@@ -1069,9 +1070,6 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
                 checkmate_hash[cursorX+1][cursorY-1]=1;
 			}else {
                 moves_hash[cursorX+1][cursorY]=1;
-                if(pawn_flag){
-                moves_hash[cursorX+1][cursorY+1]=1;
-                moves_hash[cursorX+1][cursorY-1]=1;
                 }
 			}
         }
@@ -1097,8 +1095,7 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 					moves_hash[cursorX+2][cursorY] = 1;
 				}
             }
-        }
-    }else if(board[cursorX][cursorY].color==-1&&front_color==1) {
+        }else if(board[cursorX][cursorY].color==-1&&front_color==1) {
         if(board[cursorX-1][cursorY].color==0) {
 			if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY]=1;
@@ -1106,9 +1103,6 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
                 checkmate_hash[cursorX-1][cursorY+1]=1;
 			}else {
                 moves_hash[cursorX-1][cursorY]=1;
-                if(pawn_flag){
-                moves_hash[cursorX+1][cursorY+1]=1;
-                moves_hash[cursorX+1][cursorY-1]=1;
                 }
 			}
         }
@@ -1126,7 +1120,6 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
                 moves_hash[cursorX-1][cursorY+1]=1;
 			}
         }
-    }
     if(cursorX == 6) {
         if(board[cursorX-2][cursorY].color == EMPTY&&board[cursorX-1][cursorY].color == EMPTY&&cursorX-2>=0) {
             if(check_flag) {
@@ -1380,29 +1373,34 @@ int startGame() {
     initializeBoard();
     system("color 0e");
     do {
-            cursor_flag = 1;
+           // printBoard2();
             if(black_checked || white_checked){
                     find_checkedpiece_path();
 //                    for(i=0;checkstack[i].x!=-1;i++)
 //                        printf("%d %d\n",checkstack[i].x,checkstack[i].y);
 //                    system("pause");
 
-                    if( checkmate()&&is_king_can_move())
+                    if( checkmate())
                     {
+                        printf("here");
+                        system("pause");
+                        if(is_king_can_move()){
 //                        printf("\nEntered");
 //                        system("pause");
                         printf("check mate\ngmae over");
                         break;
+                        }
                     }
-                    else
-                    {
                        // find_checkedpiece_path();
+
                         possible_moves_at_check();
-                        printBoard2();
-                        cursor_flag = 0;
-                    }
+//                        printHash();
+//                        system("pause");
+                        //printBoard2();
+
 
         }
+        else{
         temp = board[cursorX][cursorY];
         tempX = cursorX;
         tempY = cursorY;
@@ -1429,13 +1427,13 @@ int startGame() {
 
 
         }
-        if(cursor_flag){
+        }
         board[whiteKing.x][whiteKing.y].type = KING;
         board[whiteKing.x][whiteKing.y].color = WHITE;
         board[blackKing.x][blackKing.y].type = KING;
         board[blackKing.x][blackKing.y].color = BLACK;
         printBoard2();
-        }
+
 //        printHash();
 //        system("pause");
         resetMovesHash();
@@ -1780,7 +1778,6 @@ int checkmate() {
 int all_moves(){
     tempcursorX = cursorX;
     tempcursorY = cursorY;
-    pawn_flag = 1;
     for(cursorX=0; cursorX<8; cursorX++) {
         for(cursorY=0; cursorY<8; cursorY++) {
             if(board[cursorX][cursorY].color == col){
@@ -1811,7 +1808,6 @@ int all_moves(){
             }
         }
     }
-    pawn_flag = 0;
 
 }
 int possible_moves_at_check(){
@@ -1850,8 +1846,6 @@ int possible_moves_at_check(){
 
             for( i = 0 ; checkstack[i].x >= 0 ; i++)
             {
-             //   printf("  %d %d",checkstack[i].x,checkstack[i].y);
-              //  system("pause");
                 if(moves_hash[checkstack[i].x][checkstack[i].y])
                 {
                         return 1;
@@ -1994,16 +1988,16 @@ int is_king_can_move()
     col = -1 * col;
     //printHash();
     //system("pause");
+    board[king_stack[i].x][king_stack[i].y] = temp;
     if(moves_hash[king_stack[i].x][king_stack[i].y] == 0)
     {
         board[checkedKing.x][checkedKing.y].color = temp_color;
-        board[checkedKing.x][checkedKing.y].color = KING;
+        board[checkedKing.x][checkedKing.y].type = KING;
         return 0;
     }
-    board[king_stack[i].x][king_stack[i].y] = temp;
     }
         board[checkedKing.x][checkedKing.y].color = temp_color;
-        board[checkedKing.x][checkedKing.y].color = KING;
+        board[checkedKing.x][checkedKing.y].type = KING;
     return 1;
 }
 
