@@ -1159,7 +1159,7 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
     }
 }
 
-int controls() {    //  DISPLAYS THE INSTRUCTIONS OF GAME
+int controls() {    //  DISPLAYS THE CONTROLS OF GAME
     system("cls");
     printf("\n\n\t\t\t\t\t\tW       :       UP\n");
     printf("\n\n\t\t\t\t\t\tA       :       LEFT\n");
@@ -1889,8 +1889,18 @@ int possible_moves_at_check(){
             resetMovesHash();
             return 1;
 }
-int instructions() {
-    printf("\n\n\n\n\t\t\t\t\tThe player controlling the white pieces is named 'White'; the player controlling the black pieces is named 'Black'. White moves first, then players alternate moves. Making a move is required; it is not legal to skip a move, even when having to move is detrimental. Play continues until a king is checkmated, a player resigns, or a draw is declared, as explained below. In addition, if the game is being played under a time control players who exceed their time limit lose the game. The official chess rules do not include a procedure for determining who plays White. Instead, this decision is left open to tournament-specific rules (e.g. a Swiss system tournament or Round-robin tournament) or, in the case of non-competitive play, mutual agreement, in which case some kind of random choice is often employed. A common method is for one player to conceal a piece (usually a pawn) of each color in either hand; the other player chooses a hand to open, and receives the color of the piece that is revealed.");
+int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
+    FILE *fp;
+    char ch;
+    fp = fopen("instructions.txt", "r");
+    if(fp == NULL) {
+        printf("Unable to open the file!");
+    }else {
+        while((ch=fgetc(fp)) != EOF) {
+            printf("%c", ch);
+        }
+    }
+    fclose(fp);
     printf("\n");
     system("pause");
     system("cls");
