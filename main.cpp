@@ -1190,6 +1190,7 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
 }
 
 int controls() {    //  DISPLAYS THE CONTROLS OF GAME
+    system("color 2f");
     system("cls");
     printf("\n\n\n\n");
     printf("\n\n\t\t\t\t\t\t\t\t\tW       :       UP\n");
@@ -1922,6 +1923,7 @@ int possible_moves_at_check(){
             return 1;
 }
 int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
+    system("color 80");
     FILE *fp;
     char ch;
     fp = fopen("instructions.txt", "r");
@@ -1940,10 +1942,11 @@ int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
 }
 
 int aboutUs() {
-    printf("\n\n\n\n\t\t\t\t\tSunny");
-    printf("\n\n\n\n\t\t\t\t\tSreekara Mouli. T");
+    system("color 0d");
+    printf("\n\n\n\n\t\t\t\t\t\t\tSunny");
+    printf("\n\n\n\n\t\t\t\t\t\t\tSreekara Mouli. T");
     printf("\n");
-    printf("\n\n\n\n\t\t\tYou can find the source code to this project at: https://github.com/MouliTadinada/Chess-in-C\n\n\n");
+    printf("\n\n\n\n\n\n\t\tYou can find the source code to this project at: https://github.com/MouliTadinada/Chess-in-C\n\n\n");
     system("pause");
     system("cls");
     return 1;
