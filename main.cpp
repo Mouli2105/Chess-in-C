@@ -203,14 +203,13 @@ int setHashCheckMate() {
                 if(check()) {
                         if(flag){
                     if(col == WHITE){
-                        printf("\n\t\t\tblack");
                         black_checked = 1;
                     }
                     else{
-                        printf("\n\t\t\twhite");
                         white_checked = 1;
                     }
-                    printf("CHECK");
+                    printf("\nCHECK");
+                    printf("\n");
                     system("pause");
                     checkingPiece = board[cursorX][cursorY];
                     checkingPiece_pos.x = cursorX;
@@ -1443,12 +1442,17 @@ int startGame() {
 
                     if( checkmate())
                     {
-                        printf("here");
-                        system("pause");
                         if(is_king_can_move()){
 //                        printf("\nEntered");
 //                        system("pause");
-                        printf("check mate\ngmae over");
+                        printf("\nCHECK-MATE");
+                        if(col==WHITE) {
+                            printf("\n%s WINS", player2);
+                        }else {
+                            printf("\n%s WINS", player1);
+                        }
+                        printf("\n");
+                        system("pause");
                         break;
                         }
                     }
@@ -1949,7 +1953,7 @@ int aboutUs() {
 void printBoard2() {
     system("cls");
     int i, j, k, pos;
-    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n\n\n");
+    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n");
     printf("\t\t\t\t\t\t\t\t\t");
     if(col == WHITE) {
         system("color f9");
@@ -2143,7 +2147,7 @@ int checkKingMoves(coord pos){
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y-1].color || board[pos.x+1][pos.y-1].color == EMPTY) && pos.x!=7 && pos.y!=0){
-       // printf("*6");
+       // printf("*6");system("color 0a");
         king_stack[i].x = pos.x+1;
         king_stack[i].y = pos.y-1;
         i++;
