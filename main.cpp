@@ -120,6 +120,7 @@ int main() {
         a = mainMenu();
         switch(a) {
             case 1:
+                loadingScreen(100);
                 endGame = startGame();
                 break;
 
@@ -556,11 +557,25 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
 int loadingScreen(int time) {   //  DISPLAYS THE LOADING SCREEN
     int i;
-    printf("\n\n\n\n\t\t\t\t\t\tLoading");
-    for(i=0; i<20; i++) {
+    printf("\n\n\n\n\n\n\t\t\t\t\t\t\t\tLoading");
+    for(i=1; i<=20; i++) {
         printf("%c", '.');
         _sleep(time);
+        if(i==4){
+            system("color 01");
+        }else if(i==8) {
+            system("color 02");
+        }else if(i==12) {
+            system("color 03");
+        }else if(i==16) {
+            system("color 04");
+        }else if(i==20) {
+            system("color 05");
+        }else {
+            //0system("color 06");
+        }
     }
+    _sleep(250);
     return 0;
 }
 
@@ -1379,7 +1394,7 @@ int welcome() {
 	printf("\n\t\t\t\t\t\t%c   %c       %c     %c %c              %c       %c       %c    %c    %c%c   %c          %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
 	printf("\n\t\t\t\t\t\t%c   %c%c%c%c%c%c%c %c     %c %c%c%c%c%c%c%c%c %c%c%c%c%c%c%c %c%c%c%c%c%c%c    %c%c%c%c%c%c%c %c     %c   %c%c%c%c%c%c%c    %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
 	printf("\n\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
-    loadingScreen(150);
+    loadingScreen(100);
 }
 
 int mainMenu() {
