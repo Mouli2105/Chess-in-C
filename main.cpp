@@ -25,6 +25,7 @@
 
 
 //  DECLARING PROTOTYPES
+int quit();
 int scanPlayers();
 int is_king_can_move();
 int find_checkedpiece_path();
@@ -116,10 +117,10 @@ int main() {
     if(started == 0) {
         welcome();
     }
-    system("color 0a");
     int a;
     int endGame = 0;
     do {
+        system("color 0a");
         a = mainMenu();
         switch(a) {
             case 1:
@@ -143,9 +144,14 @@ int main() {
 
             case 5:
                 system("cls");
-                printf("\n\n\n\n\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
-                system("pause");
-                exit(0);
+                if(quit()) {
+                    system("cls");
+                    printf("\n\n\n\n\n\n\n\t\t\t\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
+                    _sleep(250);
+                    exit(0);
+                }else {
+                    a = 6;
+                }
                 break;
 
         }
@@ -529,9 +535,13 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
         case 'e':
         case 'E':
-            cursorX = 0;
-            cursorY = 0;
-            return 0;
+            if(quit()) {
+                cursorX = 0;
+                cursorY = 0;
+                return 0;
+            }else {
+                return 1;
+            }
             break;
 
         case 'c':
@@ -1181,14 +1191,15 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
 
 int controls() {    //  DISPLAYS THE CONTROLS OF GAME
     system("cls");
-    printf("\n\n\t\t\t\t\t\tW       :       UP\n");
-    printf("\n\n\t\t\t\t\t\tA       :       LEFT\n");
-    printf("\n\n\t\t\t\t\t\tS       :       DOWN\n");
-    printf("\n\n\t\t\t\t\t\tD       :       RIGHT\n");
-    printf("\n\n\t\t\t\t\t\tENTER   :       SELECT PIECE\n");
+    printf("\n\n\n\n");
+    printf("\n\n\t\t\t\t\t\t\t\t\tW       :       UP\n");
+    printf("\n\t\t\t\t\t\t\t\t\tA       :       LEFT\n");
+    printf("\n\t\t\t\t\t\t\t\t\tS       :       DOWN\n");
+    printf("\n\t\t\t\t\t\t\t\t\tD       :       RIGHT\n");
+    printf("\n\n\t\t\t\t\t\t\t\t\tENTER   :       SELECT PIECE\n");
     printf("\n");
-    printf("\n\n\t\t\t\t\t\tE       :       EXIT\n");
-    printf("\n\n\n\n\t\t");
+    printf("\n\n\t\t\t\t\t\t\t\t\tE       :       EXIT\n");
+    printf("\n\n\n\n\t\t\t\t\t");
     system("pause");
     system("cls");
 }
@@ -1404,6 +1415,7 @@ int welcome() {
 
 int mainMenu() {
     char ch;
+    int op;
     int X = 0, Y = 0;
     do {
         system("cls");
@@ -1940,11 +1952,13 @@ int aboutUs() {
 void printBoard2() {
     system("cls");
     int i, j, k, pos;
-    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n\n\n\n\n");
+    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n\n\n");
     printf("\t\t\t\t\t\t\t\t\t");
     if(col == WHITE) {
+        system("color f9");
         printf("%s's turn \n\n\n", player1);
     }else {
+        system("color 09");
         printf("%s's turn \n\n\n", player2);
     }
     printf("\t\t\t\t\t\t\t     A     B     C     D     E     F     G     H   \n");
@@ -2161,9 +2175,29 @@ int scanPlayers() {
     system("cls");
     printf("\n\n\n\n\n\n");
     printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter first player's name: ");
+    system("color f9");
     scanf("%s", &player1);
     printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter second player's name: ");
+    system("color 09");
     scanf("%s", &player2);
+    system("color 0e");
+    printf("\n\n\n\n\n\t\t\t\t\t\t\t\t\t");
     system("pause");
     system("cls");
+}
+
+int quit() {
+    char op;
+    system("cls");
+    system("color 4f");
+    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\tAre you sure you want to quit(Y/N): ");
+    op = getche();
+    if(op == 'y' || op == 'Y') {
+        return 1;
+    }else if(op == 'n' || op == 'N') {
+        return 0;
+    }else {
+        return quit();
+    }
+
 }
