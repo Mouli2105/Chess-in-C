@@ -1387,13 +1387,15 @@ int mainMenu() {
     int X = 0, Y = 0;
     do {
         system("cls");
-        printf("\n\n\n\n\t\t\t\t\t\tMAIN MENU");
-        printf("\n\n\t\t\t\t\t\t1. TWO PLAYER MODE");
-        printf("\n\n\t\t\t\t\t\t2. HOW TO PLAY CHESS?");
-        printf("\n\n\t\t\t\t\t\t3. CONTROLS");
-        printf("\n\n\t\t\t\t\t\t4. ABOUT US");
-        printf("\n\n\t\t\t\t\t\t5. EXIT GAME");
-        printf("\n\n\n\n\n\t\t\t\t\t\tENTER: ");
+        printf("\n\n\n\n\t\t\t\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
+        printf("\n\t\t\t\t\t\t\t\t\t%c  MAIN MENU %c", 186, 186);
+        printf("\n\t\t\t\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+        printf("\n\n\n\t\t\t\t\t\t\t\t\t[1] TWO PLAYER MODE");
+        printf("\n\n\n\t\t\t\t\t\t\t\t\t[2] HOW TO PLAY CHESS?");
+        printf("\n\n\n\t\t\t\t\t\t\t\t\t[3] CONTROLS");
+        printf("\n\n\n\t\t\t\t\t\t\t\t\t[4] ABOUT US");
+        printf("\n\n\n\t\t\t\t\t\t\t\t\t[5] EXIT GAME");
+        printf("\n\n\n\n\n\t\t\t\t\t\tENTER YOUR CHOICE: ");
         ch = getche();
     }while(ch!='1' && ch!='2' && ch!='3' && ch!= '4' && ch!='5');
     system("cls");
