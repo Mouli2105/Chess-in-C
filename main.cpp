@@ -6,6 +6,10 @@
 #include<windows.h>
 
 //  DEFINING PIECES
+#define BLOCK 219
+#define BLOCK1 178
+#define BLOCK2 177
+#define BLOCK3 176
 #define UP_ARROW 72
 #define DOWN_ARROW 80
 #define LEFT_ARROW 75
@@ -114,15 +118,14 @@ int checkKingMoves(coord pos);
 
 //  MAIN METHOD
 int main() {
-    COORD Coord;
-    SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
+    //COORD Coord;
+    //SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
     if(started == 0) {
         welcome();
     }
     int a;
     int endGame = 0;
     do {
-        system("color 0a");
         a = mainMenu();
         switch(a) {
             case 1:
@@ -1372,33 +1375,38 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
 }
 
 int welcome() {
-	printf("\n\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
-	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c%c%c%c%c%c%c%c%c%c  %c           %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c       %c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c           %c           %c           %c       %c   %c%c     %c%c   %c             %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t%c       %c    %c    %c    %c%c%c%c%c%c%c%c%c%c  %c           %c           %c       %c   %c%c%c   %c%c%c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t%c        %c  %c %c  %c     %c           %c           %c           %c       %c   %c%c%c%c %c%c%c%c   %c             %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t%c         %c%c   %c%c      %c%c%c%c%c%c%c%c%c%c  %c%c%c%c%c%c%c%c%c%c  %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c%c   %c%c%c%c%c%c%c%c      %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
-	printf("\n");
-	printf("\n\t\t\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
-	printf("\n\t\t\t\t\t\t\t\t%c     %c%c%c%c%c%c%c%c%c%c%c     %c%c%c%c%c%c%c%c%c%c    %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t\t\t%c          %c          %c        %c    %c", 186, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t\t\t%c          %c          %c        %c    %c", 186, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t\t\t%c          %c          %c        %c    %c", 186, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t\t\t%c          %c          %c        %c    %c", 186, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t\t\t%c          %c          %c%c%c%c%c%c%c%c%c%c    %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
-	printf("\n");
-	printf("\n\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
-	printf("\n\t\t\t\t\t\t%c   %c%c%c%c%c%c%c %c     %c %c%c%c%c%c%c%c%c %c%c%c%c%c%c%c %c%c%c%c%c%c%c    %c%c%c%c%c%c%c %c     %c   %c%c%c%c%c%c%c    %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c   %c       %c     %c %c        %c       %c             %c    %c%c    %c   %c          %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c   %c       %c     %c %c        %c       %c             %c    %c %c   %c   %c          %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c   %c       %c%c%c%c%c%c%c %c%c%c%c%c%c%c%c %c%c%c%c%c%c%c %c%c%c%c%c%c%c       %c    %c  %c  %c   %c          %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c   %c       %c     %c %c              %c       %c       %c    %c   %c %c   %c          %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c   %c       %c     %c %c              %c       %c       %c    %c    %c%c   %c          %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c   %c%c%c%c%c%c%c %c     %c %c%c%c%c%c%c%c%c %c%c%c%c%c%c%c %c%c%c%c%c%c%c    %c%c%c%c%c%c%c %c     %c   %c%c%c%c%c%c%c    %c", 186, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 186);
-	printf("\n\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
-    loadingScreen(100);
+    char ch;
+    system("color f0");
+    for(int i=0; i<4; i++) {
+      system("cls");
+      switch(i) {
+        case 0:
+          ch = BLOCK1;
+          break;
+        case 1:
+          ch = BLOCK3;
+          break;
+        case 2:
+          ch = BLOCK1;
+          break;
+        case 3:
+          ch = BLOCK;
+          break;
+      }
+      printf("\n\n\n\n\n\n\n\n\n\n");
+      printf("\n\t\t\t\t  %c%c%c%c%c %c   %c %c%c%c%c%c %c%c%c%c%c %c%c%c%c%c  %c%c%c%c%c %c   %c  %c%c%c%c%c", ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch);
+      printf("\n\t\t\t\t  %c     %c   %c %c     %c     %c        %c   %c%c  %c  %c    ", ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch);
+      printf("\n\t\t\t\t  %c     %c%c%c%c%c %c%c%c%c%c %c%c%c%c%c %c%c%c%c%c    %c   %c %c %c  %c    ", ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch);
+      printf("\n\t\t\t\t  %c     %c   %c %c         %c     %c    %c   %c  %c%c  %c    ", ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch);
+      printf("\n\t\t\t\t  %c%c%c%c%c %c   %c %c%c%c%c%c %c%c%c%c%c %c%c%c%c%c  %c%c%c%c%c %c   %c  %c%c%c%c%c", ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch, ch);
+      printf("\n\n\t\t\t\t  ");
+      _sleep(300);
+    }
+    ch = BLOCK2;
+    for(int i=0; i<50-1; i++) {
+      _sleep(30);
+      printf("%c", ch);
+    }
 }
 
 int mainMenu() {
