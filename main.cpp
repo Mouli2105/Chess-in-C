@@ -6,6 +6,10 @@
 #include<windows.h>
 
 //  DEFINING PIECES
+#define UP_ARROW 72
+#define DOWN_ARROW 80
+#define LEFT_ARROW 75
+#define RIGHT_ARROW 77
 #define WHITE 1
 #define BLACK -1
 #define EMPTY 0
@@ -477,57 +481,13 @@ int swapPieces(struct piece *a, struct piece *b, int newX, int newY) {//    SWAP
 }
 
 int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR ACCORDINGLY
-    char ch;
+    int ch;
     int i, j;
     fflush(stdin);
-    ch = getche();
-    switch(ch) {
-        case 'w':
-        case 'W':
-            _beep(250, 100);
-            for(int i=cursorX-1; i>=0; i--) {
-                if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
-                    cursorX = i;
-                    break;
-                }
-            }
-            return 1;
-
-        case 'a':
-        case 'A':
-            _beep(300, 100);
-            for(int i=cursorY-1; i>=0; i--) {
-                if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
-                    cursorY = i;
-                    break;
-                }
-            }
-            return 1;
-
-        case 's':
-        case 'S':
-            _beep(350, 100);
-            for(int i=cursorX+1; i<=7; i++) {
-                if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
-                    cursorX = i;
-                    break;
-                }
-            }
-            return 1;
-
-        case 'd':
-        case 'D':
-            _beep(400, 100);
-            for(int i=cursorY+1; i<=7; i++) {
-                if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
-                    cursorY = i;
-                    break;
-                }
-            }
-            return 1;
-
-        case 'e':
-        case 'E':
+    ch = _getch();
+    printf("%d", ch);
+    //system("pause");
+    if(ch == 27) {
             if(quit()) {
                 cursorX = 0;
                 cursorY = 0;
@@ -535,7 +495,48 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             }else {
                 return 1;
             }
-            break;
+        }
+    if(ch == 224 || ch == 0) {
+        ch = _getch();
+        printf("%d", ch);
+        //system("pause");
+        switch(ch) {
+            case UP_ARROW:
+                for(int i=cursorX-1; i>=0; i--) {
+                    if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
+                        cursorX = i;
+                        break;
+                    }
+                }
+                return 1;
+
+            case LEFT_ARROW:
+                for(int i=cursorY-1; i>=0; i--) {
+                    if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
+                        cursorY = i;
+                        break;
+                    }
+                }
+                return 1;
+
+            case DOWN_ARROW:
+                for(int i=cursorX+1; i<=7; i++) {
+                    if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
+                        cursorX = i;
+                        break;
+                    }
+                }
+                return 1;
+
+            case RIGHT_ARROW:
+                for(int i=cursorY+1; i<=7; i++) {
+                    if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
+                        cursorY = i;
+                        break;
+                    }
+                }
+                return 1;
+
 
         case 'c':
         case 'C':
@@ -558,6 +559,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                     }while(flag==1);
                 }
             }
+        }
 
     }
     return 1;
@@ -1199,7 +1201,7 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     printf("M: MOVE PIECE\n");
     printf("R: RETURN\n\n");
     printf("ENTER:  ");
-    ch = getche();
+    ch = _getch();
     switch(ch) {
         case 'n':
         case 'N':
@@ -1414,7 +1416,7 @@ int mainMenu() {
         printf("\n\n\n\t\t\t\t\t\t\t\t\t[4] ABOUT US");
         printf("\n\n\n\t\t\t\t\t\t\t\t\t[5] EXIT GAME");
         printf("\n\n\n\n\n\t\t\t\t\t\tENTER YOUR CHOICE: ");
-        ch = getche();
+        ch = _getch();
     }while(ch!='1' && ch!='2' && ch!='3' && ch!= '4' && ch!='5');
     system("cls");
     return(ch-48);
@@ -1944,7 +1946,7 @@ int aboutUs() {
 void printBoard2() {// PRINTS THE BOARD IN WELL DESIGNED MANNER
     system("cls");
     int i, j, k, pos;
-    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n\n");
+    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[esc]--exit to main menu-----------\n\n\n");
     printf("\t\t\t\t\t\t\t\t\t");
     if(col == WHITE) {
         system("color f9");
@@ -2181,8 +2183,8 @@ int quit() {
     char op;
     system("cls");
     system("color 4f");
-    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\tAre you sure you want to quit(Y/N): ");
-    op = getche();
+    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\tAre you sure you want to exit(Y/N): ");
+    op = _getch();
     if(op == 'y' || op == 'Y') {
         return 1;
     }else if(op == 'n' || op == 'N') {
