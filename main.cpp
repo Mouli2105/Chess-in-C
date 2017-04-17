@@ -1410,24 +1410,69 @@ int welcome() {
 }
 
 int mainMenu() {
-    char ch;
-    int op;
-    int X = 0, Y = 0;
+    int X = 0;
+    int ch;
+    char *op1 = "Play Game";
+    char *op2 = "How to play?";
+    char *op3 = "Controls";
+    char *op4 = "About Us";
+    char *op5 = "Quit game";
     do {
-        system("cls");
-        printf("\n\n\n\n\t\t\t\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
-        printf("\n\t\t\t\t\t\t\t\t\t%c  MAIN MENU %c", 186, 186);
-        printf("\n\t\t\t\t\t\t\t\t\t%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
-        printf("\n\n\n\t\t\t\t\t\t\t\t\t[1] TWO PLAYER MODE");
-        printf("\n\n\n\t\t\t\t\t\t\t\t\t[2] HOW TO PLAY CHESS?");
-        printf("\n\n\n\t\t\t\t\t\t\t\t\t[3] CONTROLS");
-        printf("\n\n\n\t\t\t\t\t\t\t\t\t[4] ABOUT US");
-        printf("\n\n\n\t\t\t\t\t\t\t\t\t[5] EXIT GAME");
-        printf("\n\n\n\n\n\t\t\t\t\t\tENTER YOUR CHOICE: ");
+      system("cls");
+      printf("\n\n\n\n\n\n");
+      printf("\n\t\t\t\t\t\t\t");
+      if(X==0) {
+        printf(">> %s", op1);
+      }else {
+        printf("   %s", op1);
+      }
+      printf("\n\t\t\t\t\t\t\t");
+      if(X==1) {
+        printf(">> %s", op2);
+      }else {
+        printf("   %s", op2);
+      }
+      printf("\n\t\t\t\t\t\t\t");
+      if(X==2) {
+        printf(">> %s", op3);
+      }else {
+        printf("   %s", op3);
+      }
+      printf("\n\t\t\t\t\t\t\t");
+      if(X==3) {
+        printf(">> %s", op4);
+      }else {
+        printf("   %s", op4);
+      }
+      printf("\n\t\t\t\t\t\t\t");
+      if(X==4) {
+        printf(">> %s", op5);
+      }else {
+        printf("   %s", op5);
+      }
+      printf("\n\t\t\t\t\t\t\t");
+      ch = _getch();
+      if(ch == 13) {
+        return X + 1;
+      }
+      if(ch == 224 || ch == 0) {
         ch = _getch();
-    }while(ch!='1' && ch!='2' && ch!='3' && ch!= '4' && ch!='5');
-    system("cls");
-    return(ch-48);
+        switch(ch) {
+          case UP_ARROW:
+            if(X>0) {
+              X--;
+            }
+            break;
+
+          case DOWN_ARROW:
+            if(X<4) {
+              X++;
+            }
+            break;
+        }
+      }
+      //system("pause");
+    }while(1);
 }
 
 int startGame() {
