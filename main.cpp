@@ -2133,19 +2133,58 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
 }
 
 int quit() {
-    char op;
-    system("cls");
-    system("color 4f");
-    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\tAre you sure you want to exit(Y/N): ");
-    op = _getch();
-    if(op == 'y' || op == 'Y') {
-        return 1;
-    }else if(op == 'n' || op == 'N') {
-        return 0;
-    }else {
-        return quit();
-    }
+    int op;
+    int x=1;
+    system("color f0");
+    do {
+        system("cls");
+        gotoxy(45, 10);
+        printf("Are you sure you want to exit?");
+        for(int i=0; i<2; i++) {
+            gotoxy(50+10*i,15);
+            printf("%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 187);
+            gotoxy(50+10*i,16);
+            if(x==i) {
+                printf("%c     %c", 175, 174);
+            }else {
+                printf("%c     %c", 186, 186);
+            }
+            gotoxy(50+10*i,17);
+            printf("%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 188);
+        }
+        gotoxy(51, 16);
+        printf(" YES");
+        gotoxy(61, 16);
+        printf(" NO");
+        gotoxy(75, 10);
+        op = _getch();
+        if(op == 27) {
+            return 0;
+        }else if(op == 13) {
+            if(x==1) {
+                return 0;
+            }else {
+                return 1;
+            }
+        }else if(op == 224 || op ==0) {
+            op = _getch();
+            switch(op) {
+            case LEFT_ARROW:
+                x--;
+                if(x<0) {
+                    x=1;
+                }
+                break;
+            case RIGHT_ARROW:
+                x++;
+                if(x>1) {
+                    x=0;
+                }
+                break;
+            }
 
+        }
+    }while(1);
 }
 
 void gotoxy(int x, int y) {
