@@ -33,6 +33,7 @@
 
 
 //  DECLARING PROTOTYPES
+void printPiece2(int i, int j);
 void gotoxy(int x, int y);
 int quit();
 int scanPlayers();
@@ -275,199 +276,103 @@ int initializeBoard() {//   INITIALIZES BOARD WITH PIECES ON THEIR DEFAULT POISI
     return 1;
 }
 
-int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
-    system("cls");
-    int i, j,pos;
-    printf("\t\t ----------[c]--controls-----------------[e]--exit to main menu-----------\n\n");
-    for(i=0; i<8; i++) {
-        printf("\t\t");
-        printf(" %c", 218);
-        for(j=1; j<48; j++) {
-            if(j%6==0 && j!=0 && j!=48) {
-                printf("%c  %c", 191, 218);
-            }else {
-                printf("%c", 196);
-            }
+void printPiece2(int i, int j) {
+    char piece;
+    switch(board[i][j].type) {
+    case KING:
+        if(board[i][j].color == WHITE) {
+            piece = 'K';
+        }else {
+            piece = 'k';
         }
-        printf("%c\n", 191);
-        printf("\t\t");
-        for(j=0; j<8; j++) {
-            switch(board[i][j].type) {
-                case PAWN:
-                    if(i == cursorX && j == cursorY) {
-                        if(board[i][j].color == -1) {
-                            printf(" %c%c[P]%c%c ", 175, 175, 174, 174);
-                        }else {
-                            printf(" %c%c P %c%c ", 175, 175, 174, 174);
-                        }
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            if(board[i][j].color == -1) {
-                                printf(" %c [P] %c ", 179, 179);
-                            }else {
-                                printf(" %c  P  %c ", 179, 179);
-                            }
-                        }else {
-                            if(board[i][j].color == -1) {
-                                printf(" %c%c[P]%c%c ", 179, 222, 221, 179);
-                            }else {
-                                printf(" %c %cP%c %c ", 179, 222, 221, 179);
-                            }
-                        }
-                    }
-                    break;
-
-                case ROOK:
-                    if(i == cursorX && j == cursorY) {
-                        if(board[i][j].color == -1) {
-                            printf(" %c%c[R]%c%c ", 175, 175, 174, 174);
-                        }else {
-                            printf(" %c%c R %c%c ", 175, 175, 174, 174);
-                        }
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            if(board[i][j].color == -1) {
-                                printf(" %c [R] %c ", 179, 179);
-                            }else {
-                             printf(" %c  R  %c ", 179, 179);
-                            }
-                        }else {
-                            if(board[i][j].color == -1) {
-                                printf(" %c%c[R]%c%c ", 179, 222, 221, 179);
-                            }else {
-                                printf(" %c %cR%c %c ", 179, 222, 221, 179);
-                            }
-                        }
-                    }
-                    break;
-
-                case BISHOP:
-                    if(i == cursorX && j == cursorY) {
-                        if(board[i][j].color == -1) {
-                            printf(" %c%c[B]%c%c ", 175, 175, 174, 174);
-                        }else {
-                            printf(" %c%c B %c%c ", 175, 175, 174, 174);
-                        }
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            if(board[i][j].color == -1) {
-                                printf(" %c [B] %c ", 179, 179);
-                            }else {
-                                printf(" %c  B  %c ", 179, 179);
-                            }
-                        }else {
-                            if(board[i][j].color == -1) {
-                                printf(" %c%c[B]%c%c ", 179, 222, 221, 179);
-                            }else {
-                                printf(" %c %cB%c %c ", 179, 222, 221, 179);
-                            }
-                        }
-                    }
-                    break;
-
-                case KNIGHT:
-                    if(i == cursorX && j == cursorY) {
-                        if(board[i][j].color == -1) {
-                            printf(" %c%c[N]%c%c ", 175, 175, 174, 174);
-                        }else {
-                            printf(" %c%c N %c%c ", 175, 175, 174, 174);
-                        }
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            if(board[i][j].color == -1) {
-                                printf(" %c [N] %c ", 179, 179);
-                            }else {
-                                printf(" %c  N  %c ", 179, 179);
-                            }
-                        }else {
-                            if(board[i][j].color == -1) {
-                                printf(" %c%c[N]%c%c ", 179, 222, 221, 179);
-                            }else {
-                                printf(" %c %cN%c %c ", 179, 222, 221, 179);
-                            }
-                        }
-                    }
-                    break;
-
-                case QUEEN:
-                    if(i == cursorX && j == cursorY) {
-                        if(board[i][j].color == -1) {
-                            printf(" %c%c[Q]%c%c ", 175, 175, 174, 174);
-                        }else {
-                            printf(" %c%c Q %c%c ", 175, 175, 174, 174);
-                        }
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            if(board[i][j].color == -1) {
-                                printf(" %c [Q] %c ", 179, 179);
-                            }else {
-                                printf(" %c  Q  %c ", 179, 179);
-                            }
-                        }
-                        else{
-                            if(board[i][j].color == -1) {
-                                printf(" %c%c[Q]%c%c ", 179, 222, 221, 179);
-                            }else {
-                                printf(" %c %cQ%c %c ", 179, 222, 221, 179);
-                            }
-                        }
-                    }
-                    break;
-
-                case KING:
-                    if(i == cursorX && j == cursorY) {
-                        if(board[i][j].color == -1) {
-                            printf(" %c%c[K]%c%c ", 175, 175, 174, 174);
-                        }else {
-                            printf(" %c%c K %c%c ", 175, 175, 174, 174);
-                        }
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            if(board[i][j].color == -1) {
-                                printf(" %c [K] %c ", 179, 179);
-                            }else {
-                                printf(" %c  K  %c ", 179, 179);
-                            }
-                        }
-                        else{
-                            if(board[i][j].color == -1) {
-                                printf(" %c%c[K]%c%c ", 179, 222, 221, 179);
-                            }else {
-                                printf(" %c %cK%c %c ", 179, 222, 221, 179);
-                            }
-                        }
-                    }
-                    break;
-
-                case EMPTY:
-                    if(i == cursorX && j == cursorY) {
-                        printf(" %c%c   %c%c ", 175, 175, 174, 174);
-                    }else {
-                        if(moves_hash[i][j]!=1){
-                            printf(" %c     %c ", 179, 179);
-                        }else {
-                            printf(" %c  %c  %c ", 179, 219, 179);
-                        }
-                    }
-                    break;
-            }
+        break;
+    case QUEEN:
+        if(board[i][j].color == WHITE) {
+            piece = 'Q';
+        }else {
+            piece = 'q';
         }
-        printf("\n");
-        printf("\t\t");
-        printf(" %c", 192);
-        for(j=1; j<48; j++) {
-            if(j%6==0 && j!=0 && j!=48) {
-                printf("%c  %c", 217, 192);
-            }else {
-                printf("%c", 196);
-            }
+        break;
+    case BISHOP:
+        if(board[i][j].color == WHITE) {
+            piece = 'B';
+        }else {
+            piece = 'b';
         }
-        printf("%c", 217);
-        printf("\n");
+        break;
+    case ROOK:
+        if(board[i][j].color == WHITE) {
+            piece = 'R';
+        }else {
+            piece = 'r';
+        }
+        break;
+    case KNIGHT:
+        if(board[i][j].color == WHITE) {
+            piece = 'N';
+        }else {
+            piece = 'n';
+        }
+        break;
+    case PAWN:
+        if(board[i][j].color == WHITE) {
+            piece = 'P';
+        }else {
+            piece = 'p';
+        }
+        break;
+    case EMPTY:
+        piece = ' ';
+        break;
     }
-    return 1;
+    if(cursorX==i && cursorY==j) {
+        printf("[%c]", piece);
+    }else {
+        if(moves_hash[i][j]) {
+            if(piece==' ') {
+                printf(" * ");
+            }else {
+                printf("*%c*", piece);
+            }
+        }else {
+            printf(" %c ", piece);
+        }
+    }
 }
 
+int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
+    system("cls");
+    system("color f0");
+    int i, j;
+    printf("\n\n\t\t\t\t\t       ");
+    printf("%c%c", 218, 196);
+    for(int i=0; i<7; i++) {
+        printf("%c%c%c%c", 196, 196, 194, 196);
+    }
+    printf("%c%c%c", 196, 196, 191);
+    for(i=0; i<8; i++) {
+        printf("\n\t\t\t\t\t       %c", 179);
+        for(j=0; j<8; j++) {
+            printPiece2(i, j);
+            printf("%c", 179);
+        }
+        if(i<7) {
+            printf("\n\t\t\t\t\t       ");
+            printf("%c%c", 195, 196);
+            for(int k=0; k<7; k++) {
+                printf("%c%c%c%c", 196, 196, 197, 196);
+            }
+            printf("%c%c%c", 196, 196, 180);
+        }
+    }
+    printf("\n\t\t\t\t\t       ");
+    printf("%c%c", 192, 196);
+    for(int i=0; i<7; i++) {
+        printf("%c%c%c%c", 196, 196, 193, 196);
+    }
+    printf("%c%c%c", 196, 196, 217);
+    return 1;
+}
 
 int swapPieces(struct piece *a, struct piece *b, int newX, int newY) {//    SWAPS TWO PIECES ON THE BOARD
     if(a->type == KING){
@@ -491,8 +396,6 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     int i, j;
     fflush(stdin);
     ch = _getch();
-    printf("%d", ch);
-    //system("pause");
     if(ch == 27) {
             if(quit()) {
                 cursorX = 0;
@@ -504,8 +407,6 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         }
     if(ch == 224 || ch == 0) {
         ch = _getch();
-        printf("%d", ch);
-        //system("pause");
         switch(ch) {
             case UP_ARROW:
                 for(int i=cursorX-1; i>=0; i--) {
@@ -560,7 +461,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                 if(isMovesHashEmpty() == 0) {
                     len = pieceMoves();
                     do {
-                        printBoard2();
+                        printBoard();
                         flag = selectPosition(len);
                     }while(flag==1);
                 }
@@ -572,6 +473,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 }
 
 int loadingScreen(int time) {   //  DISPLAYS THE LOADING SCREEN
+    system("cls");
     system("color f0");
     gotoxy(50,10);
     printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
@@ -1416,15 +1318,15 @@ int mainMenu() {
       system("cls");
       printf("\n\n\n\n\n\n");
       for(int i=0; i<5; i++) {
-        printf("\n\t\t\t\t\t\t\t");
+        printf("\n\t\t\t\t\t\t");
         if(X==i) {
             printf(">>  %s\t<<", op[i]);
         }else {
             printf("    %s", op[i]);
         }
-        printf("\n\t\t\t\t\t\t\t");
+        printf("\n\t\t\t\t\t\t");
       }
-      printf("\n\t\t\t\t\t\t\t");
+      printf("\n\t\t\t\t\t\t");
       ch = _getch();
       if(ch == 13) {
         return X + 1;
@@ -1433,19 +1335,20 @@ int mainMenu() {
         ch = _getch();
         switch(ch) {
           case UP_ARROW:
-            if(X>0) {
-              X--;
+            X--;
+            if(X<0) {
+              X=4;
             }
             break;
 
           case DOWN_ARROW:
-            if(X<4) {
-              X++;
+            X++;
+            if(X>4) {
+                X=0;
             }
             break;
         }
       }
-      //system("pause");
     }while(1);
 }
 
@@ -1519,7 +1422,7 @@ int startGame() {
         board[whiteKing.x][whiteKing.y].color = WHITE;
         board[blackKing.x][blackKing.y].type = KING;
         board[blackKing.x][blackKing.y].color = BLACK;
-        printBoard2();
+        printBoard();
 
 //        printHash();
 //        system("pause");
@@ -2193,17 +2096,24 @@ int checkKingMoves(coord pos){
 
 int scanPlayers() {// SCANS THE  PLAYERNAMES
     system("cls");
-    printf("\n\n\n\n\n\n");
-    printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter first player's name: ");
-    system("color f9");
+    system("color f0");
+    for(int i=0; i<2; i++) {
+        gotoxy(40,10+i*5+1);
+        printf("PLAYER %d: ", i+1);
+        gotoxy(50,10+i*5);
+        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
+        gotoxy(50,11+i*5);
+        printf("%c                      %c", 186, 186);
+        gotoxy(50,12+i*5);
+        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+    }
+    char ch[100];
+    gotoxy(51, 11);
     scanf("%s", &player1);
-    printf("\n\n\n\t\t\t\t\t\t\t\t\tEnter second player's name: ");
-    system("color 09");
+    gotoxy(51, 16);
     scanf("%s", &player2);
-    system("color 0e");
-    printf("\n\n\n\n\n\t\t\t\t\t\t\t\t\t");
-    system("pause");
-    system("cls");
+    printf("\n\n");
+    return 1;
 }
 
 int quit() {
@@ -2228,3 +2138,4 @@ void gotoxy(int x, int y) {
     SetConsoleCursorPosition(console,CursorPosition);
 
 }
+
