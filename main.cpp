@@ -397,14 +397,31 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     fflush(stdin);
     ch = _getch();
     if(ch == 27) {
-            if(quit()) {
-                cursorX = 0;
-                cursorY = 0;
-                return 0;
-            }else {
-                return 1;
+        if(quit()) {
+            cursorX = 0;
+            cursorY = 0;
+            return 0;
+        }else {
+            return 1;
+        }
+    }else if(ch == 13) {
+        printf("\n\t\t");
+        possible_moves();
+        int len;
+        stackPointer = -1;
+        int flag;
+        mainX = cursorX;
+        mainY = cursorY;
+        if(board[cursorX][cursorY].type != EMPTY) {
+            if(isMovesHashEmpty() == 0) {
+                len = pieceMoves();
+                do {
+                    printBoard();
+                    flag = selectPosition(len);
+                }while(flag==1);
             }
         }
+    }
     if(ch == 224 || ch == 0) {
         ch = _getch();
         switch(ch) {
@@ -444,31 +461,30 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                 }
                 return 1;
 
-
-        case 'c':
-        case 'C':
-            controls();
-            return 1;
-
-        case '\r':
-            possible_moves();
-            int len;
-            stackPointer = -1;
-            int flag;
-            mainX = cursorX;
-            mainY = cursorY;
-            if(board[cursorX][cursorY].type != EMPTY) {
-                if(isMovesHashEmpty() == 0) {
-                    len = pieceMoves();
-                    do {
-                        printBoard();
-                        flag = selectPosition(len);
-                    }while(flag==1);
-                }
+//
+//        case 'c':
+//        case 'C':
+//            controls();
+//            return 1;
+//
+//        case '\r':
+//            possible_moves();
+//            int len;
+//            stackPointer = -1;
+//            int flag;
+//            mainX = cursorX;
+//            mainY = cursorY;
+//            if(board[cursorX][cursorY].type != EMPTY) {
+//                if(isMovesHashEmpty() == 0) {
+//                    len = pieceMoves();
+//                    do {
+//                        printBoard();
+//                        flag = selectPosition(len);
+//                    }while(flag==1);
+//                }
             }
         }
 
-    }
     return 1;
 }
 
