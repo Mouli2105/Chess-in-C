@@ -33,6 +33,7 @@
 
 
 //  DECLARING PROTOTYPES
+void gotoxy(int x, int y);
 int quit();
 int scanPlayers();
 int is_king_can_move();
@@ -79,6 +80,8 @@ int setHashCheckMate();
 void resetCheckHash();
 
 //  DECLARING GLOBAL VARIABLES
+HANDLE console =GetStdHandle(STD_OUTPUT_HANDLE);
+COORD CursorPosition;
 char player1[50];
 char player2[50];
 int pawn_flag = 0;
@@ -569,27 +572,23 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 }
 
 int loadingScreen(int time) {   //  DISPLAYS THE LOADING SCREEN
-    int i;
-    printf("\n\n\n\n\n\n\t\t\t\t\t\t\t\tLoading");
-    for(i=1; i<=20; i++) {
-        printf("%c", '.');
+    system("color f0");
+    gotoxy(50,10);
+    printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
+    gotoxy(50,11);
+    printf("%c                      %c", 186, 186);
+    gotoxy(50,12);
+    printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+    for(int i=0; i<22; i++) {
+        gotoxy(51+i, 11);
+        printf("%c", 219);
+        gotoxy(75, 11);
+        float percent = ((i+1)/(float)22)*100;
+        printf("%.0f%c", percent, '%');
         _sleep(time);
-        if(i==4){
-            system("color 01");
-        }else if(i==8) {
-            system("color 02");
-        }else if(i==12) {
-            system("color 03");
-        }else if(i==16) {
-            system("color 04");
-        }else if(i==20) {
-            system("color 05");
-        }else {
-            //0system("color 06");
-        }
     }
-    _sleep(250);
-    return 0;
+    printf("\n\n");
+  return 0;
 }
 
 void possible_moves() { //  FIND THE POSSIBLE MOVES OF CURRENT PIECE
@@ -2220,5 +2219,12 @@ int quit() {
     }else {
         return quit();
     }
+
+}
+
+void gotoxy(int x, int y) {
+    CursorPosition.X = x;
+    CursorPosition.Y = y;
+    SetConsoleCursorPosition(console,CursorPosition);
 
 }
