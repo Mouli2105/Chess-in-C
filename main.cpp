@@ -1412,43 +1412,18 @@ int welcome() {
 int mainMenu() {
     int X = 0;
     int ch;
-    char *op1 = "Play Game";
-    char *op2 = "How to play?";
-    char *op3 = "Controls";
-    char *op4 = "About Us";
-    char *op5 = "Quit game";
+    char *op[5]={"Play Game", "Rules of Chess", "Controls", "About Us", "Quit"};
     do {
       system("cls");
       printf("\n\n\n\n\n\n");
-      printf("\n\t\t\t\t\t\t\t");
-      if(X==0) {
-        printf(">> %s", op1);
-      }else {
-        printf("   %s", op1);
-      }
-      printf("\n\t\t\t\t\t\t\t");
-      if(X==1) {
-        printf(">> %s", op2);
-      }else {
-        printf("   %s", op2);
-      }
-      printf("\n\t\t\t\t\t\t\t");
-      if(X==2) {
-        printf(">> %s", op3);
-      }else {
-        printf("   %s", op3);
-      }
-      printf("\n\t\t\t\t\t\t\t");
-      if(X==3) {
-        printf(">> %s", op4);
-      }else {
-        printf("   %s", op4);
-      }
-      printf("\n\t\t\t\t\t\t\t");
-      if(X==4) {
-        printf(">> %s", op5);
-      }else {
-        printf("   %s", op5);
+      for(int i=0; i<5; i++) {
+        printf("\n\t\t\t\t\t\t\t");
+        if(X==i) {
+            printf(">>  %s\t<<", op[i]);
+        }else {
+            printf("    %s", op[i]);
+        }
+        printf("\n\t\t\t\t\t\t\t");
       }
       printf("\n\t\t\t\t\t\t\t");
       ch = _getch();
