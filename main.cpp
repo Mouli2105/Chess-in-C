@@ -79,6 +79,8 @@ int loadingScreen(int time);
 int setCursor();
 int setHashCheckMate();
 void resetCheckHash();
+int copyArray();
+int resetTempArray();
 
 //  DECLARING GLOBAL VARIABLES
 HANDLE console =GetStdHandle(STD_OUTPUT_HANDLE);
@@ -93,6 +95,7 @@ int moved = 0;
 int stackPointer = -1;
 int mainX;
 int mainY;
+int tempArr[8][8]={0};
 int king_hash[8][8] = {0};
 int moves_hash[8][8]={0};
 int checkmate_hash[8][8]={0};
@@ -330,9 +333,9 @@ void printPiece2(int i, int j) {
     }else {
         if(moves_hash[i][j]) {
             if(piece==' ') {
-                printf(" * ");
+                printf(" %c ", 254);
             }else {
-                printf("*%c*", piece);
+                printf("%c%c%c", 222, piece, 221);
             }
         }else {
             printf(" %c ", piece);
@@ -344,6 +347,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
     system("color f0");
     int i, j;
+    int count = 1;
     printf("\n\n\t\t\t\t\t       ");
     printf("%c%c", 218, 196);
     for(int i=0; i<7; i++) {
@@ -1398,7 +1402,6 @@ int startGame() {
                         }
                     }
                        // find_checkedpiece_path();
-
                         possible_moves_at_check();
 //                        printHash();
 //                        system("pause");
@@ -1815,7 +1818,7 @@ int all_moves(){// FIX THE HASH TABLE WITH ALL THE MOVES EXCEPT KING WHICH IS US
 
 }
 int possible_moves_at_check(){//FINDS THE POSSIBLE MOVES AFTER CHECKING THE OPPONENT KING
-    int i;
+    int i, cons = 0 ;
     resetMovesHash();
     switch(board[cursorX][cursorY].type)
                 {
@@ -1847,18 +1850,39 @@ int possible_moves_at_check(){//FINDS THE POSSIBLE MOVES AFTER CHECKING THE OPPO
 
                         break;
                 }
-
             for( i = 0 ; checkstack[i].x >= 0 ; i++)
             {
                 if(moves_hash[checkstack[i].x][checkstack[i].y])
                 {
-                        return 1;
+                        tempArr[checkstack[i].x][checkstack[i].y] = 1;
+                        cons = 1;
                 }
 
             }
-            resetMovesHash();
+            if(cons)
+                copyArray();
+            else
+                resetMovesHash();
+            resetTempArray();
             return 1;
 }
+
+int copyArray(){
+int i,j;
+for(i=0;i<8;i++){
+        for(j=0;j<8;j++)
+    moves_hash[i][j] = tempArr[i][j];
+}
+}
+
+resetTempArray(){
+int i,j;
+for(i=0;i<8;i++){
+    for(j=0;j<8;j++)
+        tempArr[i][j] = 0;
+}
+}
+
 int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
     system("color 80");
     FILE *fp;
@@ -2133,6 +2157,9 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
 }
 
 int quit() {
+    cursorX = 0;
+    cursorY = 0;
+
     int op;
     int x=1;
     system("color f0");
