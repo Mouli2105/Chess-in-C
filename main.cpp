@@ -138,9 +138,11 @@ int main() {
         switch(a) {
             case 1:
                 _sleep(100);
-                scanPlayers();
-                loadingScreen(100);
-                endGame = startGame();
+                if(scanPlayers()) {
+                    loadingScreen(100);
+                    endGame = startGame();
+                }
+                endGame = 1;
                 break;
 
             case 2:
@@ -373,6 +375,14 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
         printf("%c%c%c%c", 196, 196, 193, 196);
     }
     printf("%c%c%c", 196, 196, 217);
+    if(col == WHITE) {
+        gotoxy(3, 2);
+        printf("%s's Move", player1);
+    }else {
+        gotoxy(90, 2);
+        printf("%s's Move", player2);
+    }
+    gotoxy(3, 10);
     return 1;
 }
 
@@ -469,7 +479,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 //            controls();
 //            return 1;
 //
-//        case '\r':
+//
 //            possible_moves();
 //            int len;
 //            stackPointer = -1;
@@ -1119,11 +1129,29 @@ int controls() {    //  DISPLAYS THE CONTROLS OF GAME
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
     char ch;
     int beepsound;
-    printf("N: NEXT POSITION\n");
-    printf("P: PREVIOUS POSITION\n");
-    printf("M: MOVE PIECE\n");
-    printf("R: RETURN\n\n");
+    if(col == WHITE) {
+    gotoxy(3, 5);
+    printf("N: NEXT POSITION");
+    gotoxy(3, 6);
+    printf("P: PREVIOUS POSITION");
+    gotoxy(3, 7);
+    printf("M: MOVE PIECE");
+    gotoxy(3, 8);
+    printf("R: RETURN");
+    gotoxy(3, 10);
     printf("ENTER:  ");
+    }else {
+    gotoxy(85, 5);
+    printf("N: NEXT POSITION");
+    gotoxy(85, 6);
+    printf("P: PREVIOUS POSITION");
+    gotoxy(85, 7);
+    printf("M: MOVE PIECE");
+    gotoxy(85, 8);
+    printf("R: RETURN");
+    gotoxy(85, 10);
+    printf("ENTER:  ");
+    }
     ch = _getch();
     switch(ch) {
         case 'n':
@@ -2079,7 +2107,9 @@ int checkKingMoves(coord pos){
 
 int scanPlayers() {// SCANS THE  PLAYERNAMES
     system("cls");
-    for(int i=0; i<2; i++) {
+    int i;
+    char ch;
+    for(i=0; i<2; i++) {
         gotoxy(40,10+i*5+1);
         printf("PLAYER %d: ", i+1);
         gotoxy(50,10+i*5);
@@ -2089,12 +2119,30 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
         gotoxy(50,12+i*5);
         printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
     }
-    char ch[100];
     gotoxy(51, 11);
-    scanf("%s", &player1);
+    i=0;
+    while((ch=_getche())!=13) {
+        if(ch==27) {
+            return 0;
+        }
+        player1[i++]=ch;
+    }
+    player1[i]='\0';
+    if(player1[1]=='\0') {
+        strcpy(player1, "Player 1");
+    }
     gotoxy(51, 16);
-    scanf("%s", &player2);
-    printf("\n\n");
+    i=0;
+    while((ch=_getche())!=13) {
+        if(ch==27) {
+            return 0;
+        }
+        player2[i++]=ch;
+    }
+    player2[i]='\0';
+    if(player2[1]=='\0') {
+        strcpy(player2, "Player 2");
+    }
     return 1;
 }
 
