@@ -1927,19 +1927,22 @@ for(i=0;i<8;i++){
 
 int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
     FILE *fp;
+    system("cls");
     char ch;
     fp = fopen("instructions.txt", "r");
     if(fp == NULL) {
+        gotoxy(50, 10);
         printf("Unable to open the file!");
+        gotoxy(50, 25);
+        system("pause");
     }else {
         while((ch=fgetc(fp)) != EOF) {
             printf("%c", ch);
         }
+        printf("\n");
+        system("pause");
     }
     fclose(fp);
-    printf("\n");
-    system("pause");
-    system("cls");
     return 1;
 }
 
