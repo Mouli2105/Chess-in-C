@@ -1334,22 +1334,41 @@ int mainMenu() {
     char *op[5]={"Play Game", "Rules of Chess", "Controls", "About Us", "Quit"};
     do {
       system("cls");
-      printf("\n\n\n\n\n\n");
       for(int i=0; i<5; i++) {
-        printf("\n\t\t\t\t\t\t");
+        gotoxy(35, 5 + i*2);
         if(X==i) {
-            printf(">>  %s\t<<", op[i]);
+            printf(">> %s", op[i]);
         }else {
-            printf("    %s", op[i]);
+            printf("   %s", op[i]);
         }
-        printf("\n\t\t\t\t\t\t");
       }
-      printf("\n\t\t\t\t\t\t");
+      gotoxy(35, 25);
       ch = _getch();
       if(ch == 13) {
-        return X + 1;
-      }
-      if(ch == 224 || ch == 0) {
+        switch(X) {
+            case 0:
+                gotoxy(38, 5);
+                break;
+            case 1:
+                gotoxy(38, 7);
+                break;
+            case 2:
+                gotoxy(38, 9);
+                break;
+            case 3:
+                gotoxy(38, 11);
+                break;
+            case 4:
+                gotoxy(37, 13);
+                break;
+        }
+        for(int i=0; i<strlen(op[X]); i++) {
+            printf("%c", 219);
+            _sleep(25);
+        }
+        return X+1;
+    }
+    if(ch == 224 || ch == 0) {
         ch = _getch();
         switch(ch) {
           case UP_ARROW:
