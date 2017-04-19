@@ -218,15 +218,13 @@ int setHashCheckMate() {  //SETS THE HASH TABLE USED TO CHECK THE CHECKMATE AND 
                     if(col == WHITE){
                         black_checked = 1;
                         gotoxy(85, 10);
-                        printf("CHECK");
-                        _sleep(100);
                     }
                     else{
                         white_checked = 1;
                         gotoxy(5, 10);
-                        printf("CHECK");
-                        _sleep(100);
                     }
+                    printf("CHECK");
+                    _sleep(5000);
                     checkingPiece = board[cursorX][cursorY];
                     checkingPiece_pos.x = cursorX;
                     checkingPiece_pos.y = cursorY;
@@ -1140,9 +1138,9 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     printf("ESC: select different piece/ go back");
     gotoxy(3, 9);
     }else {
-    gotoxy(85, 7);
+    gotoxy(83, 7);
     printf("ENTER: select piece");
-    gotoxy(85, 8);
+    gotoxy(83, 8);
     printf("ESC: select different piece/ go back");
     gotoxy(85, 9);
     }
@@ -1520,10 +1518,15 @@ int startGame() {
     piece temp;
     int tempX,tempY,i;
     initializeBoard();
-    col = WHITE;
-    cursorX = 0;
-    cursorY = 0;
+    // CHECK THIS
+    resetCheckHash();   //
+    resetMovesHash();   //
+    col = WHITE;        //
+    cursorX = 0;        //
+    cursorY = 0;        //
+    // CHECK THIS
     do {
+            printBoard();
             if(black_checked || white_checked){
                     find_checkedpiece_path();
 //                    for(i=0;checkstack[i].x!=-1;i++)
@@ -1535,14 +1538,20 @@ int startGame() {
                         if(is_king_can_move()){
 //                        printf("\nEntered");
 //                        system("pause");
-                        printf("\nCHECK-MATE");
+                        gotoxy(35, 50);
+                        printf("CHECK-MATE");
                         if(col==WHITE) {
-                            printf("\n%s WINS", player2);
+                            gotoxy(85, 30);
+                            printf("YOU WIN");
+                            gotoxy(5, 30);
+                            printf("YOU LOSE");
                         }else {
-                            printf("\n%s WINS", player1);
+                            gotoxy(5, 30);
+                            printf("YOU WIN");
+                            gotoxy(85, 30);
+                            printf("YOU LOSE");
                         }
-                        printf("\n");
-                        system("pause");
+                        _sleep(5000);
                         break;
                         }
                     }
