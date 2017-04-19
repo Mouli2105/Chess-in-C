@@ -1154,25 +1154,25 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     printf("ENTER:  ");
     }
     ch = _getch();
-    if(ch == 13) {
+    if(ch==13) {
         if(mainX != cursorX || mainY != cursorY) {
-            resetMovesHash();
-            black_checked = 0;
-            white_checked = 0;
-            piece current = board[mainX][mainY];
-            swapPieces(&board[mainX][mainY], &board[cursorX][cursorY],cursorX,cursorY);
-            flag = 1;
-            setHashCheckMate();
-            flag = 0;
-            moved++;
-            setCursor();
-            if(moved%2==0) {
-                col = WHITE;
-            }else {
-                col = BLACK;
+                resetMovesHash();
+                black_checked = 0;
+                white_checked = 0;
+                piece current = board[mainX][mainY];
+                swapPieces(&board[mainX][mainY], &board[cursorX][cursorY],cursorX,cursorY);
+                flag = 1;
+                setHashCheckMate();
+                flag = 0;
+                moved++;
+                setCursor();
+                if(moved%2==0) {
+                    col = WHITE;
+				}else {
+                    col = BLACK;
+                }
             }
-        }
-        return 0;
+            return 0;
     }
     if(ch==224 || ch==0) {
         ch = _getch();
@@ -1213,11 +1213,10 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
             }
             return 1;
             break;
-
         }
     }else {
         char op = ch;
-        switch(op){
+        switch(op) {
         case 'n':
         case 'N':
             if(stackPointer<len-1) {
