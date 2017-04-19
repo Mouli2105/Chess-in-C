@@ -217,13 +217,16 @@ int setHashCheckMate() {  //SETS THE HASH TABLE USED TO CHECK THE CHECKMATE AND 
                         if(flag){
                     if(col == WHITE){
                         black_checked = 1;
+                        gotoxy(85, 10);
+                        printf("CHECK");
+                        _sleep(100);
                     }
                     else{
                         white_checked = 1;
+                        gotoxy(5, 10);
+                        printf("CHECK");
+                        _sleep(100);
                     }
-                    printf("\nCHECK");
-                    printf("\n");
-                    system("pause");
                     checkingPiece = board[cursorX][cursorY];
                     checkingPiece_pos.x = cursorX;
                     checkingPiece_pos.y = cursorY;
@@ -1131,27 +1134,17 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     int ch;
     int beepsound;
     if(col == WHITE) {
-    gotoxy(3, 5);
-    printf("N: NEXT POSITION");
-    gotoxy(3, 6);
-    printf("P: PREVIOUS POSITION");
     gotoxy(3, 7);
-    printf("M: MOVE PIECE");
+    printf("ENTER: select piece");
     gotoxy(3, 8);
-    printf("R: RETURN");
-    gotoxy(3, 10);
-    printf("ENTER:  ");
+    printf("ESC: select different piece/ go back");
+    gotoxy(3, 9);
     }else {
-    gotoxy(85, 5);
-    printf("N: NEXT POSITION");
-    gotoxy(85, 6);
-    printf("P: PREVIOUS POSITION");
     gotoxy(85, 7);
-    printf("M: MOVE PIECE");
+    printf("ENTER: select piece");
     gotoxy(85, 8);
-    printf("R: RETURN");
-    gotoxy(85, 10);
-    printf("ENTER:  ");
+    printf("ESC: select different piece/ go back");
+    gotoxy(85, 9);
     }
     ch = _getch();
     if(ch==13) {
@@ -1176,96 +1169,132 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     }
     if(ch==224 || ch==0) {
         ch = _getch();
+        int found = 0;
         switch(ch) {
         case UP_ARROW:
+            found = 0;
             for(int i=cursorX-1; i>=0; i--) {
                 if(moves_hash[i][cursorY]) {
                     cursorX = i;
+                    found = 1;
                     break;
+                }
+            }
+            if(!found) {
+                for(int i=cursorX-1; i>=0; i--) {
+                    if(moves_hash[i][cursorY-1]) {
+                        cursorX = i;
+                        cursorY--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int i=cursorX-1; i>=0; i--) {
+                    if(moves_hash[i][cursorY+1]) {
+                        cursorX = i;
+                        cursorY++;
+                        found = 1;
+                        break;
+                    }
                 }
             }
             return 1;
             break;
         case DOWN_ARROW:
+            found = 0;
             for(int i=cursorX+1; i<=7; i++) {
                 if(moves_hash[i][cursorY]) {
                     cursorX = i;
+                    found = 1;
                     break;
+                }
+            }
+            if(!found) {
+                for(int i=cursorX+1; i<=7; i++) {
+                    if(moves_hash[i][cursorY-1]) {
+                        cursorX = i;
+                        cursorY--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int i=cursorX+1; i<=7; i++) {
+                    if(moves_hash[i][cursorY+1]) {
+                        cursorX = i;
+                        cursorY++;
+                        found = 1;
+                        break;
+                    }
                 }
             }
             return 1;
             break;
         case LEFT_ARROW:
+            found = 0;
             for(int j=cursorY-1; j>=0; j--) {
                 if(moves_hash[cursorX][j]) {
                     cursorY = j;
+                    found = 1;
                     break;
+                }
+            }
+            if(!found) {
+                for(int j=cursorY-1; j>=0; j--) {
+                    if(moves_hash[cursorX-1][j]) {
+                        cursorY = j;
+                        cursorX--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int j=cursorY-1; j>=0; j--) {
+                    if(moves_hash[cursorX+1][j]) {
+                        cursorY = j;
+                        cursorX++;
+                        found = 1;
+                        break;
+                    }
                 }
             }
             return 1;
             break;
         case RIGHT_ARROW:
+            found = 0;
             for(int j=cursorY+1; j<=7; j++) {
                 if(moves_hash[cursorX][j]) {
                     cursorY = j;
+                    found = 1;
                     break;
                 }
             }
-            return 1;
-            break;
-        }
-    }else {
-        char op = ch;
-        switch(op) {
-        case 'n':
-        case 'N':
-            if(stackPointer<len-1) {
-                stackPointer++;
-                cursorX = positionStack[stackPointer].x;
-                cursorY = positionStack[stackPointer].y;
-            }
-            return 1;
-            break;
-
-        case 'P':
-        case 'p':
-            if(stackPointer>0) {
-                stackPointer--;
-                cursorX = positionStack[stackPointer].x;
-                cursorY = positionStack[stackPointer].y;
-            }
-            return 1;
-            break;
-
-        case 'm':
-        case 'M':
-            if(mainX != cursorX || mainY != cursorY) {
-                resetMovesHash();
-                black_checked = 0;
-                white_checked = 0;
-                piece current = board[mainX][mainY];
-                swapPieces(&board[mainX][mainY], &board[cursorX][cursorY],cursorX,cursorY);
-                flag = 1;
-                setHashCheckMate();
-                flag = 0;
-                moved++;
-                setCursor();
-                if(moved%2==0) {
-                    col = WHITE;
-				}else {
-                    col = BLACK;
+            if(!found) {
+                for(int j=cursorY+1; j<=7; j++) {
+                    if(moves_hash[cursorX+1][j]) {
+                        cursorY = j;
+                        cursorX++;
+                        found = 1;
+                        break;
+                    }
                 }
             }
-            return 0;
-            break;
-
-        case 'r':
-        case 'R':
-            return 0;
-            break;
-
-        default:
+            if(!found) {
+                for(int j=cursorY+1; j<=7; j++) {
+                    if(moves_hash[cursorX-1][j]) {
+                        cursorY = j;
+                        cursorX--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
             return 1;
+            break;
         }
     }
 }
@@ -1296,6 +1325,7 @@ int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     }
     return 0;
 }
+
 void printCheckHash(){
     int i,j;
     for( i = 0 ; i < 8 ; i++){
@@ -1306,6 +1336,7 @@ void printCheckHash(){
         printf("\n");
     }
 }
+
 int setCursor() {// SETS THE CURSOR TO INITIAL POSITION
     int i,j;
     for(i=0; i<8; i++) {
@@ -1489,6 +1520,9 @@ int startGame() {
     piece temp;
     int tempX,tempY,i;
     initializeBoard();
+    col = WHITE;
+    cursorX = 0;
+    cursorY = 0;
     do {
             if(black_checked || white_checked){
                     find_checkedpiece_path();
@@ -1560,6 +1594,7 @@ int startGame() {
     }while(handleCursor(col));
     return 1;
 }
+
 int find_checkedpiece_path(){ // FINDS THE PATH FROM CHECKEING PIECE TO OPPENENT KING
     switch(checkingPiece.type)
         {
@@ -1577,6 +1612,7 @@ int find_checkedpiece_path(){ // FINDS THE PATH FROM CHECKEING PIECE TO OPPENENT
         }
         return 0;
 }
+
 int find_rook_path(){// FIND THE ROOK PATH
     int i,j;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1628,6 +1664,7 @@ int find_rook_path(){// FIND THE ROOK PATH
         checkstack[j].x = -1;
     }
 }
+
 int find_bishop_path(){//FINDS THE BISHOP PATH
     int i,j,k;
     if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1687,6 +1724,7 @@ int find_bishop_path(){//FINDS THE BISHOP PATH
         checkstack[j].x = -1;
     }
 }
+
 int find_queen_path(){//FINDS THE QUEEN PATH
    int i,j,k;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1794,6 +1832,7 @@ int find_queen_path(){//FINDS THE QUEEN PATH
         checkstack[j].x = -1;
     }
 }
+
 int find_knight_path(){//FINDS THE KNIGHT PATH
     int i = 0,j = checkingPiece_pos.x,k = checkingPiece_pos.y;
     if(j+2 == checkedKing.x && k+1 == checkedKing.y)
@@ -1841,6 +1880,7 @@ int find_knight_path(){//FINDS THE KNIGHT PATH
     //system("pause");
     return 1;
 }
+
 int find_pawn_path(){//FINDS THE PAWN PATH
     int i,j,k=0;
     i = checkedKing.x;
@@ -1892,6 +1932,7 @@ int checkmate() {// RETURNS 1 IF CHECKMATE SITUATION ARRIVES
     }
     return 1;
 }
+
 int all_moves(){// FIX THE HASH TABLE WITH ALL THE MOVES EXCEPT KING WHICH IS USED IN CHECKMATE METHOD
     tempcursorX = cursorX;
     tempcursorY = cursorY;
@@ -1927,6 +1968,7 @@ int all_moves(){// FIX THE HASH TABLE WITH ALL THE MOVES EXCEPT KING WHICH IS US
     }
 
 }
+
 int possible_moves_at_check(){//FINDS THE POSSIBLE MOVES AFTER CHECKING THE OPPONENT KING
     int i, cons = 0 ;
     resetMovesHash();
@@ -2085,8 +2127,8 @@ void printPiece(int i, int j, char piece) {
         }
     }
 }
-int is_king_can_move()// CHECKES WHETHER A CHECKED KING CAN MOVE AFTER CHECKING
-{
+
+int is_king_can_move() {// CHECKES WHETHER A CHECKED KING CAN MOVE AFTER CHECKING
     int i,temp_color;
     piece temp;
     checkKingMoves(checkedKing);
@@ -2180,6 +2222,8 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
     system("cls");
     int i;
     char ch;
+    player1[0]='\0';
+    player2[0]='\0';
     for(i=0; i<2; i++) {
         gotoxy(40,10+i*5+1);
         printf("PLAYER %d: ", i+1);
@@ -2199,7 +2243,7 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
         player1[i++]=ch;
     }
     player1[i]='\0';
-    if(player1[1]=='\0') {
+    if(player1[0]=='\0') {
         strcpy(player1, "Player 1");
     }
     gotoxy(51, 16);
@@ -2211,7 +2255,7 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
         player2[i++]=ch;
     }
     player2[i]='\0';
-    if(player2[1]=='\0') {
+    if(player2[0]=='\0') {
         strcpy(player2, "Player 2");
     }
     return 1;
