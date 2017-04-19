@@ -33,6 +33,7 @@
 
 
 //  DECLARING PROTOTYPES
+int thankYou();
 void printPiece2(int i, int j);
 void gotoxy(int x, int y);
 int quit();
@@ -49,7 +50,6 @@ int find_knight_path();
 int find_pawn_path();
 void printCheckHash();
 void printPiece(int i, int j, char piece);
-void printBoard2();
 int aboutUs();
 int instructions();
 int startGame();
@@ -125,8 +125,9 @@ int checkKingMoves(coord pos);
 
 //  MAIN METHOD
 int main() {
-    //COORD Coord;
-    //SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
+//    COORD Coord;
+//    SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
+    system("color f0");
     if(started == 0) {
         welcome();
     }
@@ -157,9 +158,7 @@ int main() {
             case 5:
                 system("cls");
                 if(quit()) {
-                    system("cls");
-                    printf("\n\n\n\n\n\n\n\t\t\t\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
-                    _sleep(250);
+                    thankYou();
                     exit(0);
                 }else {
                     a = 6;
@@ -345,7 +344,6 @@ void printPiece2(int i, int j) {
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
-    system("color f0");
     int i, j;
     int count = 1;
     printf("\n\n\t\t\t\t\t       ");
@@ -494,7 +492,6 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
 int loadingScreen(int time) {   //  DISPLAYS THE LOADING SCREEN
     system("cls");
-    system("color f0");
     gotoxy(50,10);
     printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
     gotoxy(50,11);
@@ -1102,19 +1099,21 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
 }
 
 int controls() {    //  DISPLAYS THE CONTROLS OF GAME
-    system("color 2f");
     system("cls");
-    printf("\n\n\n\n");
-    printf("\n\n\t\t\t\t\t\t\t\t\tW       :       UP\n");
-    printf("\n\t\t\t\t\t\t\t\t\tA       :       LEFT\n");
-    printf("\n\t\t\t\t\t\t\t\t\tS       :       DOWN\n");
-    printf("\n\t\t\t\t\t\t\t\t\tD       :       RIGHT\n");
-    printf("\n\n\t\t\t\t\t\t\t\t\tENTER   :       SELECT PIECE\n");
-    printf("\n");
-    printf("\n\n\t\t\t\t\t\t\t\t\tE       :       EXIT\n");
-    printf("\n\n\n\n\t\t\t\t\t");
+    gotoxy(35, 8);
+    printf("    UP_ARROW       :     move up");
+    gotoxy(35, 10);
+    printf("  DOWN_ARROW       :     move down");
+    gotoxy(35, 12);
+    printf("  LEFT_ARROW       :     move left");
+    gotoxy(35, 14);
+    printf("  DOWN_ARROW       :     move down");
+    gotoxy(35, 16);
+    printf("       ENTER       :     select an option");
+    gotoxy(35, 18);
+    printf("         ESC       :     go back");
+    gotoxy(35, 30);
     system("pause");
-    system("cls");
 }
 
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
@@ -1297,7 +1296,6 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
 
 int welcome() {
     char ch;
-    system("color f0");
     for(int i=0; i<4; i++) {
       system("cls");
       switch(i) {
@@ -1376,9 +1374,7 @@ int startGame() {
     piece temp;
     int tempX,tempY,i;
     initializeBoard();
-    system("color 0e");
     do {
-           // printBoard2();
             if(black_checked || white_checked){
                     find_checkedpiece_path();
 //                    for(i=0;checkstack[i].x!=-1;i++)
@@ -1405,7 +1401,6 @@ int startGame() {
                         possible_moves_at_check();
 //                        printHash();
 //                        system("pause");
-                        //printBoard2();
 
 
         }
@@ -1884,7 +1879,6 @@ for(i=0;i<8;i++){
 }
 
 int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
-    system("color 80");
     FILE *fp;
     char ch;
     fp = fopen("instructions.txt", "r");
@@ -1903,96 +1897,26 @@ int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
 }
 
 int aboutUs() {
-    system("color 0d");
-    printf("\n\n\n\n\t\t\t\t\t\t\tSunny");
-    printf("\n\n\n\n\t\t\t\t\t\t\tSreekara Mouli. T");
-    printf("\n");
-    printf("\n\n\n\n\n\n\t\tYou can find the source code to this project at: https://github.com/MouliTadinada/Chess-in-C\n\n\n");
+    system("cls");
+    gotoxy(35, 10);
+    printf("Hi, we are Sreekara Mouli and Sunny. We are currently doing our");
+    gotoxy(35, 12);
+    printf("computer science engineering in St Martin's Engineering College.");
+    gotoxy(35, 14);
+    printf("We collaborated on doing a C program to build a Chess engine and");
+    gotoxy(35, 16);
+    printf("this is what we have achieved.");
+    gotoxy(35, 20);
+    printf("Hoped you all like it! :)");
+    gotoxy(35, 22);
+    printf("Thank You!");
+    gotoxy(35, 30);
+    printf("You can find the source code to this project at");
+    gotoxy(35, 32);
+    printf("-> https://github.com/MouliTadinada/Chess-in-C <-");
+    gotoxy(35, 35);
     system("pause");
-    system("cls");
     return 1;
-}
-
-void printBoard2() {// PRINTS THE BOARD IN WELL DESIGNED MANNER
-    system("cls");
-    int i, j, k, pos;
-    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[esc]--exit to main menu-----------\n\n\n");
-    printf("\t\t\t\t\t\t\t\t\t");
-    if(col == WHITE) {
-        system("color f9");
-        printf("%s's turn \n\n\n", player1);
-    }else {
-        system("color 09");
-        printf("%s's turn \n\n\n", player2);
-    }
-    printf("\t\t\t\t\t\t\t     A     B     C     D     E     F     G     H   \n");
-    for(i=0; i<8; i++) {
-        printf("\t\t\t\t\t\t\t  ");
-        if(i!=0) {
-            for(k=0; k<8; k++) {
-                printf("%c     ", vertical_line);
-            }
-            printf("%c\n", vertical_line);
-            printf("\t\t\t\t\t\t\t  ");
-        }
-        for(k=0; k<8; k++) {
-            printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
-        }
-        printf("%c\n",  plus);
-        printf("\t\t\t\t\t\t\t  ");
-        for(k=0; k<8; k++) {
-            printf("%c     ", vertical_line);
-        }
-        printf("%c\n", vertical_line);
-        printf("\t\t\t\t\t\t  ");
-        for(j=0; j<8; j++) {
-            if(j==0) {
-                printf("\t");
-            }
-            switch(board[i][j].type) {
-                case PAWN:
-                    printPiece(i, j, 'P');
-                    break;
-
-                case ROOK:
-                    printPiece(i, j, 'R');
-                    break;
-
-                case BISHOP:
-                    printPiece(i, j, 'B');
-                    break;
-
-                case KNIGHT:
-                    printPiece(i, j, 'N');
-                    break;
-
-                case QUEEN:
-                    printPiece(i, j, 'Q');
-                    break;
-
-                case KING:
-                    printPiece(i, j, 'K');
-                    break;
-
-                case EMPTY:
-                    printPiece(i, j, ' ');
-                    break;
-            }
-        }
-        printf("%c\n", vertical_line);
-        if(i==7) {
-            printf("\t\t\t\t\t\t\t  ");
-            for(k=0; k<8; k++) {
-                printf("%c     ", vertical_line);
-            }
-            printf("%c\n", vertical_line);
-            printf("\t\t\t\t\t\t\t  ");
-            for(k=0; k<8; k++) {
-                printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
-            }
-            printf("%c\n", plus);
-        }
-    }
 }
 
 void printPiece(int i, int j, char piece) {
@@ -2109,7 +2033,7 @@ int checkKingMoves(coord pos){
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y-1].color || board[pos.x+1][pos.y-1].color == EMPTY) && pos.x!=7 && pos.y!=0){
-       // printf("*6");system("color 0a");
+       // printf("*6");
         king_stack[i].x = pos.x+1;
         king_stack[i].y = pos.y-1;
         i++;
@@ -2136,7 +2060,6 @@ int checkKingMoves(coord pos){
 
 int scanPlayers() {// SCANS THE  PLAYERNAMES
     system("cls");
-    system("color f0");
     for(int i=0; i<2; i++) {
         gotoxy(40,10+i*5+1);
         printf("PLAYER %d: ", i+1);
@@ -2162,7 +2085,6 @@ int quit() {
 
     int op;
     int x=1;
-    system("color f0");
     do {
         system("cls");
         gotoxy(45, 10);
@@ -2221,3 +2143,35 @@ void gotoxy(int x, int y) {
 
 }
 
+int thankYou() {
+    system("cls");
+    gotoxy(25, 5);
+	printf("%c%c%c%c%c%c%c %c     %c    %c    %c     %c %c     %c   %c     %c %c%c%c%c%c%c%c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 6);
+	printf("   %c    %c     %c   %c %c   %c%c    %c %c   %c      %c   %c  %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 7);
+	printf("   %c    %c     %c  %c   %c  %c %c   %c %c %c         %c %c   %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 8);
+	printf("   %c    %c%c%c%c%c%c%c %c%c%c%c%c%c%c %c  %c  %c %c%c           %c    %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 9);
+	printf("   %c    %c     %c %c     %c %c   %c %c %c %c          %c    %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 10);
+	printf("   %c    %c     %c %c     %c %c    %c%c %c   %c        %c    %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 11);
+	printf("   %c    %c     %c %c     %c %c     %c %c     %c      %c    %c%c%c%c%c%c%c %c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	for(int i=0; i<68; i++) {
+        gotoxy(23+i, 13);
+        printf("%c", 219);
+        gotoxy(91-i, 3);
+        printf("%c", 219);
+        _sleep(10);
+	}
+	for(int i=0; i<10; i++) {
+        gotoxy(23, 3+i);
+        printf("%c", 219);
+        gotoxy(91, 13-i);
+        printf("%c", 219);
+        _sleep(10);
+	}
+	gotoxy(25, 25);
+}
