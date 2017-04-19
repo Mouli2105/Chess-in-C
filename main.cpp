@@ -378,11 +378,12 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     if(col == WHITE) {
         gotoxy(3, 2);
         printf("%s's Move", player1);
+        gotoxy(3, 10);
     }else {
         gotoxy(90, 2);
         printf("%s's Move", player2);
+        gotoxy(90, 10);
     }
-    gotoxy(3, 10);
     return 1;
 }
 
@@ -1127,7 +1128,7 @@ int controls() {    //  DISPLAYS THE CONTROLS OF GAME
 }
 
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
-    char ch;
+    int ch;
     int beepsound;
     if(col == WHITE) {
     gotoxy(3, 5);
@@ -1153,7 +1154,70 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     printf("ENTER:  ");
     }
     ch = _getch();
-    switch(ch) {
+    if(ch == 13) {
+        if(mainX != cursorX || mainY != cursorY) {
+            resetMovesHash();
+            black_checked = 0;
+            white_checked = 0;
+            piece current = board[mainX][mainY];
+            swapPieces(&board[mainX][mainY], &board[cursorX][cursorY],cursorX,cursorY);
+            flag = 1;
+            setHashCheckMate();
+            flag = 0;
+            moved++;
+            setCursor();
+            if(moved%2==0) {
+                col = WHITE;
+            }else {
+                col = BLACK;
+            }
+        }
+        return 0;
+    }
+    if(ch==224 || ch==0) {
+        ch = _getch();
+        switch(ch) {
+        case UP_ARROW:
+            for(int i=cursorX-1; i>=0; i--) {
+                if(moves_hash[i][cursorY]) {
+                    cursorX = i;
+                    break;
+                }
+            }
+            return 1;
+            break;
+        case DOWN_ARROW:
+            for(int i=cursorX+1; i<=7; i++) {
+                if(moves_hash[i][cursorY]) {
+                    cursorX = i;
+                    break;
+                }
+            }
+            return 1;
+            break;
+        case LEFT_ARROW:
+            for(int j=cursorY-1; j>=0; j--) {
+                if(moves_hash[cursorX][j]) {
+                    cursorY = j;
+                    break;
+                }
+            }
+            return 1;
+            break;
+        case RIGHT_ARROW:
+            for(int j=cursorY+1; j<=7; j++) {
+                if(moves_hash[cursorX][j]) {
+                    cursorY = j;
+                    break;
+                }
+            }
+            return 1;
+            break;
+
+        }
+    }else {
+        char op = ch;
+        switch(op){
         case 'n':
         case 'N':
             if(stackPointer<len-1) {
@@ -1200,6 +1264,10 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
         case 'R':
             return 0;
             break;
+
+        default:
+            return 1;
+        }
     }
 }
 
@@ -1363,31 +1431,32 @@ int mainMenu() {
     do {
       system("cls");
       for(int i=0; i<5; i++) {
-        gotoxy(35, 5 + i*2);
+        gotoxy(40, 5 + i*2);
         if(X==i) {
             printf(">> %s", op[i]);
         }else {
             printf("   %s", op[i]);
         }
       }
-      gotoxy(35, 25);
+      gotoxy(40, 25);
       ch = _getch();
       if(ch == 13) {
         switch(X) {
             case 0:
-                gotoxy(38, 5);
+                gotoxy(43, 5);
                 break;
             case 1:
-                gotoxy(38, 7);
+                gotoxy(43, 7);
                 break;
             case 2:
-                gotoxy(38, 9);
+                gotoxy(43, 9);
                 break;
             case 3:
-                gotoxy(38, 11);
+                gotoxy(43, 11);
                 break;
             case 4:
-                gotoxy(37, 13);
+                gotoxy(43, 13);
+                gotoxy(43, 13);
                 break;
         }
         for(int i=0; i<strlen(op[X]); i++) {
