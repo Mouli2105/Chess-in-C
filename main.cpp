@@ -85,6 +85,7 @@ int copyArray();
 int resetTempArray();
 
 //  DECLARING GLOBAL VARIABLES
+int MUTE = -1;
 int whiteDeadPointer = -1;
 int blackDeadPointer = -1;
 int leftRookWhite = 0;
@@ -156,14 +157,23 @@ int main() {
 
             case 2:
                 instructions();
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 break;
 
             case 3:
                 controls();
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 break;
 
             case 4:
                 aboutUs();
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 break;
 
             case 5:
@@ -227,13 +237,21 @@ int setHashCheckMate() {  //SETS THE HASH TABLE USED TO CHECK THE CHECKMATE AND 
                     if(col == WHITE){
                         black_checked = 1;
                         gotoxy(85, 10);
+                        printf("CHECK");
+                        gotoxy(83, 11);
+                        printf("PROCESSING IF ITS A CHECK-MATE");
                     }
                     else{
                         white_checked = 1;
                         gotoxy(5, 10);
+                        printf("CHECK");
+                        gotoxy(5, 11);
+                        printf("PROCESSING IF ITS A CHECK-MATE");
                     }
-                    printf("CHECK");
-                    _sleep(5000);
+                    for(int k=0; k<5; k++) {
+                        printf(".");
+                        _sleep(250);
+                    }
                     checkingPiece = board[cursorX][cursorY];
                     checkingPiece_pos.x = cursorX;
                     checkingPiece_pos.y = cursorY;
@@ -356,6 +374,8 @@ void printPiece2(int i, int j) {
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
+    gotoxy(45, 25);
+    printf("Press 'm' to mute/unmute.");
     if(whiteDeadPointer != -1) {
         for(int k=0; k<=whiteDeadPointer; k++) {
             gotoxy(115 - k*2, 12);
@@ -508,7 +528,13 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
     int i, j;
     fflush(stdin);
     ch = _getch();
+    if((char)ch == 'm' || (char)ch == 'M') {
+        MUTE *= -1;
+    }
     if(ch == 27) {
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
         if(quit()) {
             cursorX = 0;
             cursorY = 0;
@@ -517,6 +543,9 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
             return 1;
         }
     }else if(ch == 13) {
+        if(MUTE < 0) {
+            _beep(800, 50);
+        }
         printf("\n\t\t");
         possible_moves();
         int len;
@@ -538,6 +567,9 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
         ch = _getch();
         switch(ch) {
             case UP_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 for(int i=cursorX-1; i>=0; i--) {
                     if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
                         cursorX = i;
@@ -547,6 +579,9 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                 return 1;
 
             case LEFT_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 for(int i=cursorY-1; i>=0; i--) {
                     if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
                         cursorY = i;
@@ -556,6 +591,9 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                 return 1;
 
             case DOWN_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 for(int i=cursorX+1; i<=7; i++) {
                     if(board[i][cursorY].color == col || board[i][cursorY].color == 0) {
                         cursorX = i;
@@ -565,6 +603,9 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
                 return 1;
 
             case RIGHT_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 for(int i=cursorY+1; i<=7; i++) {
                     if(board[cursorX][i].color == col || board[cursorX][i].color == 0) {
                         cursorY = i;
@@ -1268,6 +1309,9 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
     }
     ch = _getch();
     if(ch==13) {
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
         if(mainX != cursorX || mainY != cursorY) {
                 resetMovesHash();
                 black_checked = 0;
@@ -1292,6 +1336,9 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
         int found = 0;
         switch(ch) {
         case UP_ARROW:
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
             found = 0;
             for(int i=cursorX-1; i>=0; i--) {
                 if(moves_hash[i][cursorY]) {
@@ -1323,6 +1370,9 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
             return 1;
             break;
         case DOWN_ARROW:
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
             found = 0;
             for(int i=cursorX+1; i<=7; i++) {
                 if(moves_hash[i][cursorY]) {
@@ -1354,6 +1404,9 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
             return 1;
             break;
         case LEFT_ARROW:
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
             found = 0;
             for(int j=cursorY-1; j>=0; j--) {
                 if(moves_hash[cursorX][j]) {
@@ -1385,6 +1438,9 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
             return 1;
             break;
         case RIGHT_ARROW:
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
             found = 0;
             for(int j=cursorY+1; j<=7; j++) {
                 if(moves_hash[cursorX][j]) {
@@ -1589,8 +1645,16 @@ int mainMenu() {
         }
       }
       gotoxy(40, 25);
+      printf("Press 'm' to mute/ unmute");
+      gotoxy(40, 20);
       ch = _getch();
+      if((char)ch == 'm' || (char)ch == 'M') {
+        MUTE *= -1;
+      }
       if(ch == 13) {
+        if(MUTE < 0) {
+                    _beep(800, 50);
+                }
         switch(X) {
             case 0:
                 gotoxy(43, 5);
@@ -1619,6 +1683,9 @@ int mainMenu() {
         ch = _getch();
         switch(ch) {
           case UP_ARROW:
+            if(MUTE < 0) {
+            _beep(700, 50);
+            }
             X--;
             if(X<0) {
               X=4;
@@ -1626,6 +1693,9 @@ int mainMenu() {
             break;
 
           case DOWN_ARROW:
+              if(MUTE < 0) {
+            _beep(700, 50);
+              }
             X++;
             if(X>4) {
                 X=0;
@@ -1667,23 +1737,19 @@ int startGame() {
                         if(is_king_can_move()){
 //                        printf("\nEntered");
 //                        system("pause");
-                        for(int k=0; k<100; k++) {
-                        printBoard();
-                        gotoxy(35, 35);
+                        //printBoard();
+                        system("cls");
+                        gotoxy(50, 10);
                         printf("CHECK-MATE");
+                        _sleep(3000);
+                        system("cls");
+                        gotoxy(50, 10);
                         if(col==WHITE) {
-                            gotoxy(100, 30);
-                            printf("YOU WIN");
-                            gotoxy(5, 30);
-                            printf("YOU LOSE");
+                            printf("%s WINS", player2);
                         }else {
-                            gotoxy(5, 30);
-                            printf("YOU WIN");
-                            gotoxy(85, 30);
-                            printf("YOU LOSE");
+                            printf("%s WIN", player1);
                         }
-                        }
-                        //_sleep(5000);
+                        _sleep(3000);
                         break;
                         }
                     }
@@ -2388,6 +2454,9 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
     gotoxy(51, 11);
     i=0;
     while((ch=_getche())!=13) {
+        if(MUTE < 0) {
+        _beep(500, 50);
+        }
         if(ch==27) {
             return 0;
         }
@@ -2400,6 +2469,9 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
     gotoxy(51, 16);
     i=0;
     while((ch=_getche())!=13) {
+        if(MUTE < 0) {
+            _beep(500, 50);
+        }
         if(ch==27) {
             return 0;
         }
@@ -2441,8 +2513,14 @@ int quit() {
         gotoxy(75, 10);
         op = _getch();
         if(op == 27) {
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
             return 0;
         }else if(op == 13) {
+            if(MUTE < 0) {
+                    _beep(800, 50);
+                }
             if(x==1) {
                 return 0;
             }else {
@@ -2452,12 +2530,18 @@ int quit() {
             op = _getch();
             switch(op) {
             case LEFT_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 x--;
                 if(x<0) {
                     x=1;
                 }
                 break;
             case RIGHT_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
                 x++;
                 if(x>1) {
                     x=0;
