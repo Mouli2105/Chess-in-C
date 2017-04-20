@@ -33,6 +33,7 @@
 
 
 //  DECLARING PROTOTYPES
+int thankYou();
 void printPiece2(int i, int j);
 void gotoxy(int x, int y);
 int quit();
@@ -49,7 +50,6 @@ int find_knight_path();
 int find_pawn_path();
 void printCheckHash();
 void printPiece(int i, int j, char piece);
-void printBoard2();
 int aboutUs();
 int instructions();
 int startGame();
@@ -125,8 +125,9 @@ int checkKingMoves(coord pos);
 
 //  MAIN METHOD
 int main() {
-    //COORD Coord;
-    //SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
+//    COORD Coord;
+//    SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
+    system("color f0");
     if(started == 0) {
         welcome();
     }
@@ -137,9 +138,11 @@ int main() {
         switch(a) {
             case 1:
                 _sleep(100);
-                scanPlayers();
-                loadingScreen(100);
-                endGame = startGame();
+                if(scanPlayers()) {
+                    loadingScreen(100);
+                    endGame = startGame();
+                }
+                endGame = 1;
                 break;
 
             case 2:
@@ -157,9 +160,7 @@ int main() {
             case 5:
                 system("cls");
                 if(quit()) {
-                    system("cls");
-                    printf("\n\n\n\n\n\n\n\t\t\t\t\t\t\t\tThank you!\n\n\n\n\t\t\t\t\t");
-                    _sleep(250);
+                    thankYou();
                     exit(0);
                 }else {
                     a = 6;
@@ -216,13 +217,14 @@ int setHashCheckMate() {  //SETS THE HASH TABLE USED TO CHECK THE CHECKMATE AND 
                         if(flag){
                     if(col == WHITE){
                         black_checked = 1;
+                        gotoxy(85, 10);
                     }
                     else{
                         white_checked = 1;
+                        gotoxy(5, 10);
                     }
-                    printf("\nCHECK");
-                    printf("\n");
-                    system("pause");
+                    printf("CHECK");
+                    _sleep(5000);
                     checkingPiece = board[cursorX][cursorY];
                     checkingPiece_pos.x = cursorX;
                     checkingPiece_pos.y = cursorY;
@@ -345,7 +347,6 @@ void printPiece2(int i, int j) {
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
-    system("color f0");
     int i, j;
     int count = 1;
     printf("\n\n\t\t\t\t\t       ");
@@ -375,6 +376,15 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
         printf("%c%c%c%c", 196, 196, 193, 196);
     }
     printf("%c%c%c", 196, 196, 217);
+    if(col == WHITE) {
+        gotoxy(3, 2);
+        printf("%s's Move", player1);
+        gotoxy(3, 10);
+    }else {
+        gotoxy(90, 2);
+        printf("%s's Move", player2);
+        gotoxy(90, 10);
+    }
     return 1;
 }
 
@@ -471,7 +481,7 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 //            controls();
 //            return 1;
 //
-//        case '\r':
+//
 //            possible_moves();
 //            int len;
 //            stackPointer = -1;
@@ -494,7 +504,6 @@ int handleCursor(int col) {//  TAKES THE INPUT FROM USER AND MOVES THE CURSOR AC
 
 int loadingScreen(int time) {   //  DISPLAYS THE LOADING SCREEN
     system("cls");
-    system("color f0");
     gotoxy(50,10);
     printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 187);
     gotoxy(50,11);
@@ -1102,54 +1111,42 @@ int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
 }
 
 int controls() {    //  DISPLAYS THE CONTROLS OF GAME
-    system("color 2f");
     system("cls");
-    printf("\n\n\n\n");
-    printf("\n\n\t\t\t\t\t\t\t\t\tW       :       UP\n");
-    printf("\n\t\t\t\t\t\t\t\t\tA       :       LEFT\n");
-    printf("\n\t\t\t\t\t\t\t\t\tS       :       DOWN\n");
-    printf("\n\t\t\t\t\t\t\t\t\tD       :       RIGHT\n");
-    printf("\n\n\t\t\t\t\t\t\t\t\tENTER   :       SELECT PIECE\n");
-    printf("\n");
-    printf("\n\n\t\t\t\t\t\t\t\t\tE       :       EXIT\n");
-    printf("\n\n\n\n\t\t\t\t\t");
+    gotoxy(35, 8);
+    printf("    UP_ARROW       :     move up");
+    gotoxy(35, 10);
+    printf("  DOWN_ARROW       :     move down");
+    gotoxy(35, 12);
+    printf("  LEFT_ARROW       :     move left");
+    gotoxy(35, 14);
+    printf("  DOWN_ARROW       :     move down");
+    gotoxy(35, 16);
+    printf("       ENTER       :     select an option");
+    gotoxy(35, 18);
+    printf("         ESC       :     go back");
+    gotoxy(35, 30);
     system("pause");
-    system("cls");
 }
 
 int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MOVE PIECE OR RETURN BACK
-    char ch;
+    int ch;
     int beepsound;
-    printf("N: NEXT POSITION\n");
-    printf("P: PREVIOUS POSITION\n");
-    printf("M: MOVE PIECE\n");
-    printf("R: RETURN\n\n");
-    printf("ENTER:  ");
+    if(col == WHITE) {
+    gotoxy(3, 7);
+    printf("ENTER: select piece");
+    gotoxy(3, 8);
+    printf("ESC: select different piece/ go back");
+    gotoxy(3, 9);
+    }else {
+    gotoxy(83, 7);
+    printf("ENTER: select piece");
+    gotoxy(83, 8);
+    printf("ESC: select different piece/ go back");
+    gotoxy(85, 9);
+    }
     ch = _getch();
-    switch(ch) {
-        case 'n':
-        case 'N':
-            if(stackPointer<len-1) {
-                stackPointer++;
-                cursorX = positionStack[stackPointer].x;
-                cursorY = positionStack[stackPointer].y;
-            }
-            return 1;
-            break;
-
-        case 'P':
-        case 'p':
-            if(stackPointer>0) {
-                stackPointer--;
-                cursorX = positionStack[stackPointer].x;
-                cursorY = positionStack[stackPointer].y;
-            }
-            return 1;
-            break;
-
-        case 'm':
-        case 'M':
-            if(mainX != cursorX || mainY != cursorY) {
+    if(ch==13) {
+        if(mainX != cursorX || mainY != cursorY) {
                 resetMovesHash();
                 black_checked = 0;
                 white_checked = 0;
@@ -1167,12 +1164,136 @@ int selectPosition(int len) {   // HELPS THE USER TO DECICE TO PICK LOCATION, MO
                 }
             }
             return 0;
+    }
+    if(ch==224 || ch==0) {
+        ch = _getch();
+        int found = 0;
+        switch(ch) {
+        case UP_ARROW:
+            found = 0;
+            for(int i=cursorX-1; i>=0; i--) {
+                if(moves_hash[i][cursorY]) {
+                    cursorX = i;
+                    found = 1;
+                    break;
+                }
+            }
+            if(!found) {
+                for(int i=cursorX-1; i>=0; i--) {
+                    if(moves_hash[i][cursorY-1]) {
+                        cursorX = i;
+                        cursorY--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int i=cursorX-1; i>=0; i--) {
+                    if(moves_hash[i][cursorY+1]) {
+                        cursorX = i;
+                        cursorY++;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            return 1;
             break;
-
-        case 'r':
-        case 'R':
-            return 0;
+        case DOWN_ARROW:
+            found = 0;
+            for(int i=cursorX+1; i<=7; i++) {
+                if(moves_hash[i][cursorY]) {
+                    cursorX = i;
+                    found = 1;
+                    break;
+                }
+            }
+            if(!found) {
+                for(int i=cursorX+1; i<=7; i++) {
+                    if(moves_hash[i][cursorY-1]) {
+                        cursorX = i;
+                        cursorY--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int i=cursorX+1; i<=7; i++) {
+                    if(moves_hash[i][cursorY+1]) {
+                        cursorX = i;
+                        cursorY++;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            return 1;
             break;
+        case LEFT_ARROW:
+            found = 0;
+            for(int j=cursorY-1; j>=0; j--) {
+                if(moves_hash[cursorX][j]) {
+                    cursorY = j;
+                    found = 1;
+                    break;
+                }
+            }
+            if(!found) {
+                for(int j=cursorY-1; j>=0; j--) {
+                    if(moves_hash[cursorX-1][j]) {
+                        cursorY = j;
+                        cursorX--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int j=cursorY-1; j>=0; j--) {
+                    if(moves_hash[cursorX+1][j]) {
+                        cursorY = j;
+                        cursorX++;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            return 1;
+            break;
+        case RIGHT_ARROW:
+            found = 0;
+            for(int j=cursorY+1; j<=7; j++) {
+                if(moves_hash[cursorX][j]) {
+                    cursorY = j;
+                    found = 1;
+                    break;
+                }
+            }
+            if(!found) {
+                for(int j=cursorY+1; j<=7; j++) {
+                    if(moves_hash[cursorX+1][j]) {
+                        cursorY = j;
+                        cursorX++;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                for(int j=cursorY+1; j<=7; j++) {
+                    if(moves_hash[cursorX-1][j]) {
+                        cursorY = j;
+                        cursorX--;
+                        found = 1;
+                        break;
+                    }
+                }
+            }
+            return 1;
+            break;
+        }
     }
 }
 
@@ -1202,6 +1323,7 @@ int check() {   // RETURNS 1 IF ITS A CHECK, 0 OTHERWISE
     }
     return 0;
 }
+
 void printCheckHash(){
     int i,j;
     for( i = 0 ; i < 8 ; i++){
@@ -1212,6 +1334,7 @@ void printCheckHash(){
         printf("\n");
     }
 }
+
 int setCursor() {// SETS THE CURSOR TO INITIAL POSITION
     int i,j;
     for(i=0; i<8; i++) {
@@ -1297,7 +1420,6 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
 
 int welcome() {
     char ch;
-    system("color f0");
     for(int i=0; i<4; i++) {
       system("cls");
       switch(i) {
@@ -1336,22 +1458,42 @@ int mainMenu() {
     char *op[5]={"Play Game", "Rules of Chess", "Controls", "About Us", "Quit"};
     do {
       system("cls");
-      printf("\n\n\n\n\n\n");
       for(int i=0; i<5; i++) {
-        printf("\n\t\t\t\t\t\t");
+        gotoxy(40, 5 + i*2);
         if(X==i) {
-            printf(">>  %s\t<<", op[i]);
+            printf(">> %s", op[i]);
         }else {
-            printf("    %s", op[i]);
+            printf("   %s", op[i]);
         }
-        printf("\n\t\t\t\t\t\t");
       }
-      printf("\n\t\t\t\t\t\t");
+      gotoxy(40, 25);
       ch = _getch();
       if(ch == 13) {
-        return X + 1;
-      }
-      if(ch == 224 || ch == 0) {
+        switch(X) {
+            case 0:
+                gotoxy(43, 5);
+                break;
+            case 1:
+                gotoxy(43, 7);
+                break;
+            case 2:
+                gotoxy(43, 9);
+                break;
+            case 3:
+                gotoxy(43, 11);
+                break;
+            case 4:
+                gotoxy(43, 13);
+                gotoxy(43, 13);
+                break;
+        }
+        for(int i=0; i<strlen(op[X]); i++) {
+            printf("%c", 219);
+            _sleep(25);
+        }
+        return X+1;
+    }
+    if(ch == 224 || ch == 0) {
         ch = _getch();
         switch(ch) {
           case UP_ARROW:
@@ -1376,9 +1518,15 @@ int startGame() {
     piece temp;
     int tempX,tempY,i;
     initializeBoard();
-    system("color 0e");
+    // CHECK THIS
+    resetCheckHash();   //
+    resetMovesHash();   //
+    col = WHITE;        //
+    cursorX = 0;        //
+    cursorY = 0;        //
+    // CHECK THIS
     do {
-           // printBoard2();
+            printBoard();
             if(black_checked || white_checked){
                     find_checkedpiece_path();
 //                    for(i=0;checkstack[i].x!=-1;i++)
@@ -1390,14 +1538,20 @@ int startGame() {
                         if(is_king_can_move()){
 //                        printf("\nEntered");
 //                        system("pause");
-                        printf("\nCHECK-MATE");
+                        gotoxy(35, 50);
+                        printf("CHECK-MATE");
                         if(col==WHITE) {
-                            printf("\n%s WINS", player2);
+                            gotoxy(85, 30);
+                            printf("YOU WIN");
+                            gotoxy(5, 30);
+                            printf("YOU LOSE");
                         }else {
-                            printf("\n%s WINS", player1);
+                            gotoxy(5, 30);
+                            printf("YOU WIN");
+                            gotoxy(85, 30);
+                            printf("YOU LOSE");
                         }
-                        printf("\n");
-                        system("pause");
+                        _sleep(5000);
                         break;
                         }
                     }
@@ -1415,7 +1569,6 @@ int startGame() {
                         possible_moves_at_check();
 //                        printHash();
 //                        system("pause");
-                        //printBoard2();
 
 
         }
@@ -1460,6 +1613,7 @@ int startGame() {
     }while(handleCursor(col));
     return 1;
 }
+
 int find_checkedpiece_path(){ // FINDS THE PATH FROM CHECKEING PIECE TO OPPENENT KING
     switch(checkingPiece.type)
         {
@@ -1477,6 +1631,7 @@ int find_checkedpiece_path(){ // FINDS THE PATH FROM CHECKEING PIECE TO OPPENENT
         }
         return 0;
 }
+
 int find_rook_path(){// FIND THE ROOK PATH
     int i,j;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1528,6 +1683,7 @@ int find_rook_path(){// FIND THE ROOK PATH
         checkstack[j].x = -1;
     }
 }
+
 int find_bishop_path(){//FINDS THE BISHOP PATH
     int i,j,k;
     if(checkingPiece_pos.x < checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1587,6 +1743,7 @@ int find_bishop_path(){//FINDS THE BISHOP PATH
         checkstack[j].x = -1;
     }
 }
+
 int find_queen_path(){//FINDS THE QUEEN PATH
    int i,j,k;
     if(checkingPiece_pos.x == checkedKing.x && checkingPiece_pos.y < checkedKing.y)
@@ -1694,6 +1851,7 @@ int find_queen_path(){//FINDS THE QUEEN PATH
         checkstack[j].x = -1;
     }
 }
+
 int find_knight_path(){//FINDS THE KNIGHT PATH
     int i = 0,j = checkingPiece_pos.x,k = checkingPiece_pos.y;
     if(j+2 == checkedKing.x && k+1 == checkedKing.y)
@@ -1741,6 +1899,7 @@ int find_knight_path(){//FINDS THE KNIGHT PATH
     //system("pause");
     return 1;
 }
+
 int find_pawn_path(){//FINDS THE PAWN PATH
     int i,j,k=0;
     i = checkedKing.x;
@@ -1792,6 +1951,7 @@ int checkmate() {// RETURNS 1 IF CHECKMATE SITUATION ARRIVES
     }
     return 1;
 }
+
 int all_moves(){// FIX THE HASH TABLE WITH ALL THE MOVES EXCEPT KING WHICH IS USED IN CHECKMATE METHOD
     tempcursorX = cursorX;
     tempcursorY = cursorY;
@@ -1827,6 +1987,7 @@ int all_moves(){// FIX THE HASH TABLE WITH ALL THE MOVES EXCEPT KING WHICH IS US
     }
 
 }
+
 int possible_moves_at_check(){//FINDS THE POSSIBLE MOVES AFTER CHECKING THE OPPONENT KING
     int i, cons = 0 ;
     resetMovesHash();
@@ -1894,115 +2055,47 @@ for(i=0;i<8;i++){
 }
 
 int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
-    system("color 80");
     FILE *fp;
+    system("cls");
     char ch;
     fp = fopen("instructions.txt", "r");
     if(fp == NULL) {
+        gotoxy(50, 10);
         printf("Unable to open the file!");
+        gotoxy(50, 25);
+        system("pause");
     }else {
         while((ch=fgetc(fp)) != EOF) {
             printf("%c", ch);
         }
+        printf("\n");
+        system("pause");
     }
     fclose(fp);
-    printf("\n");
-    system("pause");
-    system("cls");
     return 1;
 }
 
 int aboutUs() {
-    system("color 0d");
-    printf("\n\n\n\n\t\t\t\t\t\t\tSunny");
-    printf("\n\n\n\n\t\t\t\t\t\t\tSreekara Mouli. T");
-    printf("\n");
-    printf("\n\n\n\n\n\n\t\tYou can find the source code to this project at: https://github.com/MouliTadinada/Chess-in-C\n\n\n");
+    system("cls");
+    gotoxy(35, 10);
+    printf("Hi, we are Sreekara Mouli and Sunny. We are currently doing our");
+    gotoxy(35, 12);
+    printf("computer science engineering in St Martin's Engineering College.");
+    gotoxy(35, 14);
+    printf("We collaborated on doing a C program to build a Chess engine and");
+    gotoxy(35, 16);
+    printf("this is what we have achieved.");
+    gotoxy(35, 20);
+    printf("Hoped you all like it! :)");
+    gotoxy(35, 22);
+    printf("Thank You!");
+    gotoxy(35, 30);
+    printf("You can find the source code to this project at");
+    gotoxy(35, 32);
+    printf("-> https://github.com/MouliTadinada/Chess-in-C <-");
+    gotoxy(35, 35);
     system("pause");
-    system("cls");
     return 1;
-}
-
-void printBoard2() {// PRINTS THE BOARD IN WELL DESIGNED MANNER
-    system("cls");
-    int i, j, k, pos;
-    printf("\t\t\t\t\t\t ----------[c]--controls-----------------[esc]--exit to main menu-----------\n\n\n");
-    printf("\t\t\t\t\t\t\t\t\t");
-    if(col == WHITE) {
-        system("color f9");
-        printf("%s's turn \n\n\n", player1);
-    }else {
-        system("color 09");
-        printf("%s's turn \n\n\n", player2);
-    }
-    printf("\t\t\t\t\t\t\t     A     B     C     D     E     F     G     H   \n");
-    for(i=0; i<8; i++) {
-        printf("\t\t\t\t\t\t\t  ");
-        if(i!=0) {
-            for(k=0; k<8; k++) {
-                printf("%c     ", vertical_line);
-            }
-            printf("%c\n", vertical_line);
-            printf("\t\t\t\t\t\t\t  ");
-        }
-        for(k=0; k<8; k++) {
-            printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
-        }
-        printf("%c\n",  plus);
-        printf("\t\t\t\t\t\t\t  ");
-        for(k=0; k<8; k++) {
-            printf("%c     ", vertical_line);
-        }
-        printf("%c\n", vertical_line);
-        printf("\t\t\t\t\t\t  ");
-        for(j=0; j<8; j++) {
-            if(j==0) {
-                printf("\t");
-            }
-            switch(board[i][j].type) {
-                case PAWN:
-                    printPiece(i, j, 'P');
-                    break;
-
-                case ROOK:
-                    printPiece(i, j, 'R');
-                    break;
-
-                case BISHOP:
-                    printPiece(i, j, 'B');
-                    break;
-
-                case KNIGHT:
-                    printPiece(i, j, 'N');
-                    break;
-
-                case QUEEN:
-                    printPiece(i, j, 'Q');
-                    break;
-
-                case KING:
-                    printPiece(i, j, 'K');
-                    break;
-
-                case EMPTY:
-                    printPiece(i, j, ' ');
-                    break;
-            }
-        }
-        printf("%c\n", vertical_line);
-        if(i==7) {
-            printf("\t\t\t\t\t\t\t  ");
-            for(k=0; k<8; k++) {
-                printf("%c     ", vertical_line);
-            }
-            printf("%c\n", vertical_line);
-            printf("\t\t\t\t\t\t\t  ");
-            for(k=0; k<8; k++) {
-                printf("%c%c%c%c%c%c", plus, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line);
-            }
-            printf("%c\n", plus);
-        }
-    }
 }
 
 void printPiece(int i, int j, char piece) {
@@ -2053,8 +2146,8 @@ void printPiece(int i, int j, char piece) {
         }
     }
 }
-int is_king_can_move()// CHECKES WHETHER A CHECKED KING CAN MOVE AFTER CHECKING
-{
+
+int is_king_can_move() {// CHECKES WHETHER A CHECKED KING CAN MOVE AFTER CHECKING
     int i,temp_color;
     piece temp;
     checkKingMoves(checkedKing);
@@ -2119,7 +2212,7 @@ int checkKingMoves(coord pos){
         i++;
     }
     if((board[pos.x][pos.y].color == -1*board[pos.x+1][pos.y-1].color || board[pos.x+1][pos.y-1].color == EMPTY) && pos.x!=7 && pos.y!=0){
-       // printf("*6");system("color 0a");
+       // printf("*6");
         king_stack[i].x = pos.x+1;
         king_stack[i].y = pos.y-1;
         i++;
@@ -2146,8 +2239,11 @@ int checkKingMoves(coord pos){
 
 int scanPlayers() {// SCANS THE  PLAYERNAMES
     system("cls");
-    system("color f0");
-    for(int i=0; i<2; i++) {
+    int i;
+    char ch;
+    player1[0]='\0';
+    player2[0]='\0';
+    for(i=0; i<2; i++) {
         gotoxy(40,10+i*5+1);
         printf("PLAYER %d: ", i+1);
         gotoxy(50,10+i*5);
@@ -2157,12 +2253,30 @@ int scanPlayers() {// SCANS THE  PLAYERNAMES
         gotoxy(50,12+i*5);
         printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 205, 188);
     }
-    char ch[100];
     gotoxy(51, 11);
-    scanf("%s", &player1);
+    i=0;
+    while((ch=_getche())!=13) {
+        if(ch==27) {
+            return 0;
+        }
+        player1[i++]=ch;
+    }
+    player1[i]='\0';
+    if(player1[0]=='\0') {
+        strcpy(player1, "Player 1");
+    }
     gotoxy(51, 16);
-    scanf("%s", &player2);
-    printf("\n\n");
+    i=0;
+    while((ch=_getche())!=13) {
+        if(ch==27) {
+            return 0;
+        }
+        player2[i++]=ch;
+    }
+    player2[i]='\0';
+    if(player2[0]=='\0') {
+        strcpy(player2, "Player 2");
+    }
     return 1;
 }
 
@@ -2172,7 +2286,6 @@ int quit() {
 
     int op;
     int x=1;
-    system("color f0");
     do {
         system("cls");
         gotoxy(45, 10);
@@ -2231,3 +2344,35 @@ void gotoxy(int x, int y) {
 
 }
 
+int thankYou() {
+    system("cls");
+    gotoxy(25, 5);
+	printf("%c%c%c%c%c%c%c %c     %c    %c    %c     %c %c     %c   %c     %c %c%c%c%c%c%c%c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 6);
+	printf("   %c    %c     %c   %c %c   %c%c    %c %c   %c      %c   %c  %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 7);
+	printf("   %c    %c     %c  %c   %c  %c %c   %c %c %c         %c %c   %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 8);
+	printf("   %c    %c%c%c%c%c%c%c %c%c%c%c%c%c%c %c  %c  %c %c%c           %c    %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 9);
+	printf("   %c    %c     %c %c     %c %c   %c %c %c %c          %c    %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 10);
+	printf("   %c    %c     %c %c     %c %c    %c%c %c   %c        %c    %c     %c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(25, 11);
+	printf("   %c    %c     %c %c     %c %c     %c %c     %c      %c    %c%c%c%c%c%c%c %c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	for(int i=0; i<68; i++) {
+        gotoxy(23+i, 13);
+        printf("%c", 219);
+        gotoxy(91-i, 3);
+        printf("%c", 219);
+        _sleep(10);
+	}
+	for(int i=0; i<10; i++) {
+        gotoxy(23, 3+i);
+        printf("%c", 219);
+        gotoxy(91, 13-i);
+        printf("%c", 219);
+        _sleep(10);
+	}
+	gotoxy(25, 25);
+}
