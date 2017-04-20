@@ -1402,6 +1402,16 @@ int startGame() {
                         }
                     }
                        // find_checkedpiece_path();
+                       if(board[cursorX][cursorY].type == KING){
+                        if(is_king_can_move()){
+                            resetMovesHash();
+                        }
+                        else{
+                            resetMovesHash();
+                            king_moves();
+                        }
+                       }
+                       else
                         possible_moves_at_check();
 //                        printHash();
 //                        system("pause");
