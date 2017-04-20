@@ -33,6 +33,8 @@
 
 
 //  DECLARING PROTOTYPES
+int castling();
+int pawnChoice();
 int thankYou();
 void printPiece2(int i, int j);
 void gotoxy(int x, int y);
@@ -83,8 +85,15 @@ int copyArray();
 int resetTempArray();
 
 //  DECLARING GLOBAL VARIABLES
+int whiteDeadPointer = -1;
+int blackDeadPointer = -1;
+int leftRookWhite = 0;
+int leftRookBlack = 0;
+int rightRookWhite = 0;
+int rightRookBlack = 0;
 HANDLE console =GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
+int whiteFlag = 0,blackFlag = 0;
 char player1[50];
 char player2[50];
 int pawn_flag = 0;
@@ -115,7 +124,7 @@ int white_checked = 0;
 struct piece {
     int type;
     int color;
-}board[8][8], checkingPiece;
+}board[8][8], checkingPiece, blackDead[16], whiteDead[16];
 
 struct coord {
     int x;
@@ -347,6 +356,59 @@ void printPiece2(int i, int j) {
 
 int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     system("cls");
+    if(whiteDeadPointer != -1) {
+        for(int k=0; k<=whiteDeadPointer; k++) {
+            gotoxy(115 - k*2, 12);
+            switch(whiteDead[k].type) {
+            case QUEEN:
+                printf("Q");
+                break;
+
+            case KNIGHT:
+                printf("N");
+                break;
+
+            case BISHOP:
+                printf("B");
+                break;
+
+            case ROOK:
+                printf("R");
+                break;
+
+            case PAWN:
+                printf("P");
+                break;
+            }
+        }
+    }
+    if(blackDeadPointer != -1) {
+        for(int k=0; k<=blackDeadPointer; k++) {
+            gotoxy(3 + k*2, 12);
+            switch(blackDead[k].type) {
+            case QUEEN:
+                printf("q");
+                break;
+
+            case KNIGHT:
+                printf("n");
+                break;
+
+            case BISHOP:
+                printf("b");
+                break;
+
+            case ROOK:
+                printf("r");
+                break;
+
+            case PAWN:
+                printf("p");
+                break;
+            }
+        }
+    }
+    gotoxy(0, 0);
     int i, j;
     int count = 1;
     printf("\n\n\t\t\t\t\t       ");
@@ -376,6 +438,7 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
         printf("%c%c%c%c", 196, 196, 193, 196);
     }
     printf("%c%c%c", 196, 196, 217);
+
     if(col == WHITE) {
         gotoxy(3, 2);
         printf("%s's Move", player1);
@@ -389,13 +452,48 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
 }
 
 int swapPieces(struct piece *a, struct piece *b, int newX, int newY) {//    SWAPS TWO PIECES ON THE BOARD
+    if(b->type!=EMPTY) {
+        if(a->color == WHITE) {
+            blackDead[++blackDeadPointer].type = b->type;
+        }else if(a->color == BLACK) {
+            whiteDead[++whiteDeadPointer].type = b->type;
+        }
+    }
+
     if(a->type == KING){
         if(a->color == WHITE){
+            if(whiteKing.y - newY == -2) {
+                swapPieces(&board[0][7], &board[0][4], 0, 4);
+            }else if(whiteKing.y - newY == 2) {
+                swapPieces(&board[0][0], &board[0][2], 0, 2);
+            }
             whiteKing.x = newX;
             whiteKing.y = newY;
+            whiteFlag = 1;
         }else if(a->color == BLACK) {
+            if(blackKing.y - newY == -2) {
+                swapPieces(&board[7][7], &board[7][4], 7, 4);
+            }else if(blackKing.y - newY == 2) {
+                swapPieces(&board[7][0], &board[7][2], 7, 2);
+            }
             blackKing.x = newX;
             blackKing.y = newY;
+            blackFlag = 1;
+        }
+    }
+    if(a->type == ROOK) {
+        if(a->color == WHITE ) {
+            if(cursorY == 0 && cursorX == 0) {
+                leftRookWhite = 1;
+            }else if(cursorX == 0 && cursorY == 7) {
+                rightRookWhite = 1;
+            }
+        }else {
+            if(cursorY == 0 && cursorX == 7) {
+                leftRookBlack = 1;
+            }else if(cursorX == 7 && cursorY == 7) {
+                rightRookBlack = 1;
+            }
         }
     }
     *b = *a;
@@ -961,6 +1059,8 @@ int knight_moves() {    //TO PRINT THE POSSIBLE MOVES OF THE KNIGHT
 }
 
 int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
+    if(black_checked == 0 && white_checked == 0)
+    castling();
 		if(board[cursorX+1][cursorY].color!=board[cursorX][cursorY].color&&cursorX+1<8) {
 			if(check_flag) {
 				checkmate_hash[cursorX+1][cursorY] = 1;
@@ -1021,6 +1121,9 @@ int king_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE KING
 
 int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
     if(board[cursorX][cursorY].color==1&&front_color==WHITE) {
+            if(cursorX == 7){
+            board[cursorX][cursorY].type = pawnChoice();
+        }else{
         if(board[cursorX+1][cursorY].color==0) {
             if(check_flag) {
                 checkmate_hash[cursorX+1][cursorY]=1;
@@ -1053,8 +1156,13 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 				}
             }
         }
+        }
         }else if(board[cursorX][cursorY].color==-1&&front_color==1) {
-        if(board[cursorX-1][cursorY].color==0) {
+        if(cursorX == 0){
+            board[cursorX][cursorY].type = pawnChoice();
+        }else
+        {
+            if(board[cursorX-1][cursorY].color==0) {
 			if(check_flag) {
                 checkmate_hash[cursorX-1][cursorY]=1;
                 checkmate_hash[cursorX-1][cursorY-1]=1;
@@ -1086,7 +1194,8 @@ int pawn_moves() {  //TO PRINT THE POSSIBLE MOVES OF THE PAWN
 			}
         }
     }
-        }
+    }
+  }
 }
 
 void printHash() {  //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE NOT
@@ -1101,6 +1210,19 @@ void printHash() {  //TO VERIFY THE POSSIBLE MOVES ARE AT EXPECTED POSITIONS ARE
     }
 }
 
+int castling(){
+ if(cursorY == 3 && cursorX == 0||cursorX==7){
+    if((board[cursorX][cursorY].color == WHITE && whiteFlag==0 )|| (board[cursorX][cursorY].color == BLACK && blackFlag==0)) {
+    if(board[cursorX][2].type == EMPTY && board[cursorX][1].type == EMPTY && board[cursorX][0].type == ROOK && board[cursorX][0].color == board[cursorX][cursorY].color) {
+        moves_hash[cursorX][cursorY-2] = 1;
+        }
+    if(board[cursorX][4].type == EMPTY && board[cursorX][5].type == EMPTY && board[cursorX][6].type == EMPTY && board[cursorX][7].type == ROOK && board[cursorX][7].color == board[cursorX][cursorY].color) {
+        moves_hash[cursorX][cursorY+2] = 1;
+        }
+    }
+ }
+    return 1;
+}
 int resetMovesHash() {  // RESETS THE MOVES_HASH ARRAY TO 0
     int i, j;
     for(i=0; i<8; i++) {
@@ -1519,11 +1641,18 @@ int startGame() {
     int tempX,tempY,i;
     initializeBoard();
     // CHECK THIS
+    leftRookBlack = 0;
+    leftRookWhite = 0;
+    rightRookBlack = 0;
+    rightRookWhite = 0;
+    whiteDeadPointer = -1;
+    blackDeadPointer = -1;
     resetCheckHash();   //
     resetMovesHash();   //
     col = WHITE;        //
     cursorX = 0;        //
-    cursorY = 0;        //
+    cursorY = 0;
+    moved = 0;        //
     // CHECK THIS
     do {
             printBoard();
@@ -1538,10 +1667,12 @@ int startGame() {
                         if(is_king_can_move()){
 //                        printf("\nEntered");
 //                        system("pause");
-                        gotoxy(35, 50);
+                        for(int k=0; k<100; k++) {
+                        printBoard();
+                        gotoxy(35, 35);
                         printf("CHECK-MATE");
                         if(col==WHITE) {
-                            gotoxy(85, 30);
+                            gotoxy(100, 30);
                             printf("YOU WIN");
                             gotoxy(5, 30);
                             printf("YOU LOSE");
@@ -1551,7 +1682,8 @@ int startGame() {
                             gotoxy(85, 30);
                             printf("YOU LOSE");
                         }
-                        _sleep(5000);
+                        }
+                        //_sleep(5000);
                         break;
                         }
                     }
@@ -2375,4 +2507,75 @@ int thankYou() {
         _sleep(10);
 	}
 	gotoxy(25, 25);
+}
+
+int pawnChoice() {
+    int X = 0;
+    int ch;
+    do {
+        system("cls");
+        gotoxy(35, 10);
+        if(X==0) {
+            printf(">> QUEEN");
+        }else {
+            printf("   QUEEN");
+        }
+        gotoxy(35, 12);
+        if(X==1) {
+            printf(">> ROOK");
+        }else {
+            printf("   ROOK");
+        }
+        gotoxy(35, 14);
+        if(X==2) {
+            printf(">> BISHOP");
+        }else {
+            printf("   BISHOP");
+        }
+        gotoxy(35, 16);
+        if(X==3) {
+            printf(">> KNIGHT");
+        }else {
+            printf("   KNIGHT");
+        }
+        gotoxy(35, 18);
+        ch = _getch();
+        if(ch == 13) {
+            switch(X) {
+            case 0:
+                return QUEEN;
+                break;
+
+            case 1:
+                return ROOK;
+                break;
+
+            case 2:
+                return BISHOP;
+                break;
+
+            case 3:
+                return KNIGHT;
+                break;
+            }
+        }else if(ch==224 || ch==0) {
+            ch = _getch();
+            switch(ch) {
+            case UP_ARROW:
+                X--;
+                if(X<0) {
+                    X=3;
+                }
+                break;
+
+            case DOWN_ARROW:
+                X++;
+                if(X>3) {
+                    X=0;
+                }
+                break;
+            }
+        }
+
+    }while(1);
 }
