@@ -250,7 +250,7 @@ int setHashCheckMate() {  //SETS THE HASH TABLE USED TO CHECK THE CHECKMATE AND 
                     }
                     for(int k=0; k<5; k++) {
                         printf(".");
-                        _sleep(250);
+                        _sleep(650);
                     }
                     checkingPiece = board[cursorX][cursorY];
                     checkingPiece_pos.x = cursorX;
@@ -1639,7 +1639,7 @@ int mainMenu() {
       for(int i=0; i<5; i++) {
         gotoxy(40, 5 + i*2);
         if(X==i) {
-            printf(">> %s", op[i]);
+            printf("%c  %s", 254, op[i]);
         }else {
             printf("   %s", op[i]);
         }
