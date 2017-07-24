@@ -1,4 +1,4 @@
-//  HEADER FILES
+////  HEADER FILES
 #include<stdio.h>
 #include<stdlib.h>
 #include<conio.h>
@@ -30,7 +30,6 @@
 #define bottom_right_corner 217
 #define bottom_left_corner 192
 #define plus 197
-
 
 //  DECLARING PROTOTYPES
 int castling();
@@ -83,8 +82,12 @@ int setHashCheckMate();
 void resetCheckHash();
 int copyArray();
 int resetTempArray();
+void settings();
+void displayMode();
+void esc();
 
 //  DECLARING GLOBAL VARIABLES
+int DARK_MODE = 1;
 int MUTE = -1;
 int whiteDeadPointer = -1;
 int blackDeadPointer = -1;
@@ -137,7 +140,7 @@ int checkKingMoves(coord pos);
 int main() {
 //    COORD Coord;
 //    SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, &Coord);
-    system("color f0");
+    displayMode();
     if(started == 0) {
         welcome();
     }
@@ -170,13 +173,20 @@ int main() {
                 break;
 
             case 4:
-                aboutUs();
+                settings();
                 if(MUTE < 0) {
                     _beep(800, 50);
                 }
                 break;
 
             case 5:
+                aboutUs();
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
+                break;
+
+            case 6:
                 system("cls");
                 if(quit()) {
                     thankYou();
@@ -187,7 +197,7 @@ int main() {
                 break;
 
         }
-    }while(a!=1 && a!=5 && endGame==0);
+    }while(a!=1 && a!=6 && endGame==0);
     started = 1;
     if(endGame) {
         main();
@@ -460,10 +470,12 @@ int printBoard() {//    DISPLAYS THE BOARD IN A SIMPLE WAY
     printf("%c%c%c", 196, 196, 217);
 
     if(col == WHITE) {
+        system("color a0");
         gotoxy(3, 2);
         printf("%s's Move", player1);
         gotoxy(3, 10);
     }else {
+        system("color 4f");
         gotoxy(90, 2);
         printf("%s's Move", player2);
         gotoxy(90, 10);
@@ -1597,6 +1609,7 @@ int isMovesHashEmpty() {//  RETURNS 1 IF MOVESHASH IF EMPTY, 0 OTHERWISE
 }
 
 int welcome() {
+    system("color 0e");
     char ch;
     for(int i=0; i<4; i++) {
       system("cls");
@@ -1628,15 +1641,16 @@ int welcome() {
       _sleep(30);
       printf("%c", ch);
     }
+    system("color f0");
 }
 
 int mainMenu() {
     int X = 0;
     int ch;
-    char *op[5]={"Play Game", "Rules of Chess", "Controls", "About Us", "Quit"};
+    char *op[6]={"Play Game", "Rules of Chess", "Controls", "Settings", "About Us", "Quit"};
     do {
       system("cls");
-      for(int i=0; i<5; i++) {
+      for(int i=0; i<6; i++) {
         gotoxy(40, 5 + i*2);
         if(X==i) {
             printf("%c  %s", 254, op[i]);
@@ -1644,8 +1658,8 @@ int mainMenu() {
             printf("   %s", op[i]);
         }
       }
-      gotoxy(40, 25);
-      printf("Press 'm' to mute/ unmute");
+      gotoxy(15, 25);
+      printf("Go to the controls if this is the first time you are using this application.");
       gotoxy(40, 20);
       ch = _getch();
       if((char)ch == 'm' || (char)ch == 'M') {
@@ -1670,7 +1684,12 @@ int mainMenu() {
                 break;
             case 4:
                 gotoxy(43, 13);
-                gotoxy(43, 13);
+                break;
+            case 5:
+                gotoxy(43, 15);
+                break;
+            case 6:
+                gotoxy(43, 17);
                 break;
         }
         for(int i=0; i<strlen(op[X]); i++) {
@@ -1688,7 +1707,7 @@ int mainMenu() {
             }
             X--;
             if(X<0) {
-              X=4;
+              X=5;
             }
             break;
 
@@ -1697,7 +1716,7 @@ int mainMenu() {
             _beep(700, 50);
               }
             X++;
-            if(X>4) {
+            if(X>5) {
                 X=0;
             }
             break;
@@ -2275,24 +2294,35 @@ int instructions() {//  DISPLAYS THE INSTRUCTION OF THE GAME
 
 int aboutUs() {
     system("cls");
-    gotoxy(35, 10);
+    gotoxy(30, 10);
     printf("Hi, we are Sreekara Mouli and Sunny. We are currently doing our");
-    gotoxy(35, 12);
+    gotoxy(30, 12);
     printf("computer science engineering in St Martin's Engineering College.");
-    gotoxy(35, 14);
+    gotoxy(30, 14);
     printf("We collaborated on doing a C program to build a Chess engine and");
-    gotoxy(35, 16);
+    gotoxy(30, 16);
     printf("this is what we have achieved.");
-    gotoxy(35, 20);
+    gotoxy(30, 20);
     printf("Hoped you all like it! :)");
-    gotoxy(35, 22);
+    gotoxy(30, 22);
     printf("Thank You!");
-    gotoxy(35, 30);
-    printf("You can find the source code to this project at");
-    gotoxy(35, 32);
-    printf("-> https://github.com/MouliTadinada/Chess-in-C <-");
+    gotoxy(30, 30);
+    printf("You can download this project at");
+    gotoxy(30, 32);
+    FILE *fp;
+    char ch;
+    fp = fopen("downloadURL.txt", "r");
+    if(fp == NULL) {
+        printf("URL temporarily not available !!");
+    }else {
+        while((ch=fgetc(fp)) != EOF) {
+            printf("%c", ch);
+        }
+        printf("\n");
+    }
+    fclose(fp);
     gotoxy(35, 35);
-    system("pause");
+    _getch();
     return 1;
 }
 
@@ -2494,17 +2524,25 @@ int quit() {
         system("cls");
         gotoxy(45, 10);
         printf("Are you sure you want to exit?");
-        for(int i=0; i<2; i++) {
-            gotoxy(50+10*i,15);
-            printf("%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 187);
+//        for(int i=0; i<2; i++) {
+//            gotoxy(50+10*i,15);
+//            printf("%c%c%c%c%c%c%c", 201, 205, 205, 205, 205, 205, 187);
+//            gotoxy(50+10*i,16);
+//            if(x==i) {
+//                printf("%c     %c", 175, 174);
+//            }else {
+//                printf("%c     %c", 186, 186);
+//            }
+//            gotoxy(50+10*i,17);
+//            printf("%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 188);
+//        }
+        for(int i = 0; i < 2; i++) {
             gotoxy(50+10*i,16);
             if(x==i) {
                 printf("%c     %c", 175, 174);
             }else {
-                printf("%c     %c", 186, 186);
+                //printf("%c     %c", 186, 186);
             }
-            gotoxy(50+10*i,17);
-            printf("%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 188);
         }
         gotoxy(51, 16);
         printf(" YES");
@@ -2562,6 +2600,7 @@ void gotoxy(int x, int y) {
 
 int thankYou() {
     system("cls");
+    system("color 0e");
     gotoxy(25, 5);
 	printf("%c%c%c%c%c%c%c %c     %c    %c    %c     %c %c     %c   %c     %c %c%c%c%c%c%c%c %c     %c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	gotoxy(25, 6);
@@ -2662,4 +2701,145 @@ int pawnChoice() {
         }
 
     }while(1);
+}
+
+void settings() {
+    cursorX = 0;
+    cursorY = 0;
+    int op;
+    int x=1;
+    int y=0;
+    do {
+        system("cls");
+        esc();
+        gotoxy(30, 10);
+        printf("Toggle Sound");
+        gotoxy(26, 15);
+        printf("Toggle Dark Mode");
+        for(int i = 0; i < 2; i++) {
+            gotoxy(53+10*i,10 + 5 * y);
+            if(x==i) {
+                printf("%c", 254);
+            }
+        }
+        if(MUTE < 0) {
+            gotoxy(54, 9);
+            printf("%c%c%c%c%c%c", top_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, top_right_corner);
+            gotoxy(54, 10);
+            printf("%c    %c", vertical_line, vertical_line);
+            gotoxy(54, 11);
+            printf("%c%c%c%c%c%c", bottom_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, bottom_right_corner);
+        } else if( MUTE > 0) {
+            gotoxy(64, 9);
+            printf("%c%c%c%c%c%c%c", top_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line, top_right_corner);
+            gotoxy(64, 10);
+            printf("%c     %c", vertical_line, vertical_line);
+            gotoxy(64, 11);
+            printf("%c%c%c%c%c%c%c", bottom_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line, bottom_right_corner);
+        }
+        if( DARK_MODE < 0) {
+            gotoxy(54, 14);
+            printf("%c%c%c%c%c%c", top_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, top_right_corner);
+            gotoxy(54, 15);
+            printf("%c    %c", vertical_line, vertical_line);
+            gotoxy(54, 16);
+            printf("%c%c%c%c%c%c", bottom_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, bottom_right_corner);
+        } else if ( DARK_MODE > 0) {
+            gotoxy(64, 14);
+            printf("%c%c%c%c%c%c%c", top_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line, top_right_corner);
+            gotoxy(64, 15);
+            printf("%c     %c", vertical_line, vertical_line);
+            gotoxy(64, 16);
+            printf("%c%c%c%c%c%c%c", bottom_left_corner, horizontal_line, horizontal_line, horizontal_line, horizontal_line, horizontal_line, bottom_right_corner);
+        }
+        for(int i = 0; i < 2; i++) {
+            for(int j = 0; j < 2; j++) {
+                gotoxy(55 + 10 * j, 10 + 5 * i);
+                if(j == 0) {
+                    printf(" ON");
+                }
+                else {
+                    printf(" OFF");
+                }
+            }
+        }
+        gotoxy(75, 10);
+        op = _getch();
+        if(op == 27) {
+            if(MUTE < 0) {
+                _beep(800, 50);
+            }
+            return;
+        }else if(op == 13) {
+            if(MUTE < 0) {
+                _beep(800, 50);
+            }
+            if(y == 0 && x == 0) {
+                MUTE = -1;
+            } else if( y == 0 && x == 1) {
+                MUTE = 1;
+            } else if( y == 1 && x == 0) {
+                DARK_MODE = -1;
+
+            } else if ( y == 1 && x == 1) {
+                DARK_MODE = 1;
+            }
+            displayMode();
+        }else if(op == 224 || op ==0) {
+            op = _getch();
+            switch(op) {
+            case UP_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
+                y--;
+                if(y < 0) {
+                    y = 1;
+                }
+                break;
+            case DOWN_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
+                y++;
+                if(y > 1) {
+                    y = 0;
+                }
+                break;
+            case LEFT_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
+                x--;
+                if(x<0) {
+                    x=1;
+                }
+                break;
+            case RIGHT_ARROW:
+                if(MUTE < 0) {
+                    _beep(800, 50);
+                }
+                x++;
+                if(x>1) {
+                    x=0;
+                }
+                break;
+            }
+
+        }
+    }while(1);
+}
+
+void displayMode() {
+    if(DARK_MODE > 0) {
+        system("color f0");
+    }
+    else {
+        system("color 0f");
+    }
+}
+
+void esc() {
+    gotoxy(35, 30);
+    printf("Press ESC to go back.");
 }
